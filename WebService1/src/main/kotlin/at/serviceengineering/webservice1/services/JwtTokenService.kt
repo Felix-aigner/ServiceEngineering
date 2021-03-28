@@ -1,5 +1,7 @@
 package at.serviceengineering.webservice1.services
 
+import at.serviceengineering.webservice1.entities.Account
+import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.repositories.IAccountRepository
 import io.fusionauth.jwt.Signer
@@ -8,7 +10,9 @@ import io.fusionauth.jwt.domain.JWT
 import io.fusionauth.jwt.hmac.HMACSigner
 import io.fusionauth.jwt.hmac.HMACVerifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.lang.NullPointerException
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
@@ -35,13 +39,23 @@ class JwtTokenService(
     }
 
     fun recoverJWT(encodedJWT: String): JWT {
-        val verifier: Verifier = HMACVerifier.newVerifier(privateKey)
-        return JWT.getDecoder().decode(encodedJWT, verifier)
+        return try {
+            val verifier: Verifier = HMACVerifier.newVerifier(privateKey)
+            JWT.getDecoder().decode(encodedJWT, verifier)
+        } catch (e: Exception) {
+            throw TokenNotValidException()
+        }
     }
 
     fun validateUserToken(token: String, username: String) {
         val jwt = recoverJWT(token)
         val uuid = accountRepository.findAccountByUsername(username).let { account -> account?.id.toString() }
-        if(jwt.isExpired || jwt.subject != uuid) throw TokenNotValidException()
+        if(jwt.subject != uuid) throw TokenNotValidException()
+    }
+
+    fun getAccountFromToken(token: String): Account {
+        val jwt = recoverJWT(token)
+        return accountRepository.findByIdOrNull( UUID.fromString(jwt.subject))
+                ?: throw AccountNotFoundException()
     }
 }

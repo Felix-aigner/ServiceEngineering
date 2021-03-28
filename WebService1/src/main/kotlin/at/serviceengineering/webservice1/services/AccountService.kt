@@ -1,6 +1,6 @@
 package at.serviceengineering.webservice1.services
 
-import at.serviceengineering.webservice1.dtos.AccountDto
+import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
 import at.serviceengineering.webservice1.dtos.PasswordChangeDto
 import at.serviceengineering.webservice1.dtos.UserDto
@@ -45,12 +45,12 @@ class AccountService(
         }
     }
 
-    override fun createAccount(accountDto: AccountDto) {
-        if (usernameAlreadyExists(accountDto.username)) {
+    override fun createAccount(accountCreationDto: AccountCreationDto) {
+        if (usernameAlreadyExists(accountCreationDto.username)) {
             throw UsernameAlreadyExistsException()
         }
 
-        val entity = accountMapper.mapToEntityAndHashPassword(accountDto)
+        val entity = accountMapper.mapToEntityAndHashPassword(accountCreationDto)
         accountRepository.save(entity).also {
             logger.info("New Account created: $it")
         }

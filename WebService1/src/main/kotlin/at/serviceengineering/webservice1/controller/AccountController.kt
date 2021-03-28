@@ -1,6 +1,6 @@
 package at.serviceengineering.webservice1.controller
 
-import at.serviceengineering.webservice1.dtos.AccountDto
+import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
 import at.serviceengineering.webservice1.dtos.PasswordChangeDto
 import at.serviceengineering.webservice1.dtos.UserDto
@@ -21,9 +21,9 @@ class AccountController(
 ) {
 
     @PostMapping
-    fun createAccount(@RequestBody account: AccountDto): ResponseEntity<*> {
+    fun createAccount(@RequestBody accountCreation: AccountCreationDto): ResponseEntity<*> {
         return try {
-            accountService.createAccount(account)
+            accountService.createAccount(accountCreation)
             ResponseEntity.ok().body("")
 
         } catch (e: UsernameAlreadyExistsException) {

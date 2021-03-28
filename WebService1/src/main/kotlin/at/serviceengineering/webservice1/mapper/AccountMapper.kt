@@ -1,6 +1,6 @@
 package at.serviceengineering.webservice1.mapper
 
-import at.serviceengineering.webservice1.dtos.AccountDto
+import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.UserDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.services.JwtTokenService
@@ -12,13 +12,14 @@ class AccountMapper(
         val jwtTokenService: JwtTokenService
 ) {
 
-    fun mapToEntityAndHashPassword(accountDto: AccountDto): Account {
+    fun mapToEntityAndHashPassword(accountCreationDto: AccountCreationDto): Account {
         return Account(
                 id = null,
-                accountDto.username,
-                hash(accountDto.password),
-                accountDto.firstname,
-                accountDto.lastname
+                accountCreationDto.username,
+                hash(accountCreationDto.password),
+                accountCreationDto.firstname,
+                accountCreationDto.lastname,
+                rentedCars = null
         )
     }
 
@@ -27,7 +28,7 @@ class AccountMapper(
                 account.username,
                 account.firstname,
                 account.lastname,
-                jwtTokenService.buildJwt(account.id?: throw NullPointerException("account_id should not be null"))
+                jwtTokenService.buildJwt(account.id?: throw NullPointerException("account_id should never be null"))
         )
     }
 }

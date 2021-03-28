@@ -22,5 +22,9 @@ data class Account (
     var firstname: String,
 
     @Column(nullable = false)
-    var lastname: String
+    var lastname: String,
+
+    @Column(nullable = true)
+    @OneToMany(cascade = [CascadeType.ALL])
+    var rentedCars: List<Car>? = null
 )

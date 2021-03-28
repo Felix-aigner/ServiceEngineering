@@ -1,6 +1,6 @@
 package at.serviceengineering.webservice1.dtos
 
-data class AccountDto (
+data class AccountCreationDto (
     val username: String,
     val password: String,
     val firstname: String,

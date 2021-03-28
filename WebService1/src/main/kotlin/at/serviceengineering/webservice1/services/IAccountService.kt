@@ -1,6 +1,6 @@
 package at.serviceengineering.webservice1.services
 
-import at.serviceengineering.webservice1.dtos.AccountDto
+import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
 import at.serviceengineering.webservice1.dtos.PasswordChangeDto
 import at.serviceengineering.webservice1.dtos.UserDto
@@ -12,7 +12,7 @@ interface IAccountService {
 
     fun changePassword(passwordChangeDto: PasswordChangeDto)
 
-    fun createAccount(accountDto: AccountDto)
+    fun createAccount(accountCreationDto: AccountCreationDto)
 
     fun deleteAccount(userDto: UserDto)
 
