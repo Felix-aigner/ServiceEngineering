@@ -65,6 +65,6 @@ class CarService(
         carRepository.save(car)
     }
 
-    fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarNotFoundException()
+    private fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarNotFoundException()
 
 }

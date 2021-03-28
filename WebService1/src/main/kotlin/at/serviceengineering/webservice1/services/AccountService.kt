@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class AccountService(
         private val accountRepository: IAccountRepository,
-        private val accountMapper: AccountMapper,
-        private val jwtTokenService: JwtTokenService
+        private val accountMapper: AccountMapper
 ) : IAccountService {
 
     val logger: Logger = LoggerFactory.getLogger(AccountService::class.java)

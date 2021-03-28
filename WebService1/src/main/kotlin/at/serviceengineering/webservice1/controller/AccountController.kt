@@ -7,7 +7,7 @@ import at.serviceengineering.webservice1.dtos.UserDto
 import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsException
-import at.serviceengineering.webservice1.services.AccountService
+import at.serviceengineering.webservice1.services.IAccountService
 import at.serviceengineering.webservice1.services.JwtTokenService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/account")
 class AccountController(
-        val accountService: AccountService,
+        val accountService: IAccountService,
         val jwtTokenService: JwtTokenService
 ) {
 
