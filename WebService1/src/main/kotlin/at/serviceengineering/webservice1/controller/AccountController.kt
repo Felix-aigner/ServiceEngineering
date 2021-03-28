@@ -8,6 +8,7 @@ import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsExcep
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsException
 import at.serviceengineering.webservice1.services.AccountService
+import at.serviceengineering.webservice1.services.JwtTokenService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/account")
 class AccountController(
-        val accountService: AccountService
+        val accountService: AccountService,
+        val jwtTokenService: JwtTokenService
 ) {
 
     @PostMapping
@@ -51,7 +53,7 @@ class AccountController(
             @RequestBody userDto: UserDto
     ): ResponseEntity<*> {
         return try {
-            accountService.validateUserToken(token, userDto.username)
+            jwtTokenService.validateUserToken(token, userDto.username)
             accountService.deleteAccount(userDto)
             ResponseEntity.ok().body("")
 
@@ -68,7 +70,7 @@ class AccountController(
             @RequestBody passwordChangeDto: PasswordChangeDto
     ): ResponseEntity<*> {
         return try {
-            accountService.validateUserToken(token, passwordChangeDto.username)
+            jwtTokenService.validateUserToken(token, passwordChangeDto.username)
             accountService.changePassword(passwordChangeDto)
             ResponseEntity.ok().body("")
 

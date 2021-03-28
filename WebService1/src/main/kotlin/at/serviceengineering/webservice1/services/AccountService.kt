@@ -6,7 +6,6 @@ import at.serviceengineering.webservice1.dtos.PasswordChangeDto
 import at.serviceengineering.webservice1.dtos.UserDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsException
-import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsException
 import at.serviceengineering.webservice1.mapper.AccountMapper
 import at.serviceengineering.webservice1.repositories.IAccountRepository
@@ -14,13 +13,12 @@ import at.serviceengineering.webservice1.utils.HashUtil.hash
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AccountService(
-        val accountRepository: IAccountRepository,
-        val accountMapper: AccountMapper,
-        val jwtTokenGenerator: JwtTokenGenerator
+        private val accountRepository: IAccountRepository,
+        private val accountMapper: AccountMapper,
+        private val jwtTokenService: JwtTokenService
 ) : IAccountService {
 
     val logger: Logger = LoggerFactory.getLogger(AccountService::class.java)
@@ -37,7 +35,6 @@ class AccountService(
         }
     }
 
-    @Transactional
     override fun changePassword(passwordChangeDto: PasswordChangeDto) {
         val account = accountRepository.findAccountByUsername(passwordChangeDto.username)
                 ?: throw NullPointerException()
@@ -59,9 +56,6 @@ class AccountService(
         }
     }
 
-    fun usernameAlreadyExists(username: String): Boolean = accountRepository.findAccountByUsername(username) != null
-
-    @Transactional
     override fun deleteAccount(userDto: UserDto) {
         accountRepository.deleteAccountByUsername(userDto.username).also {
             logger.info("Deleted Account with Username: ${userDto.username}")
@@ -76,9 +70,5 @@ class AccountService(
         )
     }
 
-    override fun validateUserToken(token: String, username: String) {
-        val jwt = jwtTokenGenerator.recoverJWT(token)
-        val uuid = accountRepository.findAccountByUsername(username).let { account -> account?.id.toString() }
-        if(jwt.isExpired || jwt.subject != uuid) throw TokenNotValidException()
-    }
+    private fun usernameAlreadyExists(username: String): Boolean = accountRepository.findAccountByUsername(username) != null
 }

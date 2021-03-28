@@ -1,5 +1,7 @@
 package at.serviceengineering.webservice1.services
 
+import at.serviceengineering.webservice1.exceptions.TokenNotValidException
+import at.serviceengineering.webservice1.repositories.IAccountRepository
 import io.fusionauth.jwt.Signer
 import io.fusionauth.jwt.Verifier
 import io.fusionauth.jwt.domain.JWT
@@ -12,7 +14,9 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @Service
-class JwtTokenGenerator {
+class JwtTokenService(
+        private val accountRepository: IAccountRepository
+) {
 
     @Value("\${token.privateKey}")
     val privateKey: String? = null
@@ -33,5 +37,11 @@ class JwtTokenGenerator {
     fun recoverJWT(encodedJWT: String): JWT {
         val verifier: Verifier = HMACVerifier.newVerifier(privateKey)
         return JWT.getDecoder().decode(encodedJWT, verifier)
+    }
+
+    fun validateUserToken(token: String, username: String) {
+        val jwt = recoverJWT(token)
+        val uuid = accountRepository.findAccountByUsername(username).let { account -> account?.id.toString() }
+        if(jwt.isExpired || jwt.subject != uuid) throw TokenNotValidException()
     }
 }
