@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="https://medium.com/article" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://medium.com/article" targetNamespace="https://medium.com/article">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://localhost:6000/api/currency">
+
+            <xsd:element name="getRateRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="currency" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="getRateResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="rate" type="xsd:float"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="getRateResponse">
+        <wsdl:part element="tns:getRateResponse" name="getRateResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getRateRequest">
+        <wsdl:part element="tns:getRateRequest" name="getRateRequest">
+        </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="CurrencyPort">
+        <wsdl:operation name="getCurrency">
+            <wsdl:input message="tns:getRateRequest" name="getRateRequest">
+            </wsdl:input>
+            <wsdl:output message="tns:getRateResponse" name="getRateResponse">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="CurrencyPortSoap11" type="tns:CurrencyPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getCurrency">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="getRateRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getRateResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="CurrencyPortService">
+        <wsdl:port binding="tns:CurrencyPortSoap11" name="CurrencyPortSoap11">
+            <soap:address location="/ws"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
