@@ -24,7 +24,6 @@ data class Account (
     @Column(nullable = false)
     var lastname: String,
 
-    @Column(nullable = true)
-    @OneToMany(cascade = [CascadeType.ALL])
-    var rentedCars: MutableList<Car>? = null
+    @ElementCollection
+    var rentedCars: MutableList<UUID>? = null
 )

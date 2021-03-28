@@ -5,7 +5,9 @@ import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
+import at.serviceengineering.webservice1.exceptions.CarAlreadyRentedException
 import at.serviceengineering.webservice1.exceptions.CarNotFoundException
+import at.serviceengineering.webservice1.exceptions.InvalidCarStatusManipulationException
 import at.serviceengineering.webservice1.mapper.CarMapper
 import at.serviceengineering.webservice1.repositories.IAccountRepository
 import at.serviceengineering.webservice1.repositories.ICarRepository
@@ -25,29 +27,35 @@ class CarService(
 
     override fun bookCar(account: Account, request: CarReservationUpdateDto) {
         val car = getCar(request.id)
+        if(car.isRented)
+            throw CarAlreadyRentedException()
+
         car.isRented = true
-        account.rentedCars?.add(car)
+        account.rentedCars?.add(car.id?: throw NullPointerException())
         accountRepository.save(account)
 
         try {
             carRepository.save(car)
         } catch (e: Exception) {
-            account.rentedCars?.remove(car)
+            account.rentedCars?.remove(car.id?: throw NullPointerException())
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }
     }
 
     override fun returnCar(account: Account, request: CarReservationUpdateDto) {
+        if(account.rentedCars?.contains(UUID.fromString(request.id)) == false)
+            throw InvalidCarStatusManipulationException()
+
         val car = getCar(request.id)
-        account.rentedCars?.remove(car)
+        account.rentedCars?.remove(car.id?: throw NullPointerException())
         car.isRented = false
         accountRepository.save(account)
 
         try {
             carRepository.save(car)
         } catch (e: Exception) {
-            account.rentedCars?.add(car)
+            account.rentedCars?.add(car.id?: throw NullPointerException())
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }
