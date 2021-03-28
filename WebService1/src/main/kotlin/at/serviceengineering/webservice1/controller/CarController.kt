@@ -4,7 +4,7 @@ import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
-import at.serviceengineering.webservice1.exceptions.CarIsNotExistingException
+import at.serviceengineering.webservice1.exceptions.CarDoesNotExistException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.services.CarService
 import at.serviceengineering.webservice1.services.JwtTokenService
@@ -51,7 +51,7 @@ class CarController(
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: AccountNotFoundException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: CarIsNotExistingException) {
+        } catch (e: CarDoesNotExistException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)

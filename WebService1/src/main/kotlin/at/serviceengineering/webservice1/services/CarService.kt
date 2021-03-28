@@ -5,7 +5,7 @@ import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
-import at.serviceengineering.webservice1.exceptions.CarIsNotExistingException
+import at.serviceengineering.webservice1.exceptions.CarDoesNotExistException
 import at.serviceengineering.webservice1.mapper.CarMapper
 import at.serviceengineering.webservice1.repositories.IAccountRepository
 import at.serviceengineering.webservice1.repositories.ICarRepository
@@ -57,6 +57,6 @@ class CarService(
         carRepository.save(car)
     }
 
-    fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarIsNotExistingException()
+    fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarDoesNotExistException()
 
 }
