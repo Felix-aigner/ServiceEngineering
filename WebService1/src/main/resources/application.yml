@@ -15,7 +15,7 @@ spring:
 
   datasource:
     platform: postgres
-    url: jdbc:h2:file:./data/h2
+    url: jdbc:h2:file:./WebService1/data/h2
     username: sa
     password:
     driverClassName: org.h2.Driver
@@ -31,4 +31,4 @@ spring:
 token:
   privateKey: ${PRIVATE_KEY:688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6}
   issuer: ${ISSUER:webservice1.carRental}
-  expirationtime: ${EXPIRATION_TIME:10}
+  expirationTime: ${EXPIRATION_TIME:10}
