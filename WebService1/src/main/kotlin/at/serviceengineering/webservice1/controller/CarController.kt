@@ -1,7 +1,9 @@
 package at.serviceengineering.webservice1.controller
 
+import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.entities.Car
+import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.services.AccountService
@@ -21,11 +23,12 @@ class CarController(
 ) {
 
     @GetMapping("/list")
-    fun carList(@RequestHeader("token") token: String
-    ): ResponseEntity<List<Car>> {
+    fun carList(@RequestHeader("token") token: String,
+                @RequestBody currency: Currency
+    ): ResponseEntity<List<CarDto>> {
         return try {
             jwtTokenService.getAccountFromToken(token)
-            val carList = carService.findAll()
+            val carList = carService.findAll(currency)
             ResponseEntity.ok().body(carList)
 
         } catch (e: TokenNotValidException) {

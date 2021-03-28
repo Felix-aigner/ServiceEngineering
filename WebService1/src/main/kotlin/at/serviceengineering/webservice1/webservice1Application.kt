@@ -1,6 +1,7 @@
 package at.serviceengineering.webservice1
 
 import at.serviceengineering.webservice1.entities.Car
+import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.services.CarService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,7 +21,7 @@ class WebService1Application(
 	@EventListener(ApplicationReadyEvent::class)
 	fun fillDatabase() {
 		try {
-			if(carService.findAll().isEmpty()) {
+			if(carService.findAll(currency = Currency.USD).isEmpty()) {
 				logger.info("Fill database with cars")
 				repeat(10) {
 					carService.addCarToDatabase(
