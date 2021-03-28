@@ -1,4 +1,4 @@
 package at.serviceengineering.webservice1.exceptions
 
 class InvalidLoginCredentialsException
-    : Exception("Username oder Passwort nicht korrekt")
+    : Exception("Username or password not correct")

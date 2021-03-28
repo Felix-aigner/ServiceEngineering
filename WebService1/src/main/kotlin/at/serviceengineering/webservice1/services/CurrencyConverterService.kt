@@ -10,8 +10,7 @@ class CurrencyConverterService {
         return if(expectedCurrency == Currency.USD)
             value
         else {
-            // TODO: Implement WebService2 Currency Converter
-            value
+            TODO("Not yet implemented WebService2 Currency Converter")
         }
 
     }

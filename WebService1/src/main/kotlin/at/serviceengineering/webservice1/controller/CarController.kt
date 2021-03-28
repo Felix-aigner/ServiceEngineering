@@ -2,14 +2,12 @@ package at.serviceengineering.webservice1.controller
 
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
-import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
+import at.serviceengineering.webservice1.exceptions.CarIsNotExistingException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
-import at.serviceengineering.webservice1.services.AccountService
 import at.serviceengineering.webservice1.services.CarService
 import at.serviceengineering.webservice1.services.JwtTokenService
-import io.fusionauth.jwt.JWTExpiredException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -24,11 +22,11 @@ class CarController(
 
     @GetMapping("/list")
     fun carList(@RequestHeader("token") token: String,
-                @RequestBody currency: Currency
+                @RequestParam(name = "cy", required = false) currency: Currency?
     ): ResponseEntity<List<CarDto>> {
         return try {
             jwtTokenService.getAccountFromToken(token)
-            val carList = carService.findAll(currency)
+            val carList = carService.findAll(currency?: Currency.USD)
             ResponseEntity.ok().body(carList)
 
         } catch (e: TokenNotValidException) {
@@ -46,13 +44,15 @@ class CarController(
     ): ResponseEntity<*> {
         return try {
             val account = jwtTokenService.getAccountFromToken(token)
-            val carList = carService.bookCar(account, request)
-            ResponseEntity.ok().body(carList)
+            carService.bookCar(account, request)
+            ResponseEntity.ok().body("")
 
         } catch (e: TokenNotValidException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: AccountNotFoundException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: CarIsNotExistingException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }

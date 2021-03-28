@@ -26,5 +26,5 @@ data class Account (
 
     @Column(nullable = true)
     @OneToMany(cascade = [CascadeType.ALL])
-    var rentedCars: List<Car>? = null
+    var rentedCars: MutableList<Car>? = null
 )
