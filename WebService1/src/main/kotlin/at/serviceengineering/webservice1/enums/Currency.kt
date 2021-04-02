@@ -32,5 +32,6 @@ enum class Currency {
     PHP,
     SGD,
     THB,
-    ZAR
+    ZAR,
+    EUR
 }
