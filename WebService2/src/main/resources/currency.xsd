@@ -1,0 +1,73 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="getCurrencyConversionRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="baseCurrency" type="currency"/>
+                <xs:element name="baseValue" type="money"/>
+                <xs:element name="targetCurrency" type="currency"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCurrencyConversionResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="currencyConversion" type="currencyConversion"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="currencyConversion">
+        <xs:sequence>
+            <xs:element name="baseCurrency" type="currency"/>
+            <xs:element name="baseValue" type="money"/>
+            <xs:element name="targetCurrency" type="currency"/>
+            <xs:element name="targetValue" type="money"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="currency">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EUR"/>
+            <xs:enumeration value="USD"/>
+            <xs:enumeration value="JPY"/>
+            <xs:enumeration value="BGN"/>
+            <xs:enumeration value="CZK"/>
+            <xs:enumeration value="DKK"/>
+            <xs:enumeration value="GBP"/>
+            <xs:enumeration value="HUF"/>
+            <xs:enumeration value="PLN"/>
+            <xs:enumeration value="RON"/>
+            <xs:enumeration value="SEK"/>
+            <xs:enumeration value="CHF"/>
+            <xs:enumeration value="ISK"/>
+            <xs:enumeration value="NOK"/>
+            <xs:enumeration value="HRK"/>
+            <xs:enumeration value="RUB"/>
+            <xs:enumeration value="TRY"/>
+            <xs:enumeration value="AUD"/>
+            <xs:enumeration value="BRL"/>
+            <xs:enumeration value="CAD"/>
+            <xs:enumeration value="CNY"/>
+            <xs:enumeration value="HKD"/>
+            <xs:enumeration value="IDR"/>
+            <xs:enumeration value="ILS"/>
+            <xs:enumeration value="INR"/>
+            <xs:enumeration value="KRW"/>
+            <xs:enumeration value="MXN"/>
+            <xs:enumeration value="MYR"/>
+            <xs:enumeration value="NZD"/>
+            <xs:enumeration value="PHP"/>
+            <xs:enumeration value="SGD"/>
+            <xs:enumeration value="THB"/>
+            <xs:enumeration value="ZAR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="money">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
