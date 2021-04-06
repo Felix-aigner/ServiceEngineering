@@ -56,7 +56,7 @@
 				</executions>
 				<configuration>
 					<sources>
-						<source>${project.basedir}/src/main/resources/currencies.xsd</source>
+						<source>${project.basedir}/src/main/resources/currency.xsd</source>
 					</sources>
 				</configuration>
 			</plugin>
