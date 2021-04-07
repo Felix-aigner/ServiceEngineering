@@ -6,6 +6,7 @@ import com.se.webservice2.CurrencyRate;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,8 @@ public class XMLReaderECB {
                     if (currencyAttrib != null) {
                         String currencyTxt = currencyAttrib.getNodeValue();
                         String rateTxt = attribs.getNamedItem(RATE).getNodeValue();
-                        currRateList.add(new CurrencyRate(currencyTxt, rateTxt));
+                        BigDecimal rate = new BigDecimal(rateTxt);
+                        currRateList.add(new CurrencyRate(currencyTxt, rate));
                     }
                 }
             }

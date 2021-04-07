@@ -1,10 +1,13 @@
 package com.se.webservice2;
 
+import generated.Currency;
+import java.math.BigDecimal;
+
 public class CurrencyRate {
     private String currency;
-    private String rate; // ?double
+    private BigDecimal rate;
 
-    public CurrencyRate(String currency, String rate) {
+    public CurrencyRate(String currency, BigDecimal rate) {
         super();
         this.currency = currency;
         this.rate = rate;
@@ -13,7 +16,7 @@ public class CurrencyRate {
     public String getCurrency() {
         return currency;
     }
-    public String getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
