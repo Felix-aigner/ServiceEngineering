@@ -24,6 +24,9 @@ data class Account (
     @Column(nullable = false)
     var lastname: String,
 
+    @Column(nullable = false)
+    var isAdministrator: Boolean,
+
     @ElementCollection
     var rentedCars: MutableList<UUID>? = null
 )

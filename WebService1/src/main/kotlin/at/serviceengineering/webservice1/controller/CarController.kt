@@ -2,6 +2,8 @@ package at.serviceengineering.webservice1.controller
 
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
+import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
+import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.*
 import at.serviceengineering.webservice1.services.ICarService
@@ -75,6 +77,46 @@ class CarController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
         } catch (e: InvalidCarStatusManipulationException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+    @PostMapping("/add")
+    fun addCar(@RequestHeader("token") token: String,
+                @RequestBody car: Car
+    ): ResponseEntity<*> {
+        return try {
+            jwtTokenService.getAccountFromToken(token).also {
+                account -> if(!account.isAdministrator) throw TokenNotValidException()
+            }
+            carService.addCarToDatabase(car)
+            ResponseEntity.ok().body("")
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+    @PostMapping("/change")
+    fun changeCar(@RequestHeader("token") token: String,
+               @RequestBody car: ChangeCarRequestDto
+    ): ResponseEntity<*> {
+        return try {
+            jwtTokenService.getAccountFromToken(token).also {
+                account -> if(!account.isAdministrator) throw TokenNotValidException()
+            }
+            carService.changeCar(car)
+            ResponseEntity.ok().body("")
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
