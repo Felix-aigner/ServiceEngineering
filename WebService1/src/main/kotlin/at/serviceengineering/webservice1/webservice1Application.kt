@@ -1,7 +1,9 @@
 package at.serviceengineering.webservice1
 
+import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
+import at.serviceengineering.webservice1.services.AccountService
 import at.serviceengineering.webservice1.services.CarService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,7 +16,8 @@ import kotlin.random.Random
 
 @SpringBootApplication
 class WebService1Application(
-		private val carService: CarService
+		private val carService: CarService,
+		private val accountService: AccountService
 ) {
 	val logger: Logger = LoggerFactory.getLogger(WebService1Application::class.java)
 
@@ -35,6 +38,21 @@ class WebService1Application(
 							)
 					)
 				}
+			}
+		} catch (e: Exception) {
+			logger.warn("Initial car import failed")
+		}
+		try {
+			if(accountService.findAll().isEmpty()) {
+				logger.info("Add Administrator")
+				accountService.createAdministrator(
+						AccountCreationDto(
+								username = "admin",
+								password = "admin",
+								firstname = "firstname",
+								lastname = "lastname"
+						)
+				)
 			}
 		} catch (e: Exception) {
 			logger.warn("Initial car import failed")

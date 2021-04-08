@@ -2,6 +2,7 @@ package at.serviceengineering.webservice1.services
 
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
+import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.enums.Currency
@@ -61,7 +62,17 @@ class CarService(
         }
     }
 
-    fun addCarToDatabase(car: Car) {
+    override fun addCarToDatabase(car: Car) {
+        carRepository.save(car)
+    }
+
+    override fun changeCar(newCar: ChangeCarRequestDto) {
+        val car = getCar(newCar.id)
+        car.brand = newCar.brand
+        car.type = newCar.type
+        car.usdPrice = newCar.usdPrice
+        car.isRented = newCar.isRented
+        car.kwPower = newCar.kwPower
         carRepository.save(car)
     }
 
