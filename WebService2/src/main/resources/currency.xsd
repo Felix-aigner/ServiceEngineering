@@ -1,14 +1,15 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:currencyConverter="http://localhost:4000/ws"
-           targetNamespace="http://localhost:4000/ws"
->
+<xs:schema
+        xmlns:tns="http://localhost:4000/ws"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        targetNamespace="http://localhost:4000/ws">
 
     <xs:element name="getCurrencyConversionRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="baseCurrency" type="currencyConverter:currency"/>
-                <xs:element name="baseValue" type="currencyConverter:money"/>
-                <xs:element name="targetCurrency" type="currencyConverter:currency"/>
+                <xs:element name="baseCurrency" type="tns:currency"/>
+                <xs:element name="baseValue" type="xs:decimal"/>
+                <xs:element name="targetCurrency" type="tns:currency"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -16,17 +17,17 @@
     <xs:element name="getCurrencyConversionResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="currencyConversion" type="currencyConversion"/>
+                <xs:element name="currencyConversion" type="tns:currencyConversion"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <xs:complexType name="currencyConversion">
         <xs:sequence>
-            <xs:element name="baseCurrency" type="currencyConverter:currency"/>
-            <xs:element name="baseValue" type="currencyConverter:money"/>
-            <xs:element name="targetCurrency" type="currencyConverter:currency"/>
-            <xs:element name="targetValue" type="currencyConverter:money"/>
+            <xs:element name="baseCurrency" type="tns:currency"/>
+            <xs:element name="baseValue" type="xs:decimal"/>
+            <xs:element name="targetCurrency" type="tns:currency"/>
+            <xs:element name="targetValue" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -65,12 +66,6 @@
             <xs:enumeration value="SGD"/>
             <xs:enumeration value="THB"/>
             <xs:enumeration value="ZAR"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="money">
-        <xs:restriction base="xs:decimal">
-            <xs:fractionDigits value="2"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

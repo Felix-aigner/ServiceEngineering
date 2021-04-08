@@ -40,7 +40,7 @@ public class XMLReaderECB {
             e.printStackTrace();
         }
         Document document = null;
-        String spec = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
+        String spec = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
         try {
             URL url = new URL(spec);
             InputStream is = url.openStream();

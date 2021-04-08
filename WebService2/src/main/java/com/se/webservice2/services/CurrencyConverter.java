@@ -1,9 +1,9 @@
 package com.se.webservice2.services;
 
 import com.se.webservice2.CurrencyRate;
-import generated.Currency;
-import generated.CurrencyConversion;
-import generated.GetCurrencyConversionRequest;
+import localhost._4000.ws.Currency;
+import localhost._4000.ws.CurrencyConversion;
+import localhost._4000.ws.GetCurrencyConversionRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +33,10 @@ public class CurrencyConverter {
         }
 
         if(request.getBaseCurrency().equals(Currency.EUR) || request.getTargetCurrency().equals(Currency.EUR)){
-            currencyConversion.setTargetValue(simpleConversion(request).setScale(2, RoundingMode.HALF_UP));
+            currencyConversion.setTargetValue(simpleConversion(request));
         }
         else{
-            currencyConversion.setTargetValue(crossConversion(request).setScale(2, RoundingMode.HALF_UP));
+            currencyConversion.setTargetValue(crossConversion(request));
         }
 
         return currencyConversion;
