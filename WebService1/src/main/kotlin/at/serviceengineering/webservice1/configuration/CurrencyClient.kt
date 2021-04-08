@@ -1,15 +1,20 @@
 package at.serviceengineering.webservice1.configuration
 
-import at.serviceengineering.webservice1.enums.Currency
-import at.serviceengineering.webservice1.wsdl.GetRateRequest
+
+import at.serviceengineering.webservice1.wsdl.Currency
+import at.serviceengineering.webservice1.wsdl.GetCurrencyConversionRequest
+import at.serviceengineering.webservice1.wsdl.GetCurrencyConversionResponse
+
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport
-import at.serviceengineering.webservice1.wsdl.GetRateResponse
+import java.math.BigDecimal
 
 class CurrencyClient: WebServiceGatewaySupport() {
 
-    fun getRate(expectedCurrency: Currency): GetRateResponse {
-        val getRateRequest = GetRateRequest()
-        getRateRequest.setCurrency(expectedCurrency.toString())
-        return webServiceTemplate.marshalSendAndReceive(getRateRequest) as GetRateResponse
+    fun getRate(baseValue: BigDecimal, expectedCurrency: Currency): GetCurrencyConversionResponse {
+        val getRateRequest = GetCurrencyConversionRequest()
+        getRateRequest.baseCurrency = Currency.USD
+        getRateRequest.baseValue = baseValue
+        getRateRequest.targetCurrency = expectedCurrency
+        return webServiceTemplate.marshalSendAndReceive(getRateRequest) as GetCurrencyConversionResponse
     }
 }

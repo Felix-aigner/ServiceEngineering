@@ -4,10 +4,10 @@ import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
 import at.serviceengineering.webservice1.entities.Car
-import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.*
 import at.serviceengineering.webservice1.services.ICarService
 import at.serviceengineering.webservice1.services.JwtTokenService
+import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

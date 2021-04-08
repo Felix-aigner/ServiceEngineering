@@ -2,10 +2,11 @@ package at.serviceengineering.webservice1.mapper
 
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.entities.Car
-import at.serviceengineering.webservice1.enums.Currency
 import at.serviceengineering.webservice1.exceptions.SoapCallException
 import at.serviceengineering.webservice1.services.CurrencyConverterService
+import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class CarMapper(
@@ -14,7 +15,7 @@ class CarMapper(
 
     fun mapToCarDtoWithCustomCurrency(car: Car, requestedCurrency: Currency): CarDto {
         var currency = requestedCurrency
-        var price: Float
+        var price: BigDecimal
         try {
             price = currencyConverterService.convertCurrency(car.usdPrice, currency)
         } catch (e: SoapCallException) {

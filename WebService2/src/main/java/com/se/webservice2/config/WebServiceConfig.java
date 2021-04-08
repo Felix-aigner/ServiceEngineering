@@ -26,9 +26,9 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean(name = "currencies")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema currencySchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("CurrencyConverterPort");
+        wsdl11Definition.setPortTypeName("CurrencyConverterPortSoap11");
         wsdl11Definition.setLocationUri("/ws");
-        //wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
+        wsdl11Definition.setTargetNamespace("http://localhost:4000/ws");
         wsdl11Definition.setSchema(currencySchema);
         return wsdl11Definition;
     }

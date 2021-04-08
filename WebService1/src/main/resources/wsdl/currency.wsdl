@@ -1,59 +1,101 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="https://medium.com/article" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://medium.com/article" targetNamespace="https://medium.com/article">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://localhost:4000/ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://localhost:4000/ws" targetNamespace="http://localhost:4000/ws">
     <wsdl:types>
-        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://localhost:6000/api/currency">
-
-            <xsd:element name="getRateRequest">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="currency" type="xsd:string"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-
-            <xsd:element name="getRateResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="rate" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-        </xsd:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://localhost:4000/ws">
+            <xs:element name="getCurrencyConversionRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="baseCurrency" type="tns:currency"/>
+                        <xs:element name="baseValue" type="tns:money"/>
+                        <xs:element name="targetCurrency" type="tns:currency"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrencyConversionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="currencyConversion" type="tns:currencyConversion"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="currencyConversion">
+                <xs:sequence>
+                    <xs:element name="baseCurrency" type="tns:currency"/>
+                    <xs:element name="baseValue" type="tns:money"/>
+                    <xs:element name="targetCurrency" type="tns:currency"/>
+                    <xs:element name="targetValue" type="tns:money"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="currency">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="EUR"/>
+                    <xs:enumeration value="USD"/>
+                    <xs:enumeration value="JPY"/>
+                    <xs:enumeration value="BGN"/>
+                    <xs:enumeration value="CZK"/>
+                    <xs:enumeration value="DKK"/>
+                    <xs:enumeration value="GBP"/>
+                    <xs:enumeration value="HUF"/>
+                    <xs:enumeration value="PLN"/>
+                    <xs:enumeration value="RON"/>
+                    <xs:enumeration value="SEK"/>
+                    <xs:enumeration value="CHF"/>
+                    <xs:enumeration value="ISK"/>
+                    <xs:enumeration value="NOK"/>
+                    <xs:enumeration value="HRK"/>
+                    <xs:enumeration value="RUB"/>
+                    <xs:enumeration value="TRY"/>
+                    <xs:enumeration value="AUD"/>
+                    <xs:enumeration value="BRL"/>
+                    <xs:enumeration value="CAD"/>
+                    <xs:enumeration value="CNY"/>
+                    <xs:enumeration value="HKD"/>
+                    <xs:enumeration value="IDR"/>
+                    <xs:enumeration value="ILS"/>
+                    <xs:enumeration value="INR"/>
+                    <xs:enumeration value="KRW"/>
+                    <xs:enumeration value="MXN"/>
+                    <xs:enumeration value="MYR"/>
+                    <xs:enumeration value="NZD"/>
+                    <xs:enumeration value="PHP"/>
+                    <xs:enumeration value="SGD"/>
+                    <xs:enumeration value="THB"/>
+                    <xs:enumeration value="ZAR"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="money">
+                <xs:restriction base="xs:decimal">
+                    <xs:fractionDigits value="2"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
     </wsdl:types>
-
-    <wsdl:message name="getRateResponse">
-        <wsdl:part element="tns:getRateResponse" name="getRateResponse">
-        </wsdl:part>
+    <wsdl:message name="getCurrencyConversionRequest">
+        <wsdl:part element="tns:getCurrencyConversionRequest" name="getCurrencyConversionRequest"> </wsdl:part>
     </wsdl:message>
-    <wsdl:message name="getRateRequest">
-        <wsdl:part element="tns:getRateRequest" name="getRateRequest">
-        </wsdl:part>
+    <wsdl:message name="getCurrencyConversionResponse">
+        <wsdl:part element="tns:getCurrencyConversionResponse" name="getCurrencyConversionResponse"> </wsdl:part>
     </wsdl:message>
-
-    <wsdl:portType name="CurrencyPort">
-        <wsdl:operation name="getCurrency">
-            <wsdl:input message="tns:getRateRequest" name="getRateRequest">
-            </wsdl:input>
-            <wsdl:output message="tns:getRateResponse" name="getRateResponse">
-            </wsdl:output>
+    <wsdl:portType name="CurrencyConverterPort">
+        <wsdl:operation name="getCurrencyConversion">
+            <wsdl:input message="tns:getCurrencyConversionRequest" name="getCurrencyConversionRequest"> </wsdl:input>
+            <wsdl:output message="tns:getCurrencyConversionResponse" name="getCurrencyConversionResponse"> </wsdl:output>
         </wsdl:operation>
     </wsdl:portType>
-
-    <wsdl:binding name="CurrencyPortSoap11" type="tns:CurrencyPort">
+    <wsdl:binding name="CurrencyConverterPortSoap11" type="tns:CurrencyConverterPort">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="getCurrency">
+        <wsdl:operation name="getCurrencyConversion">
             <soap:operation soapAction=""/>
-            <wsdl:input name="getRateRequest">
+            <wsdl:input name="getCurrencyConversionRequest">
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:output name="getRateResponse">
+            <wsdl:output name="getCurrencyConversionResponse">
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
-
-    <wsdl:service name="CurrencyPortService">
-        <wsdl:port binding="tns:CurrencyPortSoap11" name="CurrencyPortSoap11">
-            <soap:address location="/ws"/>
+    <wsdl:service name="CurrencyConverterPortService">
+        <wsdl:port binding="tns:CurrencyConverterPortSoap11" name="CurrencyConverterPortSoap11">
+            <soap:address location="http://localhost:4000/ws"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

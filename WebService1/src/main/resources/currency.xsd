@@ -1,14 +1,14 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:currencyConverter="http://localhost:4000/ws"
            targetNamespace="http://localhost:4000/ws"
+           elementFormDefault="qualified"
 >
 
     <xs:element name="getCurrencyConversionRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="baseCurrency" type="currencyConverter:currency"/>
-                <xs:element name="baseValue" type="currencyConverter:money"/>
-                <xs:element name="targetCurrency" type="currencyConverter:currency"/>
+                <xs:element name="baseCurrency" type="currency"/>
+                <xs:element name="baseValue" type="money"/>
+                <xs:element name="targetCurrency" type="currency"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -23,10 +23,10 @@
 
     <xs:complexType name="currencyConversion">
         <xs:sequence>
-            <xs:element name="baseCurrency" type="currencyConverter:currency"/>
-            <xs:element name="baseValue" type="currencyConverter:money"/>
-            <xs:element name="targetCurrency" type="currencyConverter:currency"/>
-            <xs:element name="targetValue" type="currencyConverter:money"/>
+            <xs:element name="baseCurrency" type="currency"/>
+            <xs:element name="baseValue" type="money"/>
+            <xs:element name="targetCurrency" type="currency"/>
+            <xs:element name="targetValue" type="money"/>
         </xs:sequence>
     </xs:complexType>
 
