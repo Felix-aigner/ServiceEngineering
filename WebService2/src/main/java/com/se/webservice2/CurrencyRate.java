@@ -1,6 +1,5 @@
 package com.se.webservice2;
 
-import generated.Currency;
 import java.math.BigDecimal;
 
 public class CurrencyRate {

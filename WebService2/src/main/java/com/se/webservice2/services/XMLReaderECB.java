@@ -68,10 +68,6 @@ public class XMLReaderECB {
             e.printStackTrace();
         }
 
-        for (CurrencyRate currencyRate : currRateList) {
-            System.out.println(currencyRate);
-        }
-
         return currRateList;
 
     }
