@@ -19,7 +19,8 @@ export class CarService {
   constructor(protected http: HttpClient, private userService: UserService) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json');
+      .set('Accept', 'application/json')
+      .set('cy', this.selectedCurrency.value.valueOf().toString());
   }
 
   create(car: ICar): Observable<EntityResponseType> {
@@ -38,7 +39,8 @@ export class CarService {
   query(): Observable<EntityArrayResponseType> {
     return this.http.get<ICar[]>(this.resourceUrl + '/list', {
       observe: 'response',
-      headers: this.commonHttpHeaders.append('token', this.userService.currUser.value.token)
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
     });
   }
 

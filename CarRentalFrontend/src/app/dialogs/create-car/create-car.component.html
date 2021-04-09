@@ -12,9 +12,9 @@
 
         <div class="form-group">
           <mat-form-field>
-            <mat-label class="form-control-label" for="field_carType">Car Type</mat-label>
-            <input matInput type="text" class="form-control" name="carType" id="field_carType"
-                   formControlName="carType"/>
+            <mat-label class="form-control-label" for="field_type">Car Type</mat-label>
+            <input matInput type="text" class="form-control" name="type" id="field_type"
+                   formControlName="type"/>
           </mat-form-field>
         </div>
 
@@ -44,7 +44,7 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Currency</mat-label>
-          <mat-select formControlName="price">
+          <mat-select formControlName="currency">
             <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
           </mat-select>
         </mat-form-field>

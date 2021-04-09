@@ -23,8 +23,8 @@ export class Car implements ICar {
 }
 
 export enum CurrencyEnum {
-  USD,
   EUR,
+  USD,
   JPY,
   BGN,
   CZK,

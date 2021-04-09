@@ -13,7 +13,7 @@ export class CreateCarComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    carType: [],
+    type: [],
     brand: [],
     kwPower: [],
     price: [],
