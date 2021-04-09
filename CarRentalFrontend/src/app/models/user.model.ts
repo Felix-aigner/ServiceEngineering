@@ -3,4 +3,6 @@ export class UserModel {
   lastname: string;
   username: string;
   token: string;
+  isAdministrator: boolean;
+  rentedCars: string[];
 }

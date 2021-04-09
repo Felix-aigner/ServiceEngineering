@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/car")
+@RequestMapping("/cars")
 class CarController(
         private val jwtTokenService: JwtTokenService,
         private val carService: ICarService

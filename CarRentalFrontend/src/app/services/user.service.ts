@@ -10,7 +10,7 @@ export class UserService {
 
   isLoggedIn = new BehaviorSubject<boolean>(false);
   currUser = new BehaviorSubject<UserModel>(new UserModel());
-  backendUrl = 'http://localhost:8080/account';
+  backendUrl = 'http://localhost:5000/account';
 
   private readonly commonHttpHeaders;
 

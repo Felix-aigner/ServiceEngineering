@@ -1,1 +1,59 @@
-<p>dashboard works!</p>
+<div>
+  <h2 id="page-heading">
+    <span>Car Rental</span>
+
+    <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-car">
+      <span>
+            Create a new Car
+            </span>
+    </button>
+  </h2>
+
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cars?.length === 0">
+    <span>No cars found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="cars && cars.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+      <tr>
+        <th scope="col" ><span>ID</span></th>
+        <th scope="col" ><span>Car Type</span></th>
+        <th scope="col" ><span>Brand</span></th>
+        <th scope="col" ><span>Kw Power</span></th>
+        <th scope="col" ><span>Usd Price</span></th>
+        <th scope="col" ><span>Is Rented</span></th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let car of cars ;">
+        <td><a [routerLink]="['/car', car.id, 'view']">{{ car.id }}</a></td>
+        <td>{{ car.carType }}</td>
+        <td>{{ car.brand }}</td>
+        <td>{{ car.kwPower }}</td>
+        <td>{{ car.usdPrice }}</td>
+        <td>{{ car.isRented }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <button type="submit"
+                    [routerLink]="['/car', car.id, 'view']"
+                    class="btn btn-info btn-sm">
+              Book
+              <span class="d-none d-md-inline">View</span>
+            </button>
+
+            <button type="submit"
+                    [routerLink]="['/car', car.id, 'edit']"
+                    class="btn btn-primary btn-sm">
+              submit
+              <span class="d-none d-md-inline">Edit</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

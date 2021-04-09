@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
         return EMPTY;
       }))
       .subscribe((model: UserModel) => {
+        console.log(model);
         this.loginError.next(false);
         this.loginErrorMessage.next('');
         this.userService.isLoggedIn.next(true);
