@@ -12,7 +12,6 @@ class CurrencyClientConfig {
     @Value("\${webservice2.url}")
     lateinit var webservice2Url: String
 
-
     @Bean
     fun marshaller(): Jaxb2Marshaller {
         val jaxb2Marshaller = Jaxb2Marshaller()
@@ -23,7 +22,8 @@ class CurrencyClientConfig {
     @Bean
     fun currencyClient(jaxb2Marshaller: Jaxb2Marshaller?): CurrencyClient {
         val currencyClient = CurrencyClient()
-        currencyClient.setDefaultUri(webservice2Url)
+        // TODO maybe we have to set the url here
+//        currencyClient.setDefaultUri(webservice2Url)
         currencyClient.setMarshaller(jaxb2Marshaller)
         currencyClient.setUnmarshaller(jaxb2Marshaller)
         return currencyClient
