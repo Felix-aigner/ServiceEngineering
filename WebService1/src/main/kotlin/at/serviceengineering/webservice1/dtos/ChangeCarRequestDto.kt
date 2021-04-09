@@ -1,16 +1,13 @@
 package at.serviceengineering.webservice1.dtos
 
-import at.serviceengineering.webservice1.wsdl.Currency
 import java.math.BigDecimal
-import java.util.*
 
 
-class CarDto(
-        val id: UUID?,
+data class ChangeCarRequestDto(
+        val id: String,
         val type: String,
         val brand: String,
         val kwPower: Int,
-        var price: BigDecimal,
-        var currency: Currency,
+        var usdPrice: BigDecimal,
         var isRented: Boolean
 )

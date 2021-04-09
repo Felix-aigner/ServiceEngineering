@@ -19,6 +19,7 @@ class AccountMapper(
                 hash(accountCreationDto.password),
                 accountCreationDto.firstname,
                 accountCreationDto.lastname,
+                isAdministrator = false,
                 rentedCars = null
         )
     }
@@ -28,7 +29,9 @@ class AccountMapper(
                 account.username,
                 account.firstname,
                 account.lastname,
-                jwtTokenService.buildJwt(account.id?: throw NullPointerException("account_id should never be null"))
+                jwtTokenService.buildJwt(account.id?: throw NullPointerException("account_id should never be null")),
+                account.isAdministrator,
+                account.rentedCars
         )
     }
 }

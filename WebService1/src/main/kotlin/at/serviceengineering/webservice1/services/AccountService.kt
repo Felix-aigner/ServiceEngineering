@@ -69,5 +69,17 @@ class AccountService(
         )
     }
 
+    fun createAdministrator(accountCreationDto: AccountCreationDto) {
+        if (usernameAlreadyExists(accountCreationDto.username)) {
+            throw UsernameAlreadyExistsException()
+        }
+
+        val entity = accountMapper.mapToEntityAndHashPassword(accountCreationDto)
+        entity.isAdministrator = true
+        accountRepository.save(entity).also {
+            logger.info("New Account created: $it")
+        }
+    }
+
     private fun usernameAlreadyExists(username: String): Boolean = accountRepository.findAccountByUsername(username) != null
 }
