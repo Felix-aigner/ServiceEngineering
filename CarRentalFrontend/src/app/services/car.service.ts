@@ -14,7 +14,7 @@ export class CarService {
   public resourceUrl = SERVER_API_URL + 'cars';
 
   private readonly commonHttpHeaders;
-  selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.USD);
+  selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
 
   constructor(protected http: HttpClient, private userService: UserService) {
     this.commonHttpHeaders = new HttpHeaders()

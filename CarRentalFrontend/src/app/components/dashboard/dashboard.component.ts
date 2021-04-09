@@ -32,13 +32,16 @@ export class DashboardComponent implements OnInit {
   }
 
   saveSelectedCurrency(): void {
+    console.log(this.carService.selectedCurrency.value);
     this.carService.selectedCurrency.next(this.selectedCurrency.value);
+    console.log(this.carService.selectedCurrency.value);
+    this.carService.query().subscribe((res: HttpResponse<ICar[]>) => (this.cars = res.body || []));
   }
 
 
   openBookingDialog(): void {
     this.dialog.open(ConfirmationDialogComponent, {
-      data: {question: 'Do you want to book this Car?'},
+      data: 'Do you want to book this Car?',
       hasBackdrop: true
     }).afterClosed()
       .subscribe(result => {
@@ -64,7 +67,7 @@ export class DashboardComponent implements OnInit {
 
   openDeleteDialog(car: Car): void {
     this.dialog.open(ConfirmationDialogComponent, {
-      data: {question: 'Do you want to delete this Car?'},
+      data: 'Do you want to delete this Car?',
       hasBackdrop: true
     }).afterClosed()
       .subscribe(result => {

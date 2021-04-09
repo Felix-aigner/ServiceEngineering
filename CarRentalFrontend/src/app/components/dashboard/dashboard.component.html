@@ -1,7 +1,7 @@
 <div>
-  <h2 id="page-heading">
+  <h1 id="page-heading">
     <span>Car Rental</span>
-  </h2>
+  </h1>
 
   <button mat-button (click)="openNewCarDialog()">
     <span>Create a new Car</span>
@@ -23,43 +23,25 @@
   </div>
 
   <div class="table-responsive" id="entities" *ngIf="cars && cars.length > 0">
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
-      <tr>
-        <th scope="col" ><span>ID</span></th>
-        <th scope="col" ><span>Car Type</span></th>
-        <th scope="col" ><span>Brand</span></th>
-        <th scope="col" ><span>Kw Power</span></th>
-        <th scope="col" ><span>Usd Price</span></th>
-        <th scope="col" ><span>Is Rented</span></th>
-        <th scope="col"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let car of cars ;">
-        <td><a [routerLink]="['/car', car.id, 'view']">{{ car.id }}</a></td>
-        <td>{{ car.type }}</td>
-        <td>{{ car.brand }}</td>
-        <td>{{ car.kwPower }}</td>
-        <td>{{ car.usdPrice }}</td>
-        <td>{{ car.isRented }}</td>
-        <td class="text-right">
-          <div class="btn-group">
-            <button mat-button type="submit" class="mat-raised-button" (click)="openBookingDialog()">
-              <span>Book Car</span>
-            </button>
-            <!--            <div *ngIf="userService.currUser.value.isAdministrator">-->
-            <button mat-button class="mat-primary" (click)="openEditDialog(car)">
-              <span class="d-none d-md-inline">Edit</span>
-            </button>
-            <button mat-button class="mat-warn" (click)="openDeleteDialog(car)">
-              <span class="d-none d-md-inline">Delete</span>
-            </button>
-            <!--            </div>-->
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="car-wrapper" *ngFor="let car of cars ;">
+      <h2>{{ car.brand }} {{ car.type }} </h2>
+      <p>Power (KW): {{ car.kwPower }}</p>
+      <p>Price ({{car.currency}}): {{ car.price }}</p>
+      <p *ngIf="car.isRented">this car is currently rented</p>
+      <div class="btn-group">
+        <button mat-button type="submit" class="mat-raised-button" (click)="openBookingDialog()"
+                [disabled]="car.isRented">
+          <span>Book Car</span>
+        </button>
+        <!--            <div *ngIf="userService.currUser.value.isAdministrator">-->
+        <button mat-button class="mat-primary" (click)="openEditDialog(car)">
+          <span class="d-none d-md-inline">Edit</span>
+        </button>
+        <button mat-button class="mat-warn" (click)="openDeleteDialog(car)">
+          <span class="d-none d-md-inline">Delete</span>
+        </button>
+        <!--            </div>-->
+      </div>
+    </div>
   </div>
 </div>
