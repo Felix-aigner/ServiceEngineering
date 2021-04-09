@@ -79,4 +79,5 @@ class CarService(
 
     private fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarNotFoundException()
 
+    fun isCarRepositoryEmpty(): Boolean = carRepository.findAll().isNullOrEmpty()
 }

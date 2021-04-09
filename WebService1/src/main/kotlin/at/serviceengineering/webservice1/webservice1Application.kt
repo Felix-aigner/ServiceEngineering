@@ -25,18 +25,19 @@ class WebService1Application(
 	@EventListener(ApplicationReadyEvent::class)
 	fun fillDatabase() {
 		try {
-			if(carService.findAll(currency = Currency.USD).isEmpty()) {
+			if(carService.isCarRepositoryEmpty()) {
 				logger.info("Fill database with cars")
 				repeat(10) {
+					val price: Double = Random.nextInt(600, 1400).toDouble()
 					carService.addCarToDatabase(
 							Car(
 									id = null,
 									brand = "Audi",
 									type = "A${Random.nextInt(3, 8)}",
 									kwPower = Random.nextInt(120, 250),
-									usdPrice = BigDecimal(Random.nextDouble(500.0, 1000.0)),
+									usdPrice = BigDecimal(price),
 									isRented = false
-							)
+							).also { println(it) }
 					)
 				}
 			}
