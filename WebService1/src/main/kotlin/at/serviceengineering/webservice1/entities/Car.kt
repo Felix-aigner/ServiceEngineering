@@ -1,6 +1,7 @@
 package at.serviceengineering.webservice1.entities
 
 import org.hibernate.annotations.GenericGenerator
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -24,7 +25,7 @@ data class Car(
         var kwPower: Int,
 
         @Column(nullable = false)
-        var usdPrice: Float,
+        var usdPrice: BigDecimal,
 
         @Column(nullable = false)
         var isRented: Boolean

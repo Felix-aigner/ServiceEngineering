@@ -5,7 +5,7 @@ import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
-import at.serviceengineering.webservice1.enums.Currency
+import at.serviceengineering.webservice1.wsdl.Currency
 
 interface ICarService {
 

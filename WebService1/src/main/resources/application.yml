@@ -34,4 +34,4 @@ token:
   expirationTime: ${EXPIRATION_TIME:60}
 
 webservice2:
-  url: ${WEBSERVICE2_URL:http://localhost:6000/ws/currency}
+  url: ${WEBSERVICE2_URL:http://localhost:4000/ws/currency-converter}
