@@ -1,3 +1,9 @@
+
 .wrapper {
+  margin: auto;
+  display: flex;
+  flex: auto;
+  align-self: center;
   align-content: center;
+  align-items: center;
 }

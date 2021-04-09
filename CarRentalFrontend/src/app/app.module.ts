@@ -7,16 +7,26 @@ import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCardModule} from '@angular/material/card';
 import {MatTabsModule} from '@angular/material/tabs';
+import {CreateCarComponent} from './dialogs/create-car/create-car.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {EditCarComponent} from './dialogs/edit-car/edit-car.component';
+import {ConfirmationDialogComponent} from './dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    CreateCarComponent,
+    EditCarComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -26,10 +36,16 @@ import {MatTabsModule} from '@angular/material/tabs';
     ReactiveFormsModule,
     MatDialogModule,
     MatCardModule,
-    MatTabsModule
+    MatTabsModule,
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmationDialogComponent, CreateCarComponent, EditCarComponent]
 })
 export class AppModule {
 }
