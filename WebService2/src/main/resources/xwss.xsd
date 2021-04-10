@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+
+           targetNamespace="http://java.sun.com/xml/ns/xwss/config"
+           xmlns="http://java.sun.com/xml/ns/xwss/config"
+           elementFormDefault="qualified">
+
+    <xs:element name="JAXRPCSecurity">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Service" type="Service_T"/>
+                <xs:element name="SecurityEnvironmentHandler"
+                            type="xs:string"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Service_T">
+        <xs:sequence>
+            <xs:element ref="SecurityConfiguration" minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="Port"
+                        type="Port_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Port_T" mixed="true">
+        <xs:sequence>
+            <xs:element ref="SecurityConfiguration" minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="Operation"
+                        type="Operation_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="Operation_T">
+        <xs:all>
+            <xs:element ref="SecurityConfiguration" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:element name="SecurityConfiguration"
+                type="SecurityConfiguration_T"/>
+
+    <xs:complexType name="SecurityConfiguration_T">
+        <xs:sequence>
+            <xs:group ref="ConfigurationElements"
+                      maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="dumpMessages" type="xs:boolean"
+                      default="false"/>
+    </xs:complexType>
+
+    <xs:group name="ConfigurationElements">
+        <xs:choice>
+            <xs:element name="Timestamp"
+                        type="Timestamp_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="RequireTimestamp"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="UsernameToken"
+                        type="UsernameToken_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="RequireUsernameToken"
+                        type="RequireUsernameToken_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="Sign"
+                        type="Sign_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="Encrypt"
+                        type="Encrypt_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="RequireSignature"
+                        type="RequireSignature_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="RequireEncryption"
+                        type="RequireEncryption_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="OptionalTargets"
+                        type="OptionalTargets_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="Timestamp_T">
+        <xs:attribute name="timeout" type="xs:string" default="300"/>
+    </xs:complexType>
+
+    <xs:complexType name="UsernameToken_T">
+        <xs:attribute name="id" type="id_T" use="optional"/>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+        <xs:attribute name="password" type="xs:string"
+                      use="optional"/>
+        <xs:attribute name="useNonce" type="xs:boolean"
+                      default="true"/>
+        <xs:attribute name="digestPassword" type="xs:boolean"
+                      default="true"/>
+    </xs:complexType>
+
+    <xs:complexType name="RequireUsernameToken_T">
+        <xs:attribute name="nonceRequired" type="xs:boolean"
+                      default="true"/>
+        <xs:attribute name="passwordDigestRequired"
+                      type="xs:boolean" default="true"/>
+    </xs:complexType>
+
+    <xs:complexType name="Sign_T">
+        <xs:sequence>
+            <xs:element name="X509Token"
+                        type="X509Token_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="Target"
+                        type="Target_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="includeTimestamp"
+                      type="xs:boolean" default="true"/>
+    </xs:complexType>
+
+    <xs:complexType name="Encrypt_T">
+        <xs:sequence>
+            <xs:group ref="EncryptionKey_T" minOccurs="0"
+                      maxOccurs="1"/>
+            <xs:element name="Target"
+                        type="Target_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="keyEncryptionAlgorithm"
+                      type="xs:string"
+                      use="optional"
+                      default="RSA_OAEP"/>
+    </xs:complexType>
+
+    <xs:group name="EncryptionKey_T">
+        <xs:choice>
+            <xs:element name="X509Token"
+                        type="X509Token_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+            <xs:element name="SymmetricKey"
+                        type="SymmetricKey_T"
+                        minOccurs="0"
+                        maxOccurs="1"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="SymmetricKey_T">
+        <xs:attribute name="keyAlias" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="RequireSignature_T">
+        <xs:sequence>
+            <xs:element name="Target"
+                        type="Target_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="requireTimestamp"
+                      type="xs:boolean" use="optional" default="true"/>
+    </xs:complexType>
+
+    <xs:complexType name="RequireEncryption_T">
+        <xs:sequence>
+            <xs:element name="Target"
+                        type="Target_T"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OptionalTargets_T">
+        <xs:sequence>
+            <xs:element name="Target"
+                        type="Target_T"
+                        minOccurs="1"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="X509Token_T">
+        <xs:attribute name="id" type="id_T" use="optional"/>
+        <xs:attribute name="certificateAlias"
+                      type="xs:string" use="optional"/>
+        <xs:attribute name="keyReferenceType"
+                      use="optional"
+                      default="Direct">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Direct"/>
+                    <xs:enumeration value="Identifier"/>
+                    <xs:enumeration value="IssuerSerialNumber"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="Target_T">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" use="optional"
+                              default="qname">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="qname"/>
+                            <xs:enumeration value="uri"/>
+                            <xs:enumeration value="xpath"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="contentOnly"
+                              type="xs:boolean"
+                              use="optional"
+                              default="true"/>
+                <xs:attribute name="enforce"
+                              type="xs:boolean"
+                              use="optional"
+                              default="true"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="KeyReferenceType_T">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Direct"/>
+            <xs:enumeration value="Identifier"/>
+            <xs:enumeration value="IssuerSerialNumber"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="id_T">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
