@@ -1,6 +1,7 @@
 package at.serviceengineering.webservice1.entities
 
 
+import com.sun.istack.Nullable
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.GenericGenerator
@@ -30,5 +31,5 @@ data class Rental(
         var isActive: Boolean? = null,
 
         @OneToOne
-        var car: Car
+        var car: Car? = null
 )

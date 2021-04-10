@@ -1,6 +1,8 @@
 package at.serviceengineering.webservice1.mapper;
 
+import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.RentalDTO;
+import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.entities.Rental
 import at.serviceengineering.webservice1.repositories.ICarRepository
 import at.serviceengineering.webservice1.services.CarService
@@ -18,7 +20,7 @@ class RentalMapper( private val carMapper: CarMapper
                 rentalDto.startDate,
                 rentalDto.endDate,
                 rentalDto.isActive,
-                carMapper.mapToCarWithCustomCurrency(rentalDto.car)
+                if(rentalDto.car != null) carMapper.mapToCarWithCustomCurrency(rentalDto.car!!) else null
         )
     }
 
@@ -28,7 +30,7 @@ class RentalMapper( private val carMapper: CarMapper
                 rental.startDate,
                 rental.endDate,
                 rental.isActive,
-                carMapper.mapToCarDtoWithCustomCurrency(rental.car, requestedCurrency = Currency.USD)
+                if(rental.car != null) carMapper.mapToCarDtoWithCustomCurrency(rental.car!!, requestedCurrency = Currency.USD) else null
         )
     }
 }

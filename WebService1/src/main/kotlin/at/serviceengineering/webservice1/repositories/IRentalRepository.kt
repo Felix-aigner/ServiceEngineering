@@ -13,4 +13,5 @@ import java.util.*
 @Repository
 interface IRentalRepository : JpaRepository<Rental, UUID> {
 
+    fun findByCarId(id: UUID): MutableList<Rental>
 }
