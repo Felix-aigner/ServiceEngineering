@@ -147,6 +147,5 @@ class RentalResource(
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
-
     }
 }

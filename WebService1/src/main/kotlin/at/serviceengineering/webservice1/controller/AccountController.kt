@@ -1,17 +1,18 @@
 package at.serviceengineering.webservice1.controller
 
-import at.serviceengineering.webservice1.dtos.AccountCreationDto
-import at.serviceengineering.webservice1.dtos.LoginDto
-import at.serviceengineering.webservice1.dtos.PasswordChangeDto
-import at.serviceengineering.webservice1.dtos.UserDto
+import at.serviceengineering.webservice1.dtos.*
+import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
 import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
 import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsException
 import at.serviceengineering.webservice1.services.IAccountService
 import at.serviceengineering.webservice1.services.JwtTokenService
+import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @RestController
 @RequestMapping("/account")
@@ -19,6 +20,40 @@ class AccountController(
         val accountService: IAccountService,
         val jwtTokenService: JwtTokenService
 ) {
+
+    @GetMapping
+    fun getAllAccounts (@RequestHeader("token") token: String
+    ): ResponseEntity<List<AccountDto>> {
+        return try {
+            jwtTokenService.getAccountFromToken(token)
+            val accountList = accountService.findAll()
+            ResponseEntity.ok().body(accountList)
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+    @GetMapping("/{id}")
+    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: UUID): ResponseEntity<CarDto> {
+        return try {
+            jwtTokenService.getAccountFromToken(token)
+            val accountDto = accountServiceService.findOne(id)
+            ResponseEntity.ok().body(accountDto)
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
 
     @PostMapping
     fun createAccount(@RequestBody accountCreation: AccountCreationDto): ResponseEntity<*> {
@@ -47,14 +82,13 @@ class AccountController(
         }
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/{id}")
     fun deleteAccount(
             @RequestHeader("token") token: String,
-            @RequestBody userDto: UserDto
-    ): ResponseEntity<*> {
+            @PathVariable id: UUID): ResponseEntity<*> {
         return try {
-            jwtTokenService.validateUserToken(token, userDto.username)
-            accountService.deleteAccount(userDto)
+            jwtTokenService.getAccountFromToken(token)
+            accountService.deleteAccount(id)
             ResponseEntity.ok().body("")
 
         } catch (e: TokenNotValidException) {
@@ -64,7 +98,7 @@ class AccountController(
         }
     }
 
-    @PostMapping("/password")
+    @PostMapping("/change-password")
     fun changePassword(
             @RequestHeader("token") token: String,
             @RequestBody passwordChangeDto: PasswordChangeDto

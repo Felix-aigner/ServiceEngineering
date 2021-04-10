@@ -1,9 +1,8 @@
 package at.serviceengineering.webservice1
 
-import at.serviceengineering.webservice1.controller.AccountController
 import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
-import at.serviceengineering.webservice1.dtos.UserDto
+import at.serviceengineering.webservice1.dtos.AccountDto
 import net.bytebuddy.utility.RandomString
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -58,8 +57,8 @@ class AccountIntegrationTests(
                 password = newAccount.password
         )
 
-        val entity2 = restTemplate.postForEntity(URI("/account/login"), login, UserDto::class.java)
-        val response: UserDto? = entity2.body
+        val entity2 = restTemplate.postForEntity(URI("/account/login"), login, AccountDto::class.java)
+        val response: AccountDto? = entity2.body
         assertThat(entity2.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response?.token).isNotEmpty()
     }

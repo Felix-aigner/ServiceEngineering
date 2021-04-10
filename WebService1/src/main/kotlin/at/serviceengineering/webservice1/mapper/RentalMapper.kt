@@ -3,6 +3,7 @@ package at.serviceengineering.webservice1.mapper;
 import at.serviceengineering.webservice1.dtos.RentalDTO;
 import at.serviceengineering.webservice1.entities.Rental
 import org.springframework.stereotype.Service;
+import java.lang.NullPointerException
 
 @Service
 class RentalMapper(
@@ -14,7 +15,7 @@ class RentalMapper(
                 id = null,
                 rentalDto.startDate,
                 rentalDto.endDate,
-                rentalDto.car
+                rentalDto.car?: throw NullPointerException()
         )
     }
 

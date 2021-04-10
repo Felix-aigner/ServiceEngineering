@@ -27,8 +27,4 @@ data class Car(
         @Column(nullable = false)
         var isRented: Boolean,
 
-        @OneToOne
-        @JoinColumn(unique = true)
-        var rental: Rental? = null
-
 )

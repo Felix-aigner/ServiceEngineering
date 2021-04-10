@@ -28,6 +28,5 @@ data class Rental(
         var endDate: String? = null,
 
         @OneToOne(mappedBy = "rental")
-        @JsonIgnore
-        var car: Car? = null
+        var car: Car
 )

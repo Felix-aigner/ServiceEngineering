@@ -3,6 +3,7 @@ package at.serviceengineering.webservice1.services
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
+import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.exceptions.CarAlreadyRentedException
@@ -13,6 +14,7 @@ import at.serviceengineering.webservice1.repositories.IAccountRepository
 import at.serviceengineering.webservice1.repositories.ICarRepository
 import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
@@ -25,6 +27,10 @@ class CarService(
 
     override fun findAll(currency: Currency): List<CarDto> = carRepository.findAll().map{
         car: Car ->  carMapper.mapToCarDtoWithCustomCurrency(car, currency)
+    }
+
+    override fun findOne(id: UUID, currency: Currency): CarDto {
+        return carRepository.findById(id).map{ car: Car -> carMapper.mapToCarDtoWithCustomCurrency(car, currency)}.get()
     }
 
     override fun bookCar(account: Account, request: CarReservationUpdateDto) {
@@ -75,6 +81,10 @@ class CarService(
         car.isRented = newCar.isRented
         car.kwPower = newCar.kwPower
         carRepository.save(car)
+    }
+
+    override fun deleteCar(id: UUID): Unit {
+        carRepository.deleteById(id)
     }
 
     private fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarNotFoundException()
