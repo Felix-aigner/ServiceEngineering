@@ -90,7 +90,14 @@ export class CarService {
   }
 
   bookCar(rental: IRental): void {
-    this.http.post<IRental>(this.carURL + '/book', rental, {
+    console.log(rental);
+    this.http.post<IRental>(this.rentalURL, {
+      id: rental.id,
+      startDate: rental.startDate,
+      endDate: rental.endDate,
+      isActive: rental.isActive,
+      carId: rental.car.id
+    }, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -104,7 +111,7 @@ export class CarService {
   }
 
   releaseCar(rental: IRental): void {
-    this.http.post<IRental>(this.carURL + '/return', rental, {
+    this.http.put<IRental>(`${this.rentalURL} + ${rental.id}`, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
