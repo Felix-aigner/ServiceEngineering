@@ -3,6 +3,7 @@ package at.serviceengineering.webservice1.controller
 import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
+import at.serviceengineering.webservice1.mapper.RentalMapper
 import at.serviceengineering.webservice1.services.JwtTokenService
 import at.serviceengineering.webservice1.services.RentalService
 
@@ -22,8 +23,9 @@ private const val ENTITY_NAME = "rental"
  */
 @RestController
 @RequestMapping("/rentals")
-class RentalResource(
+class RentalController(
         private val jwtTokenService: JwtTokenService,
+        private val rentalMapper: RentalMapper,
         private val rentalService: RentalService
 ) {
 
@@ -85,13 +87,35 @@ class RentalResource(
      * @param filter the filter of the request.
      * @return the [ResponseEntity] with status `200 (OK)` and the list of rentals in body.
      */
-    @GetMapping("/list")
+    @GetMapping
     fun getAllRentals(@RequestHeader("token") token: String, @RequestParam(required = false) filter: String?): MutableList<RentalDTO> {
         log.debug("REST request to get all Rentals")
         return try {
             jwtTokenService.getAccountFromToken(token)
             rentalService.findAll()
 
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+    /**
+     * `GET  /rentals` : get all the rentals.
+     *
+
+     * @param filter the filter of the request.
+     * @return the [ResponseEntity] with status `200 (OK)` and the list of rentals in body.
+     */
+    @GetMapping("/my-rentals")
+    fun getUserRentals(@RequestHeader("token") token: String): List<RentalDTO> {
+        log.debug("REST request to get all Rentals")
+        return try {
+            val account = jwtTokenService.getAccountFromToken(token)
+            account.rentals?.map { rental -> rentalMapper.toDto(rental)}?: listOf()
         } catch (e: TokenNotValidException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: AccountNotFoundException) {

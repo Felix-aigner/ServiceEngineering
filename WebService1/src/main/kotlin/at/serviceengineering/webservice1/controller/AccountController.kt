@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 class AccountController(
         val accountService: IAccountService,
         val jwtTokenService: JwtTokenService
@@ -39,10 +39,10 @@ class AccountController(
     }
 
     @GetMapping("/{id}")
-    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: UUID): ResponseEntity<CarDto> {
+    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: UUID): ResponseEntity<AccountDto> {
         return try {
             jwtTokenService.getAccountFromToken(token)
-            val accountDto = accountServiceService.findOne(id)
+            val accountDto = accountService.findOne(id)
             ResponseEntity.ok().body(accountDto)
 
         } catch (e: TokenNotValidException) {
@@ -98,7 +98,7 @@ class AccountController(
         }
     }
 
-    @PostMapping("/change-password")
+    @PutMapping("/change-password")
     fun changePassword(
             @RequestHeader("token") token: String,
             @RequestBody passwordChangeDto: PasswordChangeDto
