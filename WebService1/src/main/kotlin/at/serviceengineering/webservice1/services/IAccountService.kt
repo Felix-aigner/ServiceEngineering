@@ -3,8 +3,9 @@ package at.serviceengineering.webservice1.services
 import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
 import at.serviceengineering.webservice1.dtos.PasswordChangeDto
-import at.serviceengineering.webservice1.dtos.UserDto
+import at.serviceengineering.webservice1.dtos.AccountDto
 import at.serviceengineering.webservice1.entities.Account
+import java.util.*
 
 interface IAccountService {
 
@@ -14,9 +15,11 @@ interface IAccountService {
 
     fun createAccount(accountCreationDto: AccountCreationDto)
 
-    fun deleteAccount(userDto: UserDto)
+    fun deleteAccount(id: UUID)
 
-    fun findAll(): List<Account>
+    fun findAll(): List<AccountDto>
 
-    fun getUserDtoByUsername(username: String): UserDto
+    fun findOne(id : UUID): AccountDto
+
+    fun getUserDtoByUsername(username: String): AccountDto
 }

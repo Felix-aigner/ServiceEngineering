@@ -27,6 +27,7 @@ data class Account (
     @Column(nullable = false)
     var isAdministrator: Boolean,
 
-    @ElementCollection
-    var rentedCars: MutableList<UUID>? = null
+    @OneToMany
+    var rentals: MutableList<Rental>? = null
+
 )

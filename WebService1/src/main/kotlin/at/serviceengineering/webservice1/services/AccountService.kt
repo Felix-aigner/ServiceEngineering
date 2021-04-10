@@ -1,18 +1,18 @@
 package at.serviceengineering.webservice1.services
 
-import at.serviceengineering.webservice1.dtos.AccountCreationDto
-import at.serviceengineering.webservice1.dtos.LoginDto
-import at.serviceengineering.webservice1.dtos.PasswordChangeDto
-import at.serviceengineering.webservice1.dtos.UserDto
+import at.serviceengineering.webservice1.dtos.*
 import at.serviceengineering.webservice1.entities.Account
+import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsException
 import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsException
 import at.serviceengineering.webservice1.mapper.AccountMapper
 import at.serviceengineering.webservice1.repositories.IAccountRepository
 import at.serviceengineering.webservice1.utils.HashUtil.hash
+import at.serviceengineering.webservice1.wsdl.Currency
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class AccountService(
@@ -55,15 +55,19 @@ class AccountService(
         }
     }
 
-    override fun deleteAccount(userDto: UserDto) {
-        accountRepository.deleteAccountByUsername(userDto.username).also {
-            logger.info("Deleted Account with Username: ${userDto.username}")
+    override fun deleteAccount(id: UUID) {
+        accountRepository.deleteById(id).also {
+            logger.info("Deleted Account with UserId: ${id}")
         }
     }
 
-    override fun findAll(): List<Account> = accountRepository.findAll()
+    override fun findAll(): List<AccountDto> = accountRepository.findAll().map{ account -> accountMapper.toDto(account)}
 
-    override fun getUserDtoByUsername(username: String): UserDto {
+    override fun findOne(id: UUID): AccountDto {
+        return accountRepository.findById(id).map{ account: Account -> accountMapper.toDto(account)}.get()
+    }
+
+    override fun getUserDtoByUsername(username: String): AccountDto {
         return accountMapper.mapToDtoAndGenerateJwt(
                 accountRepository.findAccountByUsername(username) ?: throw NullPointerException()
         )

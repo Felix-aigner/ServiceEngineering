@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2>Create or edit a Car</h2>
+
+      <div>
+
+        <div class="form-group" [hidden]="!editForm.get('id')!.value">
+          <label for="id">ID</label>
+          <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly/>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <mat-label class="form-control-label" for="field_type">Car Type</mat-label>
+            <input matInput type="text" class="form-control" name="type" id="field_type"
+                   formControlName="type"/>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <mat-label class="form-control-label" for="field_brand">Brand</mat-label>
+            <input matInput type="text" class="form-control" name="brand" id="field_brand"
+                   formControlName="brand"/>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <mat-label class="form-control-label" for="field_kwPower">Kw Power</mat-label>
+            <input matInput type="number" class="form-control" name="kwPower" id="field_kwPower"
+                   formControlName="kwPower"/>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <mat-label class="form-control-label" for="field_usdPrice">Usd Price</mat-label>
+            <input matInput type="number" class="form-control" name="usdPrice" id="field_usdPrice"
+                   formControlName="price"/>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Currency</mat-label>
+          <mat-select formControlName="currency">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button mat-button type="submit" id="save-entity" [disabled]="editForm.invalid" class="mat-raised-button">
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
