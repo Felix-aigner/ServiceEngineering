@@ -5,6 +5,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {IsLoggedInGuardService} from './services/login-guard.service';
 import {MyCarsComponent} from './components/my-cars/my-cars.component';
 import {ContactComponent} from './components/contact/contact.component';
+import {RentalsComponent} from './components/rentals/rentals.component';
 
 const appRoutes: Routes = [
   {
@@ -26,6 +27,11 @@ const appRoutes: Routes = [
   {
     path: 'contact',
     component: ContactComponent,
+    canActivate: [IsLoggedInGuardService]
+  },
+  {
+    path: 'rentals',
+    component: RentalsComponent,
     canActivate: [IsLoggedInGuardService]
   },
 ];

@@ -1,9 +1,7 @@
 package at.serviceengineering.webservice1
 
 import at.serviceengineering.webservice1.dtos.AccountCreationDto
-import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.entities.Car
-import at.serviceengineering.webservice1.entities.Rental
 import at.serviceengineering.webservice1.services.AccountService
 import at.serviceengineering.webservice1.services.CarService
 import at.serviceengineering.webservice1.services.RentalService
@@ -21,8 +19,7 @@ import kotlin.random.Random
 @SpringBootApplication
 class WebService1Application(
         private val carService: CarService,
-        private val accountService: AccountService,
-        private val rentalService: RentalService
+        private val accountService: AccountService
 ) {
     val logger: Logger = LoggerFactory.getLogger(WebService1Application::class.java)
 
@@ -62,22 +59,6 @@ class WebService1Application(
             }
         } catch (e: Exception) {
             logger.warn("Initial car import failed")
-        }
-        try {
-            if (rentalService.findAll().isEmpty()) {
-                logger.info("Add Rentals")
-                rentalService.save(
-                        RentalDTO(
-                                id = null,
-                                startDate = null,
-                                endDate = null,
-                                carId = UUID.randomUUID()
-                        ).also { println(it) }
-                )
-
-            }
-        } catch (e: Exception) {
-            logger.warn("Initial rental import failed")
         }
     }
 }

@@ -1,33 +1,37 @@
 <app-header></app-header>
 
 <div *ngIf="myRentals|async as rentals">
-  <h2>These are your active Rentals</h2>
-  <div *ngFor="let rented of rentals">
-    <div *ngIf="rented.isActive">
-      <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
-      <p>Power (KW): {{ rented.car.kwPower }}</p>
-      <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
-      <p>Rental started: {{rented.startDate}}</p>
-      <p>Rental will end: {{rented.endDate}}</p>
-      <div class="btn-group">
-        <button mat-raised-button (click)="releaseCar(rented)">
-          release car
-        </button>
+  <div class="list-wrapper">
+    <h2>These are your active Rentals</h2>
+    <div *ngFor="let rented of rentals">
+      <div *ngIf="rented.isActive" class="car-wrapper">
+        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+        <p>Power (KW): {{ rented.car.kwPower }}</p>
+        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+        <p>Rental started: {{rented.startDate}}</p>
+        <p>Rental will end: {{rented.endDate}}</p>
+        <div class="btn-group">
+          <button mat-raised-button (click)="releaseCar(rented)">
+            release car
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <h2>These are your post Rentals</h2>
-  <div *ngFor="let rented of rentals">
-    <div *ngIf="!rented.isActive">
-      <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
-      <p>Power (KW): {{ rented.car.kwPower }}</p>
-      <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
-      <p>Rental started: {{rented.startDate}}</p>
-      <p>Rental will end: {{rented.endDate}}</p>
-      <div class="btn-group">
-        <button mat-raised-button (click)="releaseCar(rented)">
-          release car
-        </button>
+  <div class="list-wrapper">
+    <h2>These are your post Rentals</h2>
+    <div *ngFor="let rented of rentals" class="list-wrapper">
+      <div *ngIf="!rented.isActive" class="car-wrapper">
+        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+        <p>Power (KW): {{ rented.car.kwPower }}</p>
+        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+        <p>Rental started: {{rented.startDate}}</p>
+        <p>Rental will end: {{rented.endDate}}</p>
+        <div class="btn-group">
+          <button mat-raised-button (click)="releaseCar(rented)">
+            release car
+          </button>
+        </div>
       </div>
     </div>
   </div>

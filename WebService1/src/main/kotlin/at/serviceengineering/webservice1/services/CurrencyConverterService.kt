@@ -11,9 +11,9 @@ class CurrencyConverterService(
         val currencyClient: CurrencyClient
 ) {
 
-    fun convertCurrency(value: BigDecimal, expectedCurrency: Currency): BigDecimal {
+    fun convertCurrency(value: BigDecimal, startCurrency: Currency , expectedCurrency: Currency): BigDecimal {
         try {
-            val response = currencyClient.getRate(value, expectedCurrency)
+            val response = currencyClient.getRate(value, startCurrency,  expectedCurrency)
             return response.currencyConversion.targetValue
         } catch (e: Exception) {
             throw SoapCallException()

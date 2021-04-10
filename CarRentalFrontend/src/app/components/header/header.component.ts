@@ -17,7 +17,6 @@ export class HeaderComponent implements OnInit {
   constructor(private carService: CarService) {
     this.currencies = Object.keys(this.currencyEnum).filter(k => !isNaN(Number(k)));
     this.carService.selectedCurrency.subscribe(data => this.selectedCurrency.patchValue(data));
-    console.log(this.selectedCurrency.value);
   }
 
   ngOnInit(): void {

@@ -17,7 +17,7 @@ class CarMapper(
         var currency = requestedCurrency
         var price: BigDecimal
         try {
-            price = currencyConverterService.convertCurrency(car.usdPrice, currency)
+            price = currencyConverterService.convertCurrency(car.usdPrice, Currency.USD , currency)
         } catch (e: SoapCallException) {
             currency = Currency.USD
             price = car.usdPrice
@@ -31,6 +31,18 @@ class CarMapper(
                 currency = currency,
                 isRented = car.isRented,
                 price = price
+        )
+    }
+
+    fun mapToCarWithCustomCurrency(car: CarDto): Car {
+        val price = currencyConverterService.convertCurrency(car.price, car.currency, Currency.USD)
+        return Car(
+                id = car.id,
+                type = car.type,
+                brand = car.brand,
+                kwPower = car.kwPower,
+                isRented = car.isRented,
+                usdPrice = price
         )
     }
 }

@@ -1,5 +1,6 @@
 package at.serviceengineering.webservice1.services
 import at.serviceengineering.webservice1.dtos.RentalDTO
+import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.entities.Rental
 import at.serviceengineering.webservice1.mapper.RentalMapper
 import at.serviceengineering.webservice1.repositories.IRentalRepository
@@ -51,6 +52,12 @@ class RentalService(
     fun saveEntity(rental: Rental): Rental {
         log.debug("Request to get Rental : $rental")
         return rentalRepository.save(rental)
+    }
+
+    @Transactional
+    fun findAllByCarId(id: UUID): MutableList<Rental> {
+        log.debug("Request to get all Rentals")
+        return rentalRepository.findByCarId(id)
     }
 
 

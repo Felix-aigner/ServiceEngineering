@@ -1,5 +1,6 @@
 import {ICar} from './car.model';
 
+
 export interface IRental {
   id?: number;
   startDate?: string;

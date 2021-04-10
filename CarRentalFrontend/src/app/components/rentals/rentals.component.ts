@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CarService} from '../../services/car.service';
 import {IRental} from '../../models/rental.model';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-rentals',
@@ -11,7 +12,7 @@ export class RentalsComponent implements OnInit {
 
   allrentals = this.carService.allRentals;
 
-  constructor(private carService: CarService) {
+  constructor(private carService: CarService, private userService: UserService) {
     this.carService.queryAllRentals();
   }
 
