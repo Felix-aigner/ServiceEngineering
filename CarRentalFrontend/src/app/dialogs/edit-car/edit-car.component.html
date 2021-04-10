@@ -35,13 +35,6 @@
                    formControlName="price"/>
           </mat-form-field>
         </div>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Currency</mat-label>
-          <mat-select formControlName="currency">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
 
       <div>

@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs';
 import {CreateCarComponent} from '../../dialogs/create-car/create-car.component';
 import {EditCarComponent} from '../../dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
+import {BookingConfirmationComponent} from "../../dialogs/booking-confirmation/booking-confirmation.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -41,17 +42,11 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openBookingDialog(carId: number): void {
-    this.dialog.open(ConfirmationDialogComponent, {
-      data: 'Do you want to book this Car?',
+  openBookingDialog(car: ICar): void {
+    this.dialog.open(BookingConfirmationComponent, {
+      data: car,
       hasBackdrop: true
-    }).afterClosed()
-      .subscribe(result => {
-        this.confirmedBooking.next(result);
-        if (this.confirmedBooking.value) {
-          this.carService.bookCar(carId);
-        }
-      });
+    });
   }
 
   openDeleteDialog(carId: number): void {
@@ -62,7 +57,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(result => {
         this.confirmedDelete.next(result);
         if (this.confirmedDelete.value) {
-          // delete car
+          this.carService.delete(carId);
         }
       });
   }

@@ -11,7 +11,7 @@
       <p>Price ({{car.currency}}): {{ car.price }}</p>
       <p *ngIf="car.isRented">this car is currently rented</p>
       <div class="btn-group">
-        <button mat-button type="submit" class="mat-raised-button" (click)="openBookingDialog(car.id)"
+        <button mat-button type="submit" class="mat-raised-button" (click)="openBookingDialog(car)"
                 [disabled]="car.isRented">
           <span>Book Car</span>
         </button>

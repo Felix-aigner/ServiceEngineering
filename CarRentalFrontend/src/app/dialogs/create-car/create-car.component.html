@@ -36,18 +36,11 @@
 
         <div class="form-group">
           <mat-form-field>
-            <mat-label class="form-control-label" for="field_usdPrice">Usd Price</mat-label>
-            <input matInput type="number" class="form-control" name="usdPrice" id="field_usdPrice"
+            <mat-label class="form-control-label" for="field_price">UsD Price</mat-label>
+            <input matInput type="number" class="form-control" name="price" id="field_price"
                    formControlName="price"/>
           </mat-form-field>
         </div>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Currency</mat-label>
-          <mat-select formControlName="currency">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
 
       <div>

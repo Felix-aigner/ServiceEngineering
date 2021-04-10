@@ -5,20 +5,26 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {SERVER_API_URL} from '../app.constants';
 import {CurrencyEnum, ICar} from '../models/car.model';
 import {UserService} from './user.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
+import {IRental} from '../models/rental.model';
 
 type EntityResponseType = HttpResponse<ICar>;
-type EntityArrayResponseType = HttpResponse<ICar[]>;
 
 @Injectable({providedIn: 'root'})
 export class CarService {
-  public resourceUrl = SERVER_API_URL + 'cars';
+  public carURL = SERVER_API_URL + 'cars';
+  public rentalURL = SERVER_API_URL + 'rentals';
 
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
 
   public loadedCars = new BehaviorSubject<ICar[]>([]);
 
-  constructor(protected http: HttpClient, private userService: UserService) {
+  public myRentals = new BehaviorSubject<IRental[]>([]);
+  public allRentals = new BehaviorSubject<IRental[]>([]);
+
+  constructor(protected http: HttpClient, private userService: UserService, private dialog: MatDialog) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
@@ -26,7 +32,14 @@ export class CarService {
 
   save(car: ICar): Observable<EntityResponseType> {
     console.log(car);
-    return this.http.post<ICar>(this.resourceUrl + '/add', car, {
+    return this.http.post<ICar>(this.carURL + '/add', {
+      id: car.id,
+      type: car.type,
+      brand: car.brand,
+      kwPower: car.kwPower,
+      usdPrice: car.price,
+      isRented: car.isRented
+    }, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -35,7 +48,14 @@ export class CarService {
 
   update(car: ICar): Observable<EntityResponseType> {
     console.log(car);
-    return this.http.post<ICar>(this.resourceUrl + '/change', car, {
+    return this.http.post<ICar>(this.carURL + '/change', {
+      id: car.id,
+      type: car.type,
+      brand: car.brand,
+      kwPower: car.kwPower,
+      usdPrice: car.price,
+      isRented: car.isRented
+    }, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -43,25 +63,77 @@ export class CarService {
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<ICar>(`${this.resourceUrl}/${id}`, {observe: 'response'});
+    return this.http.get<ICar>(`${this.carURL}/${id}`, {observe: 'response'});
   }
 
-  // add selected currency to request parameters
   query(): void {
-    this.http.get<ICar[]>(this.resourceUrl + '/list?cy=' + CurrencyEnum[this.selectedCurrency.value], {
+    this.http.get<ICar[]>(this.carURL + '/list?cy=' + CurrencyEnum[this.selectedCurrency.value], {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
     }).subscribe(response => {
+      if (response.status === 503) {
+        this.dialog.open(ErrorDialogComponent, {
+          hasBackdrop: true
+        });
+      }
       this.loadedCars.next(response.body);
     });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, {observe: 'response'});
+    return this.http.delete(`${this.carURL}/${id}`, {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    });
   }
 
-  bookCar(carId: number) {
+  bookCar(rental: IRental): void {
+    this.http.post<IRental>(this.carURL + '/book', rental, {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe(() => {
+        this.queryMyRentals();
+        if (this.userService.currUser.value.isAdministrator) {
+          this.queryAllRentals();
+        }
+      }
+    );
+  }
 
+  releaseCar(rental: IRental): void {
+    this.http.post<IRental>(this.carURL + '/return', rental, {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe(() => {
+        this.queryMyRentals();
+        if (this.userService.currUser.value.isAdministrator) {
+          this.queryAllRentals();
+        }
+      }
+    );
+  }
+
+  queryMyRentals(): void {
+    this.http.get<IRental[]>(this.rentalURL + '/my-rentals', {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe(response => {
+      this.myRentals.next(response.body);
+    });
+  }
+
+  queryAllRentals(): void {
+    this.http.get<IRental[]>(this.rentalURL, {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe(response => {
+      this.allRentals.next(response.body);
+    });
   }
 }

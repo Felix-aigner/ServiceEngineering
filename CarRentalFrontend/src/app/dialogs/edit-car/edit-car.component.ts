@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Car, CurrencyEnum, ICar} from '../../models/car.model';
+import {Car, ICar} from '../../models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {CarService} from '../../services/car.service';
@@ -18,19 +18,13 @@ export class EditCarComponent implements OnInit, OnDestroy {
     brand: [],
     kwPower: [],
     price: [],
-    currency: [],
     isRented: [],
   });
-  currencyEnum = CurrencyEnum;
-  currencies;
 
   private unsubscribe$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Car, private carService: CarService, private fb: FormBuilder) {
-    this.currencies = Object.keys(this.currencyEnum).filter(k => !isNaN(Number(k)));
     this.updateForm(data);
-    console.log(data.currency);
-    console.log(data.price);
   }
 
   ngOnInit(): void {
@@ -43,7 +37,6 @@ export class EditCarComponent implements OnInit, OnDestroy {
       brand: car.brand,
       kwPower: car.kwPower,
       price: car.price,
-      currency: car.currency,
       isRented: car.isRented,
     });
   }
@@ -61,7 +54,6 @@ export class EditCarComponent implements OnInit, OnDestroy {
       brand: this.editForm.get(['brand'])!.value,
       kwPower: this.editForm.get(['kwPower'])!.value,
       price: this.editForm.get(['price'])!.value,
-      currency: this.editForm.get(['currency'])!.value,
       isRented: this.editForm.get(['isRented'])!.value,
     };
   }

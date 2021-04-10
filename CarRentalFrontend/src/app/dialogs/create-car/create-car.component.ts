@@ -3,7 +3,7 @@ import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
 import {Car, CurrencyEnum, ICar} from '../../models/car.model';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Subject} from "rxjs";
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-create-car',
@@ -18,7 +18,6 @@ export class CreateCarComponent implements OnInit, OnDestroy {
     brand: [],
     kwPower: [],
     price: [],
-    currency: [],
     isRented: [],
   });
 
@@ -28,7 +27,6 @@ export class CreateCarComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder) {
-    this.currencies = Object.keys(this.currencyEnum).filter(k => !isNaN(Number(k)));
   }
 
   ngOnInit(): void {
@@ -36,7 +34,7 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.save(car);
+    this.carService.save(car).subscribe();
   }
 
   private createFromForm(): ICar {
@@ -47,7 +45,6 @@ export class CreateCarComponent implements OnInit, OnDestroy {
       brand: this.editForm.get(['brand'])!.value,
       kwPower: this.editForm.get(['kwPower'])!.value,
       price: this.editForm.get(['price'])!.value,
-      currency: this.editForm.get(['currency'])!.value,
       isRented: this.editForm.get(['isRented'])!.value,
     };
   }

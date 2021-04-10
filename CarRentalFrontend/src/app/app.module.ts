@@ -20,6 +20,13 @@ import {EditCarComponent} from './dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from './dialogs/confirmation-dialog/confirmation-dialog.component';
 import {MyCarsComponent} from './components/my-cars/my-cars.component';
 import {HeaderComponent} from './components/header/header.component';
+import {ErrorDialogComponent} from './dialogs/error-dialog/error-dialog.component';
+import {ContactComponent} from './components/contact/contact.component';
+import {GoogleMapsModule} from '@angular/google-maps';
+import {RentalsComponent} from './components/rentals/rentals.component';
+import {BookingConfirmationComponent} from './dialogs/booking-confirmation/booking-confirmation.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -30,7 +37,11 @@ import {HeaderComponent} from './components/header/header.component';
     EditCarComponent,
     ConfirmationDialogComponent,
     MyCarsComponent,
-    HeaderComponent
+    HeaderComponent,
+    ErrorDialogComponent,
+    ContactComponent,
+    RentalsComponent,
+    BookingConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -45,11 +56,14 @@ import {HeaderComponent} from './components/header/header.component';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    GoogleMapsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmationDialogComponent, CreateCarComponent, EditCarComponent]
+  entryComponents: [ConfirmationDialogComponent, CreateCarComponent, EditCarComponent, ErrorDialogComponent, BookingConfirmationComponent]
 })
 export class AppModule {
 }
