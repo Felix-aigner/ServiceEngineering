@@ -3,6 +3,7 @@ package at.serviceengineering.webservice1.controller
 import at.serviceengineering.webservice1.dtos.CarDto
 import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
+import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.exceptions.*
 import at.serviceengineering.webservice1.services.ICarService
@@ -60,50 +61,6 @@ class CarController(
         }
     }
 
-    @PutMapping("/book")
-    fun bookCar(@RequestHeader("token") token: String,
-                @RequestBody request: CarReservationUpdateDto
-    ): ResponseEntity<*> {
-        return try {
-            val account = jwtTokenService.getAccountFromToken(token)
-            carService.bookCar(account, request)
-            ResponseEntity.ok().body("")
-
-        } catch (e: TokenNotValidException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: AccountNotFoundException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: CarNotFoundException) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
-        } catch (e: CarAlreadyRentedException) {
-            throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
-        }
-    }
-
-    @PutMapping("/return")
-    fun returnCar(@RequestHeader("token") token: String,
-                @RequestBody request: CarReservationUpdateDto
-    ): ResponseEntity<*> {
-        return try {
-            val account = jwtTokenService.getAccountFromToken(token)
-            carService.returnCar(account, request)
-            ResponseEntity.ok().body("")
-
-        } catch (e: TokenNotValidException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: AccountNotFoundException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: CarNotFoundException) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
-        } catch (e: InvalidCarStatusManipulationException) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
-        }
-    }
-
     @PostMapping
     fun addCar(@RequestHeader("token") token: String,
                 @RequestBody car: Car
@@ -151,7 +108,7 @@ class CarController(
      * @return the [ResponseEntity] with status `204 (NO_CONTENT)`.
      */
     @DeleteMapping("/{id}")
-    fun deleteRental(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<Void> {
+    fun deleteCar(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<Void> {
         log.debug("REST request to delete Car : $id")
 
         return try {

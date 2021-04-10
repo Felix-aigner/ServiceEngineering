@@ -27,6 +27,9 @@ data class Rental(
         @Column
         var endDate: String? = null,
 
-        @OneToOne(mappedBy = "rental")
-        var car: Car
+        @Column
+        var isActive: Boolean? = null,
+
+        @Column
+        var carId: UUID
 )

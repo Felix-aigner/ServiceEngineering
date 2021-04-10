@@ -1,5 +1,6 @@
 package at.serviceengineering.webservice1.services
 import at.serviceengineering.webservice1.dtos.RentalDTO
+import at.serviceengineering.webservice1.entities.Rental
 import at.serviceengineering.webservice1.mapper.RentalMapper
 import at.serviceengineering.webservice1.repositories.IRentalRepository
 import org.slf4j.LoggerFactory
@@ -18,12 +19,12 @@ class RentalService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    fun save(rentalDTO: RentalDTO): RentalDTO {
+    @Transactional
+    fun save(rentalDTO: RentalDTO): Rental {
         log.debug("Request to save Rental : $rentalDTO")
 
-        var rental = rentalMapper.toEntity(rentalDTO)
-        rental = rentalRepository.save(rental)
-        return rentalMapper.toDto(rental)
+        val rental = rentalMapper.toEntity(rentalDTO)
+        return rentalRepository.save(rental)
     }
 
     @Transactional(readOnly = true)
@@ -38,6 +39,18 @@ class RentalService(
         log.debug("Request to get Rental : $id")
         return rentalRepository.findById(id)
             .map(rentalMapper::toDto)
+    }
+
+    @Transactional(readOnly = true)
+    fun findOneEntity(id: UUID): Rental {
+        log.debug("Request to get Rental : $id")
+        return rentalRepository.findById(id).get()
+    }
+
+    @Transactional(readOnly = true)
+    fun saveEntity(rental: Rental): Rental {
+        log.debug("Request to get Rental : $rental")
+        return rentalRepository.save(rental)
     }
 
 

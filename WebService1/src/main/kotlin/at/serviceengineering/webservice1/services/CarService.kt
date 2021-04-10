@@ -1,7 +1,6 @@
 package at.serviceengineering.webservice1.services
 
 import at.serviceengineering.webservice1.dtos.CarDto
-import at.serviceengineering.webservice1.dtos.CarReservationUpdateDto
 import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
 import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.entities.Account
@@ -14,7 +13,6 @@ import at.serviceengineering.webservice1.repositories.IAccountRepository
 import at.serviceengineering.webservice1.repositories.ICarRepository
 import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
@@ -22,7 +20,8 @@ import java.util.*
 class CarService(
         private val carRepository: ICarRepository,
         private val accountRepository: IAccountRepository,
-        private val carMapper: CarMapper
+        private val carMapper: CarMapper,
+        private val rentalService: RentalService
 ): ICarService {
 
     override fun findAll(currency: Currency): List<CarDto> = carRepository.findAll().map{
@@ -33,37 +32,48 @@ class CarService(
         return carRepository.findById(id).map{ car: Car -> carMapper.mapToCarDtoWithCustomCurrency(car, currency)}.get()
     }
 
-    override fun bookCar(account: Account, request: CarReservationUpdateDto) {
-        val car = getCar(request.id)
+    override fun bookCar(account: Account, request: RentalDTO) {
+        val car = getCar(request.carId)
         if(car.isRented)
             throw CarAlreadyRentedException()
-
         car.isRented = true
-        account.rentedCars?.add(car.id?: throw NullPointerException())
-        accountRepository.save(account)
+
+        val rental = rentalService.save(request)
+        account.rentals?.add(rental)
 
         try {
             carRepository.save(car)
+            accountRepository.save(account)
         } catch (e: Exception) {
-            account.rentedCars?.remove(car.id?: throw NullPointerException())
+            account.rentals?.remove(request)
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }
     }
 
-    override fun returnCar(account: Account, request: CarReservationUpdateDto) {
-        if(account.rentedCars?.contains(UUID.fromString(request.id)) == false)
+    override fun returnCar(account: Account, rentalId: UUID) {
+        val rental = rentalService.findOneEntity(rentalId)
+
+        if (rental.isActive == false)
+            throw InvalidCarStatusManipulationException()
+        if(account.rentals?.map { accountRental -> accountRental.id }?.contains(rental.id) == false)
             throw InvalidCarStatusManipulationException()
 
-        val car = getCar(request.id)
-        account.rentedCars?.remove(car.id?: throw NullPointerException())
+        val car: Car = getCar(rental.carId)
         car.isRented = false
-        accountRepository.save(account)
 
+        account.rentals?.filter{ accountRental -> accountRental.carId == rental.id }?.forEach {
+            it.isActive = false
+        }
+        rental.isActive = false
         try {
+            rentalService.saveEntity(rental)
             carRepository.save(car)
+            accountRepository.save(account)
         } catch (e: Exception) {
-            account.rentedCars?.add(car.id?: throw NullPointerException())
+            account.rentals?.filter{ accountRental -> accountRental.carId == rental.id }?.forEach {
+                it.isActive = true
+            }
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }
@@ -88,6 +98,8 @@ class CarService(
     }
 
     private fun getCar(id: String): Car = carRepository.findCarById(UUID.fromString(id))?: throw CarNotFoundException()
+
+    private fun getCar(id: UUID): Car = carRepository.findCarById(id)?: throw CarNotFoundException()
 
     fun isCarRepositoryEmpty(): Boolean = carRepository.findAll().isNullOrEmpty()
 }

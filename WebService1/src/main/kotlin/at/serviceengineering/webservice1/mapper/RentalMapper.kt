@@ -2,12 +2,13 @@ package at.serviceengineering.webservice1.mapper;
 
 import at.serviceengineering.webservice1.dtos.RentalDTO;
 import at.serviceengineering.webservice1.entities.Rental
+import at.serviceengineering.webservice1.repositories.ICarRepository
+import at.serviceengineering.webservice1.services.CarService
 import org.springframework.stereotype.Service;
 import java.lang.NullPointerException
 
 @Service
 class RentalMapper(
-
 ) {
 
     fun toEntity(rentalDto: RentalDTO): Rental {
@@ -15,7 +16,8 @@ class RentalMapper(
                 id = null,
                 rentalDto.startDate,
                 rentalDto.endDate,
-                rentalDto.car?: throw NullPointerException()
+                rentalDto.isActive,
+                rentalDto.carId
         )
     }
 
@@ -24,7 +26,8 @@ class RentalMapper(
                 rental.id,
                 rental.startDate,
                 rental.endDate,
-                rental.car,
+                rental.isActive,
+                rental.carId,
         )
     }
 }

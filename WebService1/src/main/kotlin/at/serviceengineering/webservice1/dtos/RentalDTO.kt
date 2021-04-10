@@ -10,7 +10,8 @@ data class RentalDTO(
         var id: UUID?,
         var startDate: String? = null,
         var endDate: String? = null,
-        var car: Car?
+        var isActive: Boolean? = null,
+        var carId: UUID
 
 ) : Serializable {
 

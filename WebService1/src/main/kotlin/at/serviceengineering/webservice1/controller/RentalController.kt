@@ -1,9 +1,9 @@
 package at.serviceengineering.webservice1.controller
 
 import at.serviceengineering.webservice1.dtos.RentalDTO
-import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
-import at.serviceengineering.webservice1.exceptions.TokenNotValidException
+import at.serviceengineering.webservice1.exceptions.*
 import at.serviceengineering.webservice1.mapper.RentalMapper
+import at.serviceengineering.webservice1.services.CarService
 import at.serviceengineering.webservice1.services.JwtTokenService
 import at.serviceengineering.webservice1.services.RentalService
 
@@ -26,7 +26,8 @@ private const val ENTITY_NAME = "rental"
 class RentalController(
         private val jwtTokenService: JwtTokenService,
         private val rentalMapper: RentalMapper,
-        private val rentalService: RentalService
+        private val rentalService: RentalService,
+        private val carService: CarService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -38,17 +39,23 @@ class RentalController(
      * @return the [ResponseEntity] with status `201 (Created)` and with body the new rentalDTO, or with status `400 (Bad Request)` if the rental has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/add")
-    fun createRental(@RequestHeader("token") token: String, @RequestBody rentalDTO: RentalDTO): ResponseEntity<*> {
-        log.debug("REST request to save Rental : $rentalDTO")
+    @PostMapping
+    fun createRental(@RequestHeader("token") token: String,
+                @RequestBody request: RentalDTO
+    ): ResponseEntity<*> {
         return try {
-            if (rentalDTO.id != null) {
-                throw Exception()
-            }
-            rentalService.save(rentalDTO)
+            val account = jwtTokenService.getAccountFromToken(token)
+            carService.bookCar(account, request)
             ResponseEntity.ok().body("")
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: AccountNotFoundException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: CarNotFoundException) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
+        } catch (e: CarAlreadyRentedException) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
@@ -63,18 +70,22 @@ class RentalController(
      * or with status `500 (Internal Server Error)` if the rentalDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("")
-    fun updateRental(@RequestHeader("token") token: String, @RequestBody rentalDTO: RentalDTO): ResponseEntity<RentalDTO> {
-        log.debug("REST request to update Rental : $rentalDTO")
+    @PutMapping("/{id}")
+    fun updateRental(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<*> {
+        log.debug("REST request to update Rental : $id")
         return try {
-            jwtTokenService.getAccountFromToken(token)
-            val result = rentalService.save(rentalDTO)
-            ResponseEntity.ok().body(result)
+            val account = jwtTokenService.getAccountFromToken(token)
+            carService.returnCar(account, id)
+            ResponseEntity.ok().body("")
 
         } catch (e: TokenNotValidException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: AccountNotFoundException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: CarNotFoundException) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message)
+        } catch (e: InvalidCarStatusManipulationException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
