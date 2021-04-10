@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
 import {Car, CurrencyEnum, ICar} from '../../models/car.model';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -26,7 +26,7 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder) {
+  constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder, private dialog: MatDialogRef<CreateCarComponent>) {
   }
 
   ngOnInit(): void {
@@ -34,7 +34,10 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.save(car).subscribe();
+    this.carService.save(car).subscribe(() => {
+      this.carService.query();
+      this.dialog.close();
+    });
   }
 
   private createFromForm(): ICar {

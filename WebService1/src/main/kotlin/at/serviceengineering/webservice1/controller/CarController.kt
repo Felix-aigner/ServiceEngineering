@@ -108,7 +108,9 @@ class CarController(
      * @return the [ResponseEntity] with status `204 (NO_CONTENT)`.
      */
     @DeleteMapping("/{id}")
-    fun deleteCar(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<Void> {
+    fun deleteCar(
+            @RequestHeader("token") token: String,
+            @PathVariable id: UUID): ResponseEntity<Void> {
         log.debug("REST request to delete Car : $id")
 
         return try {

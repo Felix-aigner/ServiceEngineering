@@ -10,7 +10,7 @@ export class UserService {
 
   isLoggedIn = new BehaviorSubject<boolean>(false);
   currUser = new BehaviorSubject<UserModel>(new UserModel());
-  accoutURL = 'http://localhost:5000/account'; // add "s"
+  accoutURL = 'http://localhost:5000/accounts';
 
   private readonly commonHttpHeaders;
 

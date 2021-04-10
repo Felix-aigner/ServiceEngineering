@@ -15,6 +15,7 @@ export class MyCarsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
 
   constructor(public carService: CarService) {
+    this.carService.queryMyRentals();
   }
 
   ngOnInit(): void {

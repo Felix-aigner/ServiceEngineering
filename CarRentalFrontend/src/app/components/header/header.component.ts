@@ -25,9 +25,7 @@ export class HeaderComponent implements OnInit {
 
 
   saveSelectedCurrency(): void {
-    console.log(this.carService.selectedCurrency.value);
     this.carService.selectedCurrency.next(this.selectedCurrency.value);
-    console.log(this.carService.selectedCurrency.value);
     this.carService.query();
   }
 

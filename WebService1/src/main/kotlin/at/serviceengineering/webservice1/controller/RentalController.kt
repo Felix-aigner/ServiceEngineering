@@ -99,7 +99,7 @@ class RentalController(
      * @return the [ResponseEntity] with status `200 (OK)` and the list of rentals in body.
      */
     @GetMapping
-    fun getAllRentals(@RequestHeader("token") token: String, @RequestParam(required = false) filter: String?): MutableList<RentalDTO> {
+    fun getAllRentals(@RequestHeader("token") token: String): MutableList<RentalDTO> {
         log.debug("REST request to get all Rentals")
         return try {
             jwtTokenService.getAccountFromToken(token)

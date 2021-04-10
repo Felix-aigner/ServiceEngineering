@@ -12,6 +12,7 @@ export class RentalsComponent implements OnInit {
   allrentals = this.carService.allRentals;
 
   constructor(private carService: CarService) {
+    this.carService.queryAllRentals();
   }
 
   ngOnInit(): void {

@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(result => {
         this.confirmedDelete.next(result);
         if (this.confirmedDelete.value) {
-          this.carService.delete(carId);
+          this.carService.delete(carId).subscribe();
         }
       });
   }
