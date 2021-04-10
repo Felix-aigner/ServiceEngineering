@@ -7,7 +7,8 @@ import {CurrencyEnum, ICar} from '../models/car.model';
 import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
-import {IRental} from '../models/rental.model';
+import {IRental, IRentalRaw} from '../models/rental.model';
+import {map} from "rxjs/operators";
 
 
 type EntityResponseType = HttpResponse<ICar>;
@@ -127,13 +128,23 @@ export class CarService {
     );
   }
 
-  queryMyRentals(): void {
-    this.http.get<IRental[]>(this.rentalURL + '/my-rentals', {
+  getCar(carId: number): Observable<ICar> {
+    return this.http.get<ICar>(`${this.carURL}/${carId}`, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    }).subscribe(response => {
-      this.myRentals.next(response.body);
+    }).pipe(
+      map((value) => value.body)
+    );
+  }
+
+  queryMyRentals(): void {
+    this.http.get<IRentalRaw[]>(this.rentalURL + '/my-rentals', {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe((value) => {
+      value.body.map((entry) => <IRental>{...entry, car: this.getCar(entry.carId)});
     });
   }
 
