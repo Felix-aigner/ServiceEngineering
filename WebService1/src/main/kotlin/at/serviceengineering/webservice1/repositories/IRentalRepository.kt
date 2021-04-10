@@ -1,14 +1,16 @@
-package com.se.project.repository
+package at.serviceengineering.webservice1.repositories
 
-import com.se.project.domain.Rental
+import at.serviceengineering.webservice1.entities.Car
+import at.serviceengineering.webservice1.entities.Rental
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
-/**
- * Spring Data  repository for the [Rental] entity.
- */
+
 @Suppress("unused")
 @Repository
-interface RentalRepository : JpaRepository<Rental, Long> {
+interface IRentalRepository : JpaRepository<Rental, UUID> {
+
 }

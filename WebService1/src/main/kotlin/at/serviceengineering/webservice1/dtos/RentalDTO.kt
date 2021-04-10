@@ -1,17 +1,16 @@
-package com.se.project.service.dto
+package at.serviceengineering.webservice1.dtos
 
+import at.serviceengineering.webservice1.entities.Car
 import java.io.Serializable
+import java.util.*
 
-/**
- * A DTO for the [com.se.project.domain.Rental] entity.
- */
+
 data class RentalDTO(
-    
-    var id: Long? = null,
 
-    var startDate: String? = null,
-
-    var endDate: String? = null
+        var id: UUID?,
+        var startDate: String? = null,
+        var endDate: String? = null,
+        var car: Car?
 
 ) : Serializable {
 

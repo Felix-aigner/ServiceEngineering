@@ -1,32 +1,33 @@
-package com.se.project.web.rest
+package at.serviceengineering.webservice1.controller
 
-import com.se.project.service.RentalService
-import com.se.project.web.rest.errors.BadRequestAlertException
-import com.se.project.service.dto.RentalDTO
+import at.serviceengineering.webservice1.dtos.RentalDTO
+import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
+import at.serviceengineering.webservice1.exceptions.TokenNotValidException
+import at.serviceengineering.webservice1.services.JwtTokenService
+import at.serviceengineering.webservice1.services.RentalService
 
-import io.github.jhipster.web.util.HeaderUtil
-import io.github.jhipster.web.util.ResponseUtil
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
+
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
-import java.net.URI
 import java.net.URISyntaxException
+import java.util.*
 
 private const val ENTITY_NAME = "rental"
 /**
  * REST controller for managing [com.se.project.domain.Rental].
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/rentals")
 class RentalResource(
-    private val rentalService: RentalService
+        private val jwtTokenService: JwtTokenService,
+        private val rentalService: RentalService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    @Value("\${jhipster.clientApp.name}")
-    private var applicationName: String? = null
 
     /**
      * `POST  /rentals` : Create a new rental.
@@ -35,19 +36,20 @@ class RentalResource(
      * @return the [ResponseEntity] with status `201 (Created)` and with body the new rentalDTO, or with status `400 (Bad Request)` if the rental has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/rentals")
-    fun createRental(@RequestBody rentalDTO: RentalDTO): ResponseEntity<RentalDTO> {
+    @PostMapping("/add")
+    fun createRental(@RequestHeader("token") token: String, @RequestBody rentalDTO: RentalDTO): ResponseEntity<*> {
         log.debug("REST request to save Rental : $rentalDTO")
-        if (rentalDTO.id != null) {
-            throw BadRequestAlertException(
-                "A new rental cannot already have an ID",
-                ENTITY_NAME, "idexists"
-            )
+        return try {
+            if (rentalDTO.id != null) {
+                throw Exception()
+            }
+            rentalService.save(rentalDTO)
+            ResponseEntity.ok().body("")
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
-        val result = rentalService.save(rentalDTO)
-        return ResponseEntity.created(URI("/api/rentals/${result.id}"))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
-            .body(result)
     }
 
     /**
@@ -59,22 +61,23 @@ class RentalResource(
      * or with status `500 (Internal Server Error)` if the rentalDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/rentals")
-    fun updateRental(@RequestBody rentalDTO: RentalDTO): ResponseEntity<RentalDTO> {
+    @PutMapping("")
+    fun updateRental(@RequestHeader("token") token: String, @RequestBody rentalDTO: RentalDTO): ResponseEntity<RentalDTO> {
         log.debug("REST request to update Rental : $rentalDTO")
-        if (rentalDTO.id == null) {
-            throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
+        return try {
+            jwtTokenService.getAccountFromToken(token)
+            val result = rentalService.save(rentalDTO)
+            ResponseEntity.ok().body(result)
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
-        val result = rentalService.save(rentalDTO)
-        return ResponseEntity.ok()
-            .headers(
-                HeaderUtil.createEntityUpdateAlert(
-                    applicationName, false, ENTITY_NAME,
-                     rentalDTO.id.toString()
-                )
-            )
-            .body(result)
     }
+
     /**
      * `GET  /rentals` : get all the rentals.
      *
@@ -82,16 +85,21 @@ class RentalResource(
      * @param filter the filter of the request.
      * @return the [ResponseEntity] with status `200 (OK)` and the list of rentals in body.
      */
-    @GetMapping("/rentals")    
-    fun getAllRentals(@RequestParam(required = false) filter: String?): MutableList<RentalDTO> {
-        if ("car-is-null".equals(filter)) {
-            log.debug("REST request to get all Rentals where car is null")
-            return rentalService.findAllWhereCarIsNull()
-        }
+    @GetMapping("/list")
+    fun getAllRentals(@RequestHeader("token") token: String, @RequestParam(required = false) filter: String?): MutableList<RentalDTO> {
         log.debug("REST request to get all Rentals")
-        
-        return rentalService.findAll()
-            }
+        return try {
+            jwtTokenService.getAccountFromToken(token)
+            rentalService.findAll()
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
 
     /**
      * `GET  /rentals/:id` : get the "id" rental.
@@ -99,11 +107,21 @@ class RentalResource(
      * @param id the id of the rentalDTO to retrieve.
      * @return the [ResponseEntity] with status `200 (OK)` and with body the rentalDTO, or with status `404 (Not Found)`.
      */
-    @GetMapping("/rentals/{id}")
-    fun getRental(@PathVariable id: Long): ResponseEntity<RentalDTO> {
+    @GetMapping("{id}")
+    fun getRental(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<RentalDTO> {
         log.debug("REST request to get Rental : $id")
-        val rentalDTO = rentalService.findOne(id)
-        return ResponseUtil.wrapOrNotFound(rentalDTO)
+        return try {
+            jwtTokenService.getAccountFromToken(token)
+            val rentalDTO = rentalService.findOne(id)
+            ResponseEntity.ok().body(rentalDTO.get())
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
     }
     /**
      *  `DELETE  /rentals/:id` : delete the "id" rental.
@@ -111,12 +129,24 @@ class RentalResource(
      * @param id the id of the rentalDTO to delete.
      * @return the [ResponseEntity] with status `204 (NO_CONTENT)`.
      */
-    @DeleteMapping("/rentals/{id}")
-    fun deleteRental(@PathVariable id: Long): ResponseEntity<Void> {
+    @DeleteMapping("{id}")
+    fun deleteRental(@RequestHeader("token") token: String, @PathVariable id: UUID): ResponseEntity<Void> {
         log.debug("REST request to delete Rental : $id")
 
-        rentalService.delete(id)
-            return ResponseEntity.noContent()
-                .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build()
+        return try {
+            jwtTokenService.getAccountFromToken(token).also {
+                account -> if(!account.isAdministrator) throw TokenNotValidException()
+            }
+            rentalService.delete(id)
+            ResponseEntity.noContent().build()
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+
     }
 }

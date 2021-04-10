@@ -3,10 +3,7 @@ package at.serviceengineering.webservice1.entities
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Car(
@@ -28,6 +25,10 @@ data class Car(
         var usdPrice: BigDecimal,
 
         @Column(nullable = false)
-        var isRented: Boolean
+        var isRented: Boolean,
+
+        @OneToOne
+        @JoinColumn(unique = true)
+        var rental: Rental? = null
 
 )
