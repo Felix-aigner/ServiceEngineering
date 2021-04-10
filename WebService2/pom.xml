@@ -14,7 +14,7 @@
 	<name>WebService2</name>
 	<description>Currency Converter for SE-Project</description>
 	<properties>
-		<java.version>13</java.version>
+		<java.version>8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -38,6 +38,58 @@
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>javax.activation-api</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-security</artifactId>
+			<version>3.0.10.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.wss</groupId>
+			<artifactId>xws-security</artifactId>
+			<version>3.0</version>
+			<exclusions>
+				<exclusion>
+					<!-- Part of JDK -->
+					<groupId>javax.xml.soap</groupId>
+					<artifactId>saaj-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Part of Java EE -->
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Part of JDK -->
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Part of JDK -->
+					<groupId>javax.xml.stream</groupId>
+					<artifactId>stax-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Part of JDK -->
+					<groupId>javax.xml.crypto</groupId>
+					<artifactId>xmldsig</artifactId>
+				</exclusion>
+				<exclusion>
+					<!-- Part of JDK -->
+					<groupId>javax.xml.ws</groupId>
+					<artifactId>jaxws-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
