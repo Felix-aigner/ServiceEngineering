@@ -146,7 +146,7 @@ export class CarService {
       }),
       map((value: HttpResponse<IRental[]>) => value.body),
     ).subscribe((value) => {
-      this.myRentals.next(value);
+      this.myRentals.next(value.filter(rental => rental.car != null));
     });
   }
 
@@ -161,7 +161,7 @@ export class CarService {
       }),
       map((value: HttpResponse<IRental[]>) => value.body),
     ).subscribe((value) => {
-      this.allRentals.next(value);
+      this.allRentals.next(value.filter(rental => rental.car != null));
     });
   }
 }

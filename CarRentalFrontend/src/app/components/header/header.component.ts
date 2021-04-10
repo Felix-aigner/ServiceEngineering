@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {CurrencyEnum} from '../../models/car.model';
 import {CarService} from '../../services/car.service';
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,9 @@ export class HeaderComponent implements OnInit {
   currencyEnum = CurrencyEnum;
   currencies;
 
-  constructor(private carService: CarService) {
+  constructor(private carService: CarService,
+              public userService: UserService
+  ) {
     this.currencies = Object.keys(this.currencyEnum).filter(k => !isNaN(Number(k)));
     this.carService.selectedCurrency.subscribe(data => this.selectedCurrency.patchValue(data));
   }

@@ -15,14 +15,14 @@
                 [disabled]="car.isRented">
           <span>Book Car</span>
         </button>
-        <!--            <div *ngIf="userService.currUser.value.isAdministrator">-->
-        <button mat-button class="mat-primary" (click)="openEditDialog(car)">
-          <span class="d-none d-md-inline">Edit</span>
-        </button>
-        <button mat-button class="mat-warn" (click)="openDeleteDialog(car.id)">
-          <span class="d-none d-md-inline">Delete</span>
-        </button>
-        <!--            </div>-->
+        <div class="admin-btn-group" *ngIf="userService.currUser.value.isAdministrator">
+          <button mat-button class="mat-primary" (click)="openEditDialog(car)">
+            <span class="d-none d-md-inline">Edit</span>
+          </button>
+          <button mat-button class="mat-warn" (click)="openDeleteDialog(car.id)">
+            <span class="d-none d-md-inline">Delete</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
