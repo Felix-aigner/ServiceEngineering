@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, zip} from 'rxjs';
 
 import {SERVER_API_URL} from '../app.constants';
 import {CurrencyEnum, ICar} from '../models/car.model';
@@ -8,7 +8,7 @@ import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
 import {IRental, IRentalRaw} from '../models/rental.model';
-import {map} from "rxjs/operators";
+import {catchError, map, mergeMap, switchMap} from "rxjs/operators";
 
 
 type EntityResponseType = HttpResponse<ICar>;
@@ -134,17 +134,25 @@ export class CarService {
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
     }).pipe(
+      catchError(error => {
+        return of(null);
+      }),
       map((value) => value.body)
     );
   }
 
   queryMyRentals(): void {
-    this.http.get<IRentalRaw[]>(this.rentalURL + '/my-rentals', {
+    this.http.get<IRental[]>(this.rentalURL + '/my-rentals', {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    }).subscribe((value) => {
-      value.body.map((entry) => <IRental>{...entry, car: this.getCar(entry.carId)});
+    }).pipe(
+      catchError(error => {
+        return of(null);
+      }),
+      map((value: HttpResponse<IRental[]>) => value.body),
+    ).subscribe((value) => {
+        //TODO FELIX
     });
   }
 

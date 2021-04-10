@@ -10,9 +10,9 @@ import java.math.BigDecimal
 
 class CurrencyClient: WebServiceGatewaySupport() {
 
-    fun getRate(baseValue: BigDecimal, expectedCurrency: Currency): GetCurrencyConversionResponse {
+    fun getRate(baseValue: BigDecimal, startCurrency: Currency, expectedCurrency: Currency): GetCurrencyConversionResponse {
         val getRateRequest = GetCurrencyConversionRequest()
-        getRateRequest.baseCurrency = Currency.USD
+        getRateRequest.baseCurrency = startCurrency
         getRateRequest.baseValue = baseValue
         getRateRequest.targetCurrency = expectedCurrency
         return webServiceTemplate.marshalSendAndReceive(getRateRequest) as GetCurrencyConversionResponse

@@ -1,12 +1,5 @@
 import {ICar} from './car.model';
 
-export interface IRentalRaw {
-  id?: number;
-  startDate?: string;
-  endDate?: string;
-  isActive?: boolean;
-  carId?: number;
-}
 
 export interface IRental {
   id?: number;

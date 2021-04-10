@@ -33,7 +33,7 @@ class CarService(
     }
 
     override fun bookCar(account: Account, request: RentalDTO) {
-        val car = getCar(request.carId)
+        val car = getCar(request.car.id?: throw NullPointerException())
         if(car.isRented)
             throw CarAlreadyRentedException()
         car.isRented = true
@@ -59,10 +59,10 @@ class CarService(
         if(account.rentals?.map { accountRental -> accountRental.id }?.contains(rental.id) == false)
             throw InvalidCarStatusManipulationException()
 
-        val car: Car = getCar(rental.carId)
+        val car: Car = getCar(rental.car.id?: throw NullPointerException())
         car.isRented = false
 
-        account.rentals?.filter{ accountRental -> accountRental.carId == rental.id }?.forEach {
+        account.rentals?.filter{ accountRental -> accountRental.id == rental.id }?.forEach {
             it.isActive = false
         }
         rental.isActive = false
@@ -71,7 +71,7 @@ class CarService(
             carRepository.save(car)
             accountRepository.save(account)
         } catch (e: Exception) {
-            account.rentals?.filter{ accountRental -> accountRental.carId == rental.id }?.forEach {
+            account.rentals?.filter{ accountRental -> accountRental.id == rental.id }?.forEach {
                 it.isActive = true
             }
             accountRepository.save(account)
