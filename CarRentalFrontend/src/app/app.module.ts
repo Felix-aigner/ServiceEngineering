@@ -18,6 +18,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {EditCarComponent} from './dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from './dialogs/confirmation-dialog/confirmation-dialog.component';
+import {MyCarsComponent} from './components/my-cars/my-cars.component';
+import {HeaderComponent} from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import {ConfirmationDialogComponent} from './dialogs/confirmation-dialog/confirm
     DashboardComponent,
     CreateCarComponent,
     EditCarComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    MyCarsComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

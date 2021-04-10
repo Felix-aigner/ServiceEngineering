@@ -16,31 +16,44 @@ export class CarService {
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
 
+  public loadedCars = new BehaviorSubject<ICar[]>([]);
+
   constructor(protected http: HttpClient, private userService: UserService) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
-      .set('cy', this.selectedCurrency.value.valueOf().toString());
+      .set('Accept', 'application/json');
   }
 
-  create(car: ICar): Observable<EntityResponseType> {
-    return this.http.post<ICar>(this.resourceUrl, car, { observe: 'response' });
-  }
-
-  update(car: ICar): Observable<EntityResponseType> {
-    return this.http.put<ICar>(this.resourceUrl, car, { observe: 'response' });
-  }
-
-  find(id: number): Observable<EntityResponseType> {
-    return this.http.get<ICar>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-  }
-
-  // add selected currency to request parameters
-  query(): Observable<EntityArrayResponseType> {
-    return this.http.get<ICar[]>(this.resourceUrl + '/list', {
+  save(car: ICar): Observable<EntityResponseType> {
+    console.log(car);
+    return this.http.post<ICar>(this.resourceUrl + '/add', car, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
+    });
+  }
+
+  update(car: ICar): Observable<EntityResponseType> {
+    console.log(car);
+    return this.http.post<ICar>(this.resourceUrl + '/change', car, {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    });
+  }
+
+  find(id: number): Observable<EntityResponseType> {
+    return this.http.get<ICar>(`${this.resourceUrl}/${id}`, {observe: 'response'});
+  }
+
+  // add selected currency to request parameters
+  query(): void {
+    this.http.get<ICar[]>(this.resourceUrl + '/list?cy=' + CurrencyEnum[this.selectedCurrency.value], {
+      observe: 'response',
+      headers: this.commonHttpHeaders
+        .append('token', this.userService.currUser.value.token)
+    }).subscribe(response => {
+      this.loadedCars.next(response.body);
     });
   }
 
@@ -48,13 +61,7 @@ export class CarService {
     return this.http.delete(`${this.resourceUrl}/${id}`, {observe: 'response'});
   }
 
-  saveNewCar(car: ICar) {
-    console.log('saving');
-    console.log(car)
-  }
+  bookCar(carId: number) {
 
-  saveEditCar(car: ICar) {
-    console.log('saving');
-    console.log(car);
   }
 }
