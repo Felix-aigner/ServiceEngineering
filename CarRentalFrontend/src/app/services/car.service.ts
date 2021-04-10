@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {BehaviorSubject, combineLatest, Observable, of, zip} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 
 import {SERVER_API_URL} from '../app.constants';
 import {CurrencyEnum, ICar} from '../models/car.model';
 import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
-import {IRental, IRentalRaw} from '../models/rental.model';
-import {catchError, map, mergeMap, switchMap} from "rxjs/operators";
+import {IRental} from '../models/rental.model';
+import {catchError, map} from 'rxjs/operators';
 
 
 type EntityResponseType = HttpResponse<ICar>;
@@ -95,13 +95,7 @@ export class CarService {
 
   bookCar(rental: IRental): void {
     console.log(rental);
-    this.http.post<IRental>(this.rentalURL, {
-      id: rental.id,
-      startDate: rental.startDate,
-      endDate: rental.endDate,
-      isActive: rental.isActive,
-      carId: rental.car.id
-    }, {
+    this.http.post<IRental>(this.rentalURL, rental, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -115,7 +109,7 @@ export class CarService {
   }
 
   releaseCar(rental: IRental): void {
-    this.http.put<IRental>(`${this.rentalURL}/${rental.id}`, {
+    this.http.put<IRental>(`${this.rentalURL}/${rental.id}`, {}, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -152,7 +146,7 @@ export class CarService {
       }),
       map((value: HttpResponse<IRental[]>) => value.body),
     ).subscribe((value) => {
-        //TODO FELIX
+      this.myRentals.next(value);
     });
   }
 
@@ -161,8 +155,13 @@ export class CarService {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    }).subscribe(response => {
-      this.allRentals.next(response.body);
+    }).pipe(
+      catchError(error => {
+        return of(null);
+      }),
+      map((value: HttpResponse<IRental[]>) => value.body),
+    ).subscribe((value) => {
+      this.allRentals.next(value);
     });
   }
 }

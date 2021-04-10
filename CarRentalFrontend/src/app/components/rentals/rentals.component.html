@@ -1,19 +1,38 @@
 <app-header></app-header>
-<h2>Manage all currently rented Cars</h2>
 
-<!--            <div *ngIf="userService.currUser.value.isAdministrator">-->
 <div *ngIf="allrentals|async as currentlyRented">
-  <div *ngFor="let rented of currentlyRented">
-    <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
-    <p>Power (KW): {{ rented.car.kwPower }}</p>
-    <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
-    <p>Rental started: {{rented.startDate}}</p>
-    <p>Rental will end: {{rented.endDate}}</p>
-    <div class="btn-group">
-      <button mat-raised-button (click)="releaseCar(rented)">
-        release car
-      </button>
+  <div class="list-wrapper">
+    <h2>Active Rentals</h2>
+    <div *ngFor="let rented of currentlyRented">
+      <div *ngIf="rented.isActive" class="car-wrapper">
+        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+        <p>Power (KW): {{ rented.car.kwPower }}</p>
+        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+        <p>Rental started: {{rented.startDate}}</p>
+        <p>Rental will end: {{rented.endDate}}</p>
+        <div class="btn-group">
+          <button mat-raised-button (click)="releaseCar(rented)">
+            release car
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-wrapper">
+    <h2>Inactive Rentals</h2>
+    <div *ngFor="let rented of currentlyRented">
+      <div *ngIf="!rented.isActive" class="car-wrapper">
+        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+        <p>Power (KW): {{ rented.car.kwPower }}</p>
+        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+        <p>Rental started: {{rented.startDate}}</p>
+        <p>Rental will end: {{rented.endDate}}</p>
+        <div class="btn-group">
+          <button mat-raised-button (click)="releaseCar(rented)">
+            release car
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<!--            </div>-->
