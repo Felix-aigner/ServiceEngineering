@@ -1,15 +1,15 @@
 <div class="row justify-content-center">
   <div class="col-8">
-    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <form name="editForm" role="form" novalidate [formGroup]="editForm">
       <h2>Create or edit a Car</h2>
 
       <div>
 
         <div class="form-group">
           <mat-form-field>
-            <mat-label class="form-control-label" for="field_carType">Car Type</mat-label>
-            <input matInput type="text" class="form-control" name="carType" id="field_carType"
-                   formControlName="carType"/>
+            <mat-label class="form-control-label" for="field_type">Car Type</mat-label>
+            <input matInput type="text" class="form-control" name="type" id="field_type"
+                   formControlName="type"/>
           </mat-form-field>
         </div>
 
@@ -35,17 +35,10 @@
                    formControlName="price"/>
           </mat-form-field>
         </div>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Currency</mat-label>
-          <mat-select formControlName="currency">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
 
       <div>
-        <button mat-button type="submit" id="save-entity" [disabled]="editForm.invalid" class="mat-raised-button">
+        <button mat-button (click)="save()" [disabled]="editForm.invalid" class="mat-raised-button">
           <span>Save</span>
         </button>
       </div>

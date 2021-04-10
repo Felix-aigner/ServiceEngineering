@@ -10,7 +10,7 @@ export class UserService {
 
   isLoggedIn = new BehaviorSubject<boolean>(false);
   currUser = new BehaviorSubject<UserModel>(new UserModel());
-  backendUrl = 'http://localhost:5000/account';
+  accoutURL = 'http://localhost:5000/accounts';
 
   private readonly commonHttpHeaders;
 
@@ -21,14 +21,14 @@ export class UserService {
   }
 
   login(username: string, password: string): Observable<UserModel> {
-    return this.http.post<UserModel>(this.backendUrl + '/login', {
+    return this.http.post<UserModel>(this.accoutURL + '/login', {
       username, password
     });
   }
 
   // tslint:disable-next-line:typedef
   register(firstname: string, lastname: string, username: string, password: string) {
-    return this.http.post(this.backendUrl, {
+    return this.http.post(this.accoutURL, {
       firstname,
       lastname,
       username,

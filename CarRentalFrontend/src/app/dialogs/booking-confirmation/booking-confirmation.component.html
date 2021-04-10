@@ -1,0 +1,33 @@
+<h2>Book this car:</h2>
+<div>
+  <form name="bookingForm" role="form" [formGroup]="bookingForm">
+    <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a start-date</mat-label>
+        <input matInput [matDatepicker]="startpicker" formControlName="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <mat-datepicker #startpicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Choose an end-date</mat-label>
+        <input matInput [matDatepicker]="endpicker" formControlName="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+        <mat-datepicker #endpicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
+
+</div>
+
+<div>
+  <button class="mat-raised-button" (click)="confirmation(true)">
+    Book
+  </button>
+</div>
+<div>
+  <button class="mat-raised-button" (click)="confirmation(false)">
+    Cancel
+  </button>
+</div>

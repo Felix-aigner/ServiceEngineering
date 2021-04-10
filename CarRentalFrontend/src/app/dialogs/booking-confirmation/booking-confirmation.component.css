@@ -1,0 +1,9 @@
+mat-form-field {
+  align-self: center;
+  float: left;
+}
+
+button {
+  float: left;
+  margin-left: 1.6rem;
+}

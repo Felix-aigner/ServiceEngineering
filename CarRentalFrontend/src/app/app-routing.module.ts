@@ -2,6 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './components/login/login.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {IsLoggedInGuardService} from './services/login-guard.service';
+import {MyCarsComponent} from './components/my-cars/my-cars.component';
+import {ContactComponent} from './components/contact/contact.component';
 
 const appRoutes: Routes = [
   {
@@ -13,7 +16,17 @@ const appRoutes: Routes = [
   {
     path: 'main',
     component: DashboardComponent,
-    // canActivate: [IsLoggedInGuardService]
+    canActivate: [IsLoggedInGuardService]
+  },
+  {
+    path: 'mycars',
+    component: MyCarsComponent,
+    canActivate: [IsLoggedInGuardService]
+  },
+  {
+    path: 'contact',
+    component: ContactComponent,
+    canActivate: [IsLoggedInGuardService]
   },
 ];
 

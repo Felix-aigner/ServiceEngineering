@@ -1,15 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
 import {Car, CurrencyEnum, ICar} from '../../models/car.model';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-create-car',
   templateUrl: './create-car.component.html',
   styleUrls: ['./create-car.component.css']
 })
-export class CreateCarComponent implements OnInit {
+export class CreateCarComponent implements OnInit, OnDestroy {
 
   editForm = this.fb.group({
     id: [],
@@ -17,15 +18,15 @@ export class CreateCarComponent implements OnInit {
     brand: [],
     kwPower: [],
     price: [],
-    currency: [],
     isRented: [],
   });
 
   currencyEnum = CurrencyEnum;
   currencies;
 
-  constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder) {
-    this.currencies = Object.keys(this.currencyEnum).filter(k => !isNaN(Number(k)));
+  private unsubscribe$ = new Subject();
+
+  constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder, private dialog: MatDialogRef<CreateCarComponent>) {
   }
 
   ngOnInit(): void {
@@ -33,7 +34,10 @@ export class CreateCarComponent implements OnInit {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.saveNewCar(car);
+    this.carService.save(car).subscribe(() => {
+      this.carService.query();
+      this.dialog.close();
+    });
   }
 
   private createFromForm(): ICar {
@@ -44,9 +48,13 @@ export class CreateCarComponent implements OnInit {
       brand: this.editForm.get(['brand'])!.value,
       kwPower: this.editForm.get(['kwPower'])!.value,
       price: this.editForm.get(['price'])!.value,
-      currency: this.editForm.get(['currency'])!.value,
       isRented: this.editForm.get(['isRented'])!.value,
     };
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

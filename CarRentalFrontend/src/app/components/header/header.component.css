@@ -1,0 +1,13 @@
+
+.header {
+  margin: 1rem;
+  width: 100%;
+}
+
+h1 {
+  float: left;
+}
+
+.nav-button {
+  margin-left: 2rem;
+}
