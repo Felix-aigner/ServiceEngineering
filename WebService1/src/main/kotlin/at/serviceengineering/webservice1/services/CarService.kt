@@ -5,7 +5,6 @@ import at.serviceengineering.webservice1.dtos.ChangeCarRequestDto
 import at.serviceengineering.webservice1.dtos.RentalDTO
 import at.serviceengineering.webservice1.entities.Account
 import at.serviceengineering.webservice1.entities.Car
-import at.serviceengineering.webservice1.entities.Rental
 import at.serviceengineering.webservice1.exceptions.CarAlreadyRentedException
 import at.serviceengineering.webservice1.exceptions.CarNotFoundException
 import at.serviceengineering.webservice1.exceptions.InvalidCarStatusManipulationException

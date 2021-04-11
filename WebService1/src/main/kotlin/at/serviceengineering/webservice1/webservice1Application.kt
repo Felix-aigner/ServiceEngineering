@@ -4,7 +4,6 @@ import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.services.AccountService
 import at.serviceengineering.webservice1.services.CarService
-import at.serviceengineering.webservice1.services.RentalService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -12,7 +11,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
 import org.springframework.context.event.EventListener
 import java.math.BigDecimal
-import java.util.*
 import kotlin.random.Random
 
 

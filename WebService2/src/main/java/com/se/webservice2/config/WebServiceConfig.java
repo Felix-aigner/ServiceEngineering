@@ -16,7 +16,6 @@ import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.ws.soap.security.xwss.callback.SimplePasswordValidationCallbackHandler;
-import com.sun.xml.wss.XWSSecurityException;
 import java.util.Collections;
 import java.util.List;
 
