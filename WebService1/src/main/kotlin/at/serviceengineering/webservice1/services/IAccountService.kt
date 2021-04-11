@@ -17,6 +17,8 @@ interface IAccountService {
 
     fun deleteAccount(id: UUID)
 
+    fun deleteAccountByUsername(username: String)
+
     fun findAll(): List<AccountDto>
 
     fun findOne(id : UUID): AccountDto

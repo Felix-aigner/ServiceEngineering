@@ -61,6 +61,12 @@ class AccountService(
         }
     }
 
+    override fun deleteAccountByUsername(username: String){
+        accountRepository.deleteAccountByUsername(username).also {
+            logger.info("Deleted Account with Username: ${username}")
+        }
+    }
+
     override fun findAll(): List<AccountDto> = accountRepository.findAll().map{ account -> accountMapper.toDto(account)}
 
     override fun findOne(id: UUID): AccountDto {

@@ -15,7 +15,6 @@ import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.stereotype.Service
 import java.util.*
 
-
 @Service
 class CarService(
         private val carRepository: ICarRepository,
@@ -108,3 +107,4 @@ class CarService(
 
     fun isCarRepositoryEmpty(): Boolean = carRepository.findAll().isNullOrEmpty()
 }
+
