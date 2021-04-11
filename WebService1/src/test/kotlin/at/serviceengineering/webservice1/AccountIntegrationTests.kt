@@ -16,7 +16,7 @@ import java.net.URI
 class AccountIntegrationTests(
         @Autowired val restTemplate: TestRestTemplate
 ) {
-
+/*
     @Test
     fun `Assert account creation status code 200`() {
         val newAccount = AccountCreationDto(
@@ -81,4 +81,7 @@ class AccountIntegrationTests(
 //        val entity2 = restTemplate.postForEntity(URI("/account/login"), login, String::class.java)
 //        assertThat(entity2.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
 //    }
+
+
+ */
 }
