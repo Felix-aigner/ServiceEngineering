@@ -16,10 +16,10 @@ class AccountMapper(
     fun mapToEntityAndHashPassword(accountCreationDto: AccountCreationDto): Account {
         return Account(
                 id = null,
-                accountCreationDto.username,
-                hash(accountCreationDto.password),
-                accountCreationDto.firstname,
-                accountCreationDto.lastname,
+                username = accountCreationDto.username,
+                password = hash(accountCreationDto.password),
+                firstname = accountCreationDto.firstname,
+                lastname = accountCreationDto.lastname,
                 isAdministrator = false,
                 rentals = null
         )
