@@ -45,7 +45,7 @@ class CarService(
             carRepository.save(car)
             accountRepository.save(account)
         } catch (e: Exception) {
-            account.rentals?.remove(request)
+            account.rentals?.remove(rental)
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }

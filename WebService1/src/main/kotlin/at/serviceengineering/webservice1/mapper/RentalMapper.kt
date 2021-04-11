@@ -17,10 +17,10 @@ class RentalMapper( private val carMapper: CarMapper
     fun toEntity(rentalDto: RentalDTO): Rental {
         return Rental(
                 id = null,
-                rentalDto.startDate,
-                rentalDto.endDate,
-                rentalDto.isActive,
-                if(rentalDto.car != null) carMapper.mapToCarWithCustomCurrency(rentalDto.car!!) else null
+                startDate = rentalDto.startDate,
+                endDate = rentalDto.endDate,
+                isActive = rentalDto.isActive,
+                car = if(rentalDto.car != null) carMapper.mapToCarWithCustomCurrency(rentalDto.car!!) else null
         )
     }
 

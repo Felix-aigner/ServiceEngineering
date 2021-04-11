@@ -3,8 +3,6 @@ package at.serviceengineering.webservice1
 import at.serviceengineering.webservice1.dtos.AccountCreationDto
 import at.serviceengineering.webservice1.dtos.LoginDto
 import at.serviceengineering.webservice1.dtos.AccountDto
-import at.serviceengineering.webservice1.dtos.UserDto
-import at.serviceengineering.webservice1.services.AccountService
 import net.bytebuddy.utility.RandomString
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -38,7 +36,7 @@ class AccountIntegrationTests(
                 firstname = "firstname",
                 lastname = "lastname"
         )
-        val entity = restTemplate.postForEntity(URI("/account"), newAccount, Class::class.java)
+        val entity = restTemplate.postForEntity(URI("/accounts"), newAccount, Class::class.java)
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
     }
 
@@ -50,8 +48,8 @@ class AccountIntegrationTests(
                 firstname = "firstname",
                 lastname = "lastname"
         )
-        restTemplate.postForEntity(URI("/account"), newAccount, Class::class.java)
-        val entity2 = restTemplate.postForEntity(URI("/account"), newAccount, String::class.java)
+        restTemplate.postForEntity(URI("/accounts"), newAccount, Class::class.java)
+        val entity2 = restTemplate.postForEntity(URI("/accounts"), newAccount, String::class.java)
         assertThat(entity2.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
@@ -63,14 +61,14 @@ class AccountIntegrationTests(
                 firstname = "firstname",
                 lastname = "lastname"
         )
-        restTemplate.postForEntity(URI("/account"), newAccount, Class::class.java)
+        restTemplate.postForEntity(URI("/accounts"), newAccount, Class::class.java)
 
         val login = LoginDto(
                 username = newAccount.username,
                 password = newAccount.password
         )
 
-        val entity2 = restTemplate.postForEntity(URI("/account/login"), login, AccountDto::class.java)
+        val entity2 = restTemplate.postForEntity(URI("/accounts/login"), login, AccountDto::class.java)
         val response: AccountDto? = entity2.body
         assertThat(entity2.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response?.token).isNotEmpty()
@@ -86,17 +84,18 @@ class AccountIntegrationTests(
         headers.accept = Collections.singletonList(MediaType.APPLICATION_JSON)
         headers.set("token", newAccount?.token);
 
-        val user = UserDto(
-                username = newAccount!!.username,
+        val user = AccountDto(
+                id = newAccount!!.id,
+                username = newAccount.username,
                 firstname = newAccount.firstname,
                 lastname = newAccount.lastname,
                 token = newAccount.token,
                 isAdministrator = false,
-                rentedCars = null
+                rentals = null
         )
 
         val deleteHttpEntity = HttpEntity(user, headers)
-        val deleteResponse = restTemplate.exchange(URI("/account/delete"), HttpMethod.POST, deleteHttpEntity, String::class.java)
+        val deleteResponse = restTemplate.exchange(URI("/accounts/"+user.id), HttpMethod.DELETE, deleteHttpEntity, String::class.java)
         assertThat(deleteResponse.statusCode).isEqualTo(HttpStatus.OK)
 
         //login after deletion fails
@@ -106,7 +105,7 @@ class AccountIntegrationTests(
         )
         val loginHttpEntity = HttpEntity(login)
 
-        val res = restTemplate.exchange(URI("/account/login"), HttpMethod.POST, loginHttpEntity, String::class.java)
+        val res = restTemplate.exchange(URI("/accounts/login"), HttpMethod.POST, loginHttpEntity, String::class.java)
         assertThat(res.statusCode.value()).isEqualTo(401);
     }
 
@@ -117,7 +116,7 @@ class AccountIntegrationTests(
                 password = "pw"
         )
 
-        val res = restTemplate.postForEntity(URI("/account/login"), login, String::class.java)
+        val res = restTemplate.postForEntity(URI("/accounts/login"), login, String::class.java)
         assertThat(res.statusCode.value()).isEqualTo(401);
     }
 
@@ -129,7 +128,7 @@ class AccountIntegrationTests(
                 firstname = "firstname",
                 lastname = "lastname"
         )
-        restTemplate.postForEntity(URI("/account"), newAccount, Class::class.java)
+        restTemplate.postForEntity(URI("/accounts"), newAccount, Class::class.java)
 
         val login = LoginDto(
                 username = newAccount.username,
@@ -139,13 +138,13 @@ class AccountIntegrationTests(
         val entity = HttpEntity(login)
 
         try {
-            restTemplate.exchange(URI("/account/login"), HttpMethod.POST, entity, String::class.java)
+            restTemplate.exchange(URI("/accounts/login"), HttpMethod.POST, entity, String::class.java)
         } catch (e: HttpClientErrorException){
             assertThat(e.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
         }
     }
 
-    fun createValidAccountInclTokenRetrieval(): Pair<UserDto?, String> {
+    fun createValidAccountInclTokenRetrieval(): Pair<AccountDto?, String> {
 
         //new Account
         val newAccount = AccountCreationDto(
@@ -156,7 +155,7 @@ class AccountIntegrationTests(
         )
 
         val createHttpEntity = HttpEntity(newAccount)
-        val createResponse = restTemplate.exchange(URI("/account"), HttpMethod.POST, createHttpEntity, Class::class.java)
+        val createResponse = restTemplate.exchange(URI("/accounts"), HttpMethod.POST, createHttpEntity, Class::class.java)
         assertThat(createResponse.statusCode).isEqualTo(HttpStatus.OK)
 
         //login account to retrieve token
@@ -166,9 +165,9 @@ class AccountIntegrationTests(
         )
         val loginHttpEntity = HttpEntity(login)
 
-        val loginResponse = restTemplate.exchange(URI("/account/login"), HttpMethod.POST, loginHttpEntity, UserDto::class.java)
+        val loginResponse = restTemplate.exchange(URI("/accounts/login"), HttpMethod.POST, loginHttpEntity, AccountDto::class.java)
         assertThat(loginResponse.statusCode).isEqualTo(HttpStatus.OK)
-        val responseBody: UserDto? = loginResponse.body
+        val responseBody: AccountDto? = loginResponse.body
         assertThat(responseBody?.token).isNotEmpty()
 
         return Pair(responseBody, newAccount.password);
