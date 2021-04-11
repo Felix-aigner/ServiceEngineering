@@ -1,2 +1,6 @@
 .idea
 data
+*.tfvars
+*.tfstate
+*.backup
+CloudDeployment/.terraform/
