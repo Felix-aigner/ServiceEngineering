@@ -58,6 +58,13 @@ docker run -d \
   --network host \
   --name car_rental \
   shipitplz/car-rental-service
+
+# Frontend
+docker run -d \
+  -e FRONTEND_PORT=80 \
+  --network host \
+  --name car_rental_frontend \
+  shipitplz/car-rental-frontend
 # endregion
 
 EOF
