@@ -26,6 +26,8 @@ export class UserService {
   login(username: string, password: string): Observable<UserModel> {
     return this.http.post<UserModel>(this.accoutURL + '/login', {
       username, password
+    }, {
+      headers: this.commonHttpHeaders
     });
   }
 
@@ -36,6 +38,8 @@ export class UserService {
       lastname,
       username,
       password
+    }, {
+      headers: this.commonHttpHeaders
     });
   }
 }
