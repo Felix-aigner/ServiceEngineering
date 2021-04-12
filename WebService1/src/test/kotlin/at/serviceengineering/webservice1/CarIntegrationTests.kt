@@ -9,7 +9,6 @@ import at.serviceengineering.webservice1.services.AccountService
 import at.serviceengineering.webservice1.services.CarService
 import at.serviceengineering.webservice1.wsdl.Currency
 import net.bytebuddy.utility.RandomString
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -136,7 +135,6 @@ class CarIntegrationTests(
         }
     }
 
-    @Disabled //hängt sich derweil auf in carService.findAll
     @Test
     fun carListRetrieval() {
         //setup
@@ -222,12 +220,12 @@ class CarIntegrationTests(
     }
 
     fun singleCarTeardown(id: UUID?) {//hängt sich derweil auf in carService.findAll und deleteCar
-        //val carsBefore = carService.findAll(Currency.USD).size
+        val carsBefore = carService.findAll(Currency.USD).size
 
-        //carService.deleteCar(id!!)
+        carService.deleteCar(id!!)
 
-        //val carsAfter = carService.findAll(Currency.USD).size
+        val carsAfter = carService.findAll(Currency.USD).size
 
-        //assertThat(carsAfter).isEqualTo(carsBefore-1);
+        assertThat(carsAfter).isEqualTo(carsBefore-1);
     }
 }
