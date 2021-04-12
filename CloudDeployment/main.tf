@@ -5,11 +5,11 @@ resource "exoscale_compute" "webservices" {
   security_group_ids = [exoscale_security_group.webservices.id]
   zone = var.zone
 
-  key_pair = exoscale_ssh_keypair.stefan.id // <- hier erstmal nur Estepan für Tests
+  key_pair = exoscale_ssh_keypair.iwer_anders_von_den_jungs.id // <- hier erstmal nur Estepan für Tests
   template_id = data.exoscale_compute_template.ubuntu.id
   disk_size = 10
   // size = "micro" // für 2 java services in dieser Form wohl nicht ganz ausreichend
-  size = "tiny"
+  size = "medium"
 
   // partially based on https://gist.github.com/janoszen/7ced227c54d1c9e86a9c1cbd93a451f2
   user_data = <<EOF
@@ -65,6 +65,17 @@ docker run -d \
   --network host \
   --name car_rental_frontend \
   shipitplz/car-rental-frontend
+# endregion
+
+# Frontend
+docker run -d \
+  -p 5432:5432 \
+  -e POSTGRES_DB:postgres\
+  -e POSTGRES_USER:postgres \
+  -e POSTGRES_PASSWORD:postgres \
+  --network host \
+  --name database \
+  postgres:12.1
 # endregion
 
 EOF

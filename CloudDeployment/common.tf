@@ -28,8 +28,8 @@ resource "exoscale_ssh_keypair" "stefan" {
 }
 
 resource "exoscale_ssh_keypair" "iwer_anders_von_den_jungs" {
-  name = "Zega"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgwJB/1FI6TFjTM5a4m9r8y1sLlDNpFc8eIuKL1/pZf/wUFKCL4U+dR7HdJ3s4qVPJugxSDTzTKGGQHjSqkqshQ+JqfdY/mJS2aG7UZEBUndHxWrUokj19tXW52CnZa1x7c3Q84nQOluDOlQWSHIeCk+z+FmJW4ldr1++dfjXxl5PiobzdbwSds2Ttf9NtxHkOpMK4rT3gozkYvrmJJZcuXJlkLIeRurhuEbj7HhOn9gMuf1apnYB2jHw4T3yWOAqltnsAJmmwYDLdz6PCbIMk3zSiWI2gjP/6kVaT7yZAQp7CZu5hsguF50AahUll6dcUVjHAXjh4M9J2W98YRUtKQ=="
+  name = "joe"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC11W77TOegP3vGt2fn9KwXNzksTIAEcBpbo+/2gvm5NOUUVgGKoiXVMC87Tv52p6oVIxOvLEDH1AhFkLVS6xPLv2xUkv/IwQW2cmTuxBmKBjk58cq8Zy1EGbtfpdoEYRzfWaWtEUHnyPFtnc8wDekTYZa2aLXmFzVcWYxot7hqEOVcDKTrzAPv9iKGy8yixWu8wfE9UoZVg1gkg7Vw/IrmA4JDFcoIIBvo/IGLbG271ZaHV5ZG/ChOyVSTSvC0IEN30e0HHHLKWr1ASxojC/orjeITnh/2UYQWPbfVIJm6xRp5W5JzI/h514vU+mAW5mir3bphPFQjKpSO67BVyNXL johan@Joe-Desktop"
 }
 
 data "exoscale_compute_template" "ubuntu" {
