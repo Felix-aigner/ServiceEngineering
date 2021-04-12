@@ -9,14 +9,15 @@ import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
 import {IRental} from '../models/rental.model';
 import {catchError, map} from 'rxjs/operators';
+import {environment} from "../../environments/environment";
 
 
 type EntityResponseType = HttpResponse<ICar>;
 
 @Injectable({providedIn: 'root'})
 export class CarService {
-  public carURL = SERVER_API_URL + 'cars';
-  public rentalURL = SERVER_API_URL + 'rentals';
+  public carURL = environment.webserviceUrl +  + 'cars';
+  public rentalURL = environment.webserviceUrl +  + 'rentals';
 
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
