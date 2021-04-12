@@ -1,5 +1,6 @@
 package com.se.webservice2.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,14 @@ import java.util.List;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
+
+
+    @Value( "${soap.admin.name}" )
+    private String clientToken;
+
+    @Value( "${soap.admin.secret}" )
+    private String clientSecret;
+
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -56,7 +65,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public SimplePasswordValidationCallbackHandler callbackHandler() {
         SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
-        callbackHandler.setUsersMap(Collections.singletonMap("admin", "pwd123"));
+        callbackHandler.setUsersMap(Collections.singletonMap(clientToken, clientSecret));
         return callbackHandler;
     }
 

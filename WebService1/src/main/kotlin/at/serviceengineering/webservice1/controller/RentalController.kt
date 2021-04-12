@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.net.URISyntaxException
 import java.util.*
 
-private const val ENTITY_NAME = "rental"
+
 /**
  * REST controller for managing [com.se.project.domain.Rental].
  */
