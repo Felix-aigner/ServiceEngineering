@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 
-import {SERVER_API_URL} from '../app.constants';
 import {CurrencyEnum, ICar} from '../models/car.model';
 import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
