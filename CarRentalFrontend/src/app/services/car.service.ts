@@ -28,10 +28,8 @@ export class CarService {
 
   constructor(protected http: HttpClient, private userService: UserService, private dialog: MatDialog) {
     this.commonHttpHeaders = new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
-      .set('Access-Control-Allow-Headers', ['token', 'Content-Type', 'Accept'])
+      .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
   }
 

@@ -16,10 +16,8 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.commonHttpHeaders = new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
-      .set('Access-Control-Allow-Headers', ['token', 'Content-Type', 'Accept'])
+      .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
   }
 
