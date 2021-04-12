@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  webserviceUrl: 'http://194.182.185.87:5000/'
+  webserviceUrl: 'http://localhost:5000/'
 };
 
 /*
