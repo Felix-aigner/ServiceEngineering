@@ -15,7 +15,6 @@ import at.serviceengineering.webservice1.wsdl.Currency
 import org.springframework.stereotype.Service
 import java.util.*
 
-
 @Service
 class CarService(
         private val carRepository: ICarRepository,
@@ -45,7 +44,7 @@ class CarService(
             carRepository.save(car)
             accountRepository.save(account)
         } catch (e: Exception) {
-            account.rentals?.remove(request)
+            account.rentals?.remove(rental)
             accountRepository.save(account)
             throw Exception("Could not update Car, revert Transaction")
         }
@@ -108,3 +107,4 @@ class CarService(
 
     fun isCarRepositoryEmpty(): Boolean = carRepository.findAll().isNullOrEmpty()
 }
+
