@@ -1,0 +1,12 @@
+server:
+  port: ${PORT:5002}
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_URL:localhost}
+  application:
+    name: rental-microservice
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: rentaldb

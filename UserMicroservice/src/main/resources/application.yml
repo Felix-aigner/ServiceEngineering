@@ -1,0 +1,12 @@
+server:
+  port: ${PORT:5001}
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_URL:localhost}
+  application:
+    name: user-microservice
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: userdb
