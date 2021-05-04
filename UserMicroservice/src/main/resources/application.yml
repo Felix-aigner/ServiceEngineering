@@ -8,5 +8,8 @@ spring:
     name: user-microservice
   data:
     mongodb:
-      uri: mongodb://localhost:27017
-      database: userdb
+      authentication-database: admin
+      uri: ${MONGODB_URL:mongodb://root:example@localhost:27017/userdb}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
