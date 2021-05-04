@@ -1,4 +1,4 @@
-package at.serviceengineering.UserMicroservice
+package at.serviceengineering.microservice.user
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

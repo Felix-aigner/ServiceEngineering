@@ -1,4 +1,4 @@
-package at.serviceengineering.RentalMicroservice
+package at.serviceengineering.microservice.rental
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

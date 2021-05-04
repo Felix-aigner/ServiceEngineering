@@ -1,10 +1,10 @@
-package at.serviceengineering.CarMicroservice
+package at.serviceengineering.microservice.user
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class CarMicroserviceApplicationTests {
+class UserMicroserviceApplicationTests {
 
 	@Test
 	fun contextLoads() {
