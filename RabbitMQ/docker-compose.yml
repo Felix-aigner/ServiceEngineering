@@ -1,0 +1,10 @@
+version: "3"
+services:
+  rabbitmq:
+    image: rabbitmq:3.7-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./config/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro

@@ -1,6 +1,7 @@
 package at.serviceengineering.webservice1.controller
 
 import at.serviceengineering.webservice1.dtos.*
+import at.serviceengineering.webservice1.entities.Car
 import at.serviceengineering.webservice1.exceptions.AccountNotFoundException
 import at.serviceengineering.webservice1.exceptions.InvalidLoginCredentialsException
 import at.serviceengineering.webservice1.exceptions.TokenNotValidException
@@ -8,18 +9,38 @@ import at.serviceengineering.webservice1.exceptions.UsernameAlreadyExistsExcepti
 import at.serviceengineering.webservice1.services.IAccountService
 import at.serviceengineering.webservice1.services.JwtTokenService
 import at.serviceengineering.webservice1.wsdl.Currency
+import com.google.gson.Gson
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import springfox.documentation.spring.web.json.Json
 import java.util.*
 
 @RestController
 @RequestMapping("/accounts")
 class AccountController(
         val accountService: IAccountService,
-        val jwtTokenService: JwtTokenService
+        val jwtTokenService: JwtTokenService,
+        val rabbitTemplate: RabbitTemplate
 ) {
+
+    @GetMapping("/test")
+    fun testRabbit (): ResponseEntity<*> {
+        return try {
+            val test = LoginDto(username = "", password = "")
+            rabbitTemplate.convertAndSend("hello", test.toJson())
+            ResponseEntity.ok().body("")
+
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: AccountNotFoundException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
 
     @GetMapping
     fun getAllAccounts (@RequestHeader("token") token: String
