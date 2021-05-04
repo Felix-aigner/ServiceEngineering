@@ -6,5 +6,7 @@ services:
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=userdb
+      - MONGO_INITDB_DATABASE=cardb
+      - MONGO_INITDB_DATABASE=rentaldb
     ports:
     - 27017:27017

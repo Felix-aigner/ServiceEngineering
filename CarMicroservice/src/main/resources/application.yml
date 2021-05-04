@@ -8,5 +8,8 @@ spring:
     name: car-microservice
   data:
     mongodb:
-      uri: mongodb://localhost:27017
+      uri: ${MONGODB_URL:mongodb://localhost:27017/}
       database: cardb
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 data class Account (
 
     @Id
-    var id: String?,
+    var id: String,
 
     @Field("username")
     var username: String,
