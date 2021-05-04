@@ -11,7 +11,8 @@ export class UserService {
 
   isLoggedIn = new BehaviorSubject<boolean>(false);
   currUser = new BehaviorSubject<UserModel>(new UserModel());
-  accoutURL = environment.webserviceUrl + 'accounts';
+  accountURL: string;
+
 
   private readonly commonHttpHeaders;
 
@@ -20,10 +21,22 @@ export class UserService {
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
+    if(environment.production) {
+      this.getURL();
+    } else {
+      this.accountURL = 'http://localhost:5000/accounts';
+    }
+  }
+
+  getURL() {
+    this.http.get("http://api.ipify.org/?format=json")
+      .subscribe((res:any)=> {
+      this.accountURL = 'http://' + res.ip + ':5000/accounts';
+    });
   }
 
   login(username: string, password: string): Observable<UserModel> {
-    return this.http.post<UserModel>(this.accoutURL + '/login', {
+    return this.http.post<UserModel>(this.accountURL + '/login', {
       username, password
     }, {
       headers: this.commonHttpHeaders
@@ -32,7 +45,7 @@ export class UserService {
 
   // tslint:disable-next-line:typedef
   register(firstname: string, lastname: string, username: string, password: string) {
-    return this.http.post(this.accoutURL, {
+    return this.http.post(this.accountURL, {
       firstname,
       lastname,
       username,

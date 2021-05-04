@@ -15,8 +15,8 @@ type EntityResponseType = HttpResponse<ICar>;
 
 @Injectable({providedIn: 'root'})
 export class CarService {
-  public carURL = environment.webserviceUrl + 'cars';
-  public rentalURL = environment.webserviceUrl + 'rentals';
+  carURL: string;
+  rentalURL: string;
 
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
@@ -31,6 +31,21 @@ export class CarService {
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
+
+    if(environment.production) {
+      this.getURL();
+    } else {
+      this.carURL = 'http://localhost:5000/cars';
+      this.rentalURL = 'http://localhost:5000/rentals';
+    }
+  }
+
+  getURL() {
+    this.http.get("http://api.ipify.org/?format=json")
+      .subscribe((res:any)=> {
+        this.carURL = 'http://' + res.ip + ':5000/cars';
+        this.rentalURL = 'http://' + res.ip + ':5000/rentals';
+      });
   }
 
   save(car: ICar): Observable<EntityResponseType> {
