@@ -1,19 +1,15 @@
-package at.serviceengineering.microservice.user.controller
+package at.serviceengineering.microservice.rest.service.handler
 
-import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitHandler
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
 
 @Service
 @RabbitListener(queues = ["hello"])
-class Consumer (
-        val producer: Producer
-        ) {
+class CarMessageHandler {
     @RabbitHandler
     fun receive(obj: String) {
 
         println("Received: '$obj'")
-        producer.send()
     }
 }

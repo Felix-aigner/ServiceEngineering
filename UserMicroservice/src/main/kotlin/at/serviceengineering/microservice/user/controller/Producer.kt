@@ -8,6 +8,6 @@ class Producer(
         val rabbitTemplate: RabbitTemplate
 ) {
     fun send() {
-        rabbitTemplate.convertAndSend("hello", "test")
+        rabbitTemplate.convertAndSend("hello2", "test-response")
     }
 }

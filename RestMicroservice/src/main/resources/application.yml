@@ -1,0 +1,8 @@
+server:
+  port: ${PORT:5000}
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_URL:localhost}
+  application:
+    name: rest-microservice
