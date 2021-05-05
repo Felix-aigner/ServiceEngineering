@@ -1,3 +1,3 @@
 npm run build
-docker build -t car-rental-frontend .
+docker build -t shipitplz/car-rental-frontend .
 pause
