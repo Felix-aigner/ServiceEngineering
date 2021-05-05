@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 @Service
 class CurrencyConverterService(
-        val currencyClient: CurrencyClient
+        private val currencyClient: CurrencyClient
 ) {
 
     fun convertCurrency(value: BigDecimal, startCurrency: Currency , expectedCurrency: Currency): BigDecimal {

@@ -2,6 +2,8 @@ package at.serviceengineering.microservice.car
 
 import at.serviceengineering.microservice.car.entities.Car
 import at.serviceengineering.microservice.car.service.CarService
+import at.serviceengineering.microservice.car.service.CurrencyConverterService
+import at.serviceengineering.webservice2.wsdl.Currency
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
