@@ -1,7 +1,9 @@
 package at.serviceengineering.microservice.rest.service.controller
 
 
+import at.serviceengineering.microservice.rest.service.exceptions.TokenNotValidException
 import at.serviceengineering.microservice.rest.service.handler.AccountMessageHandler
+import at.serviceengineering.microservice.rest.service.handler.JwtTokenHandler
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,40 +14,36 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/accounts")
 class AccountController(
-        val accountMessageHandler: AccountMessageHandler
+        val accountMessageHandler: AccountMessageHandler,
+        val jwtTokenHandler: JwtTokenHandler
 ) {
 
     @GetMapping("/test")
     fun testRabbit(): ResponseEntity<*> {
         return try {
-//            val test = "Test"
-//            val response = accountMessageHandler.sendTestMessage(test)
-            val test = accountMessageHandler.send("hallo")
+            val test = accountMessageHandler.getName()
             ResponseEntity.ok().body(test)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
     }
-/*
+
     @GetMapping
     fun getAllAccounts (@RequestHeader("token") token: String
-    ): ResponseEntity<List<AccountDto>> {
+    ): ResponseEntity<String> {
         return try {
-            jwtTokenService.getAccountFromToken(token)
-            val accountList = accountService.findAll()
-            ResponseEntity.ok().body(accountList)
-
+            jwtTokenHandler.recoverJWT(token)
+            val accounts = accountMessageHandler.getAllAccounts()
+            ResponseEntity.ok().body(accounts)
         } catch (e: TokenNotValidException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: AccountNotFoundException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
     }
-
+/*
     @GetMapping("/{id}")
-    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: UUID): ResponseEntity<AccountDto> {
+    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: String): ResponseEntity<String> {
         return try {
             jwtTokenService.getAccountFromToken(token)
             val accountDto = accountService.findOne(id)
@@ -62,7 +60,7 @@ class AccountController(
 
 
     @PostMapping
-    fun createAccount(@RequestBody accountCreation: AccountCreationDto): ResponseEntity<*> {
+    fun createAccount(@RequestBody accountCreation: String): ResponseEntity<*> {
         return try {
             accountService.createAccount(accountCreation)
             ResponseEntity.ok().body("")
@@ -75,10 +73,10 @@ class AccountController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody loginDto: LoginDto): ResponseEntity<*> {
+    fun login(@RequestBody login: String): ResponseEntity<*> {
         return try {
-            accountService.login(loginDto)
-            val user = accountService.getUserDtoByUsername(loginDto.username)
+            accountService.login(login)
+            val user = accountService.getUserDtoByUsername(login.username)
             ResponseEntity.ok().body(user)
 
         } catch (e: InvalidLoginCredentialsException) {
@@ -91,7 +89,7 @@ class AccountController(
     @DeleteMapping("/{id}")
     fun deleteAccount(
             @RequestHeader("token") token: String,
-            @PathVariable id: UUID): ResponseEntity<*> {
+            @PathVariable id: String): ResponseEntity<*> {
         return try {
             jwtTokenService.getAccountFromToken(token)
             accountService.deleteAccount(id)
@@ -107,7 +105,7 @@ class AccountController(
     @PutMapping("/change-password")
     fun changePassword(
             @RequestHeader("token") token: String,
-            @RequestBody passwordChangeDto: PasswordChangeDto
+            @RequestBody passwordChange: String
     ): ResponseEntity<*> {
         return try {
             jwtTokenService.validateUserToken(token, passwordChangeDto.username)
