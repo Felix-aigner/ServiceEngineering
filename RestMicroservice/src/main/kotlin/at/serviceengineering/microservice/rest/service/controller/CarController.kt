@@ -15,14 +15,16 @@ class CarController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @GetMapping("/getCars")
-    fun getCars(@RequestHeader("id") id: String?): ResponseEntity<*> {
+    @GetMapping
+    fun getCars(
+            @RequestParam(name = "id", required = false) id: String?,
+            @RequestParam(name = "cy", required = false) currency: String?
+    ): ResponseEntity<*> {
         return try {
-            val cars:String;
-            if(id.isNullOrEmpty()) {
-                cars = carMessageHandler.getCars()
+            val cars = if(id.isNullOrEmpty()) {
+                carMessageHandler.getCars(currency?: "USD")
             } else {
-                cars = carMessageHandler.getCars(id)
+                carMessageHandler.getCars(currency?: "USD", id)
             }
             ResponseEntity.ok().body(cars)
         } catch (e: Exception) {

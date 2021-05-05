@@ -32,7 +32,7 @@ class CarMicroserviceApplication(
 									brand = "Audi",
 									type = "A${Random.nextInt(3, 8)}",
 									kwPower = Random.nextInt(120, 250),
-									usdPrice = BigDecimal(price)
+									price = BigDecimal(price)
 							)
 					)
 				}
