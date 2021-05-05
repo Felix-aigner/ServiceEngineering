@@ -25,7 +25,6 @@ class CarService(
         car.brand = newCar.brand
         car.type = newCar.type
         car.usdPrice = newCar.usdPrice
-        car.isRented = newCar.isRented
         car.kwPower = newCar.kwPower
         return carRepository.save(car)
     }

@@ -30,9 +30,8 @@ class CarMicroserviceApplication(
 									brand = "Audi",
 									type = "A${Random.nextInt(3, 8)}",
 									kwPower = Random.nextInt(120, 250),
-									usdPrice = BigDecimal(price),
-									isRented = false
-							).also { println(it) }
+									usdPrice = BigDecimal(price)
+							)
 					)
 				}
 			}
