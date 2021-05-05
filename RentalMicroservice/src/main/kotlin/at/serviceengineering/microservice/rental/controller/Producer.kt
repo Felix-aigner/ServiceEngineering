@@ -8,6 +8,7 @@ class Producer(
         val rabbitTemplate: RabbitTemplate
 ) {
     fun send() {
-        rabbitTemplate.convertAndSend("hello", "test")
+        val response = rabbitTemplate.convertSendAndReceive("rest.getName", "user.getName", "rental") as String?
+        println(" [.] Got '$response'")
     }
 }
