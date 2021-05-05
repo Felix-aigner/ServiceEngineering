@@ -1,14 +1,46 @@
 package at.serviceengineering.microservice.rest.service.controller
 
+import at.serviceengineering.microservice.rest.service.handler.CarMessageHandler
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/cars")
 class CarController(
+        val carMessageHandler: CarMessageHandler
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    @GetMapping("/getCars")
+    fun getCars(@RequestHeader("id") id: String?): ResponseEntity<*> {
+        return try {
+            val cars:String;
+            if(id.isNullOrEmpty()) {
+                cars = carMessageHandler.getCars()
+            } else {
+                cars = carMessageHandler.getCars(id)
+            }
+            ResponseEntity.ok().body(cars)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+    @PostMapping("/addCar")
+    fun addCar(@RequestBody car: String): ResponseEntity<*> {
+        return try {
+            val response = carMessageHandler.addCar(car)
+            ResponseEntity.ok().body(response)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
+
+
 /*
     @GetMapping
     fun getAllCars(@RequestHeader("token") token: String,

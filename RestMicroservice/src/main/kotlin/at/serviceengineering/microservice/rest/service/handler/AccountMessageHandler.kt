@@ -11,10 +11,21 @@ class AccountMessageHandler {
     private val template: RabbitTemplate? = null
 
 
-    fun send(name: String): String {
-        println(" [x] Requesting ($name)")
-        val response = template!!.convertSendAndReceive("rest.getName", "user.getName", name) as String?
+    fun send(exchange: String, routingKey : String): String {
+        val response = template!!.convertSendAndReceive(exchange, routingKey, "hans") as String?
         println(" [.] Got '$response'")
         return response?: "none"
+    }
+
+    fun getName(): String {
+        val exchange = "rest.getName"
+        val routingKey = "user.getName"
+        return send(exchange, routingKey)
+    }
+
+    fun getAllAccounts(): String {
+        val exchange = "rest.getAllAccounts"
+        val routingKey = "user.getAllAccounts"
+        return send(exchange, routingKey)
     }
 }
