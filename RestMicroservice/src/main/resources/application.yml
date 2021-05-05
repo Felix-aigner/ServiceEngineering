@@ -6,3 +6,8 @@ spring:
     host: ${RABBIT_URL:localhost}
   application:
     name: rest-microservice
+
+token:
+  privateKey: ${PRIVATE_KEY:688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6}
+  issuer: ${ISSUER:restService.carRental}
+  expirationTime: ${EXPIRATION_TIME:60}

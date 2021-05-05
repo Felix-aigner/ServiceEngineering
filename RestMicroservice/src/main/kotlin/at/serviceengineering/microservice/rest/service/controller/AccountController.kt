@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/accounts")
 class AccountController(
         val accountMessageHandler: AccountMessageHandler,
-        val jwtTokenHandler: JwtTokenHandler
+        //val jwtTokenHandler: JwtTokenHandler
 ) {
 
     @GetMapping("/test")
@@ -32,11 +32,11 @@ class AccountController(
     fun getAllAccounts (@RequestHeader("token") token: String
     ): ResponseEntity<String> {
         return try {
-            jwtTokenHandler.recoverJWT(token)
+            //jwtTokenHandler.recoverJWT(token)
             val accounts = accountMessageHandler.getAllAccounts()
             ResponseEntity.ok().body(accounts)
-        } catch (e: TokenNotValidException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        /*} catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)*/
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
