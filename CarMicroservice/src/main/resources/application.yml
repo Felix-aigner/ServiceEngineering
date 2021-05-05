@@ -13,3 +13,11 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+webservice2:
+  url: ${WEBSERVICE2_URL:http://localhost:4000/ws/currency-converter}
+
+soap:
+  admin:
+    name: ${SOAP_ADMIN_NAME:admin}
+    secret: ${SOAP_ADMIN_SECRET:pwd123}

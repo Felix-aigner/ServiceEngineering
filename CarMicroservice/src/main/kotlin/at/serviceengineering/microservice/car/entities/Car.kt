@@ -21,9 +21,5 @@ data class Car(
         var kwPower: Int,
 
         @Field("usdPrice")
-        var usdPrice: BigDecimal,
-
-        @Field("isRented")
-        var isRented: Boolean,
-
-        )
+        var usdPrice: BigDecimal
+)
