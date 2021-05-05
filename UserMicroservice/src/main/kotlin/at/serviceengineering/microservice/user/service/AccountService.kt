@@ -10,18 +10,16 @@ import org.springframework.stereotype.Service
 @Service
 class AccountService(
         private val accountRepository: AccountRepository,
-
 ) {
 
     val logger: Logger = LoggerFactory.getLogger(AccountService::class.java)
 
-    fun login(account: Account) {
+    fun login(account: Account) : Account{
         if (!passwordCorrect(account.username, account.password)){
-            TODO("Not yet implemented")
-        } else
-            TODO("Not yet implemented")
+            throw Exception()
+        }
+        return findOneByUsername(account.username)
     }
-
 
     fun passwordCorrect(username: String, password: String): Boolean {
         return when (val account = accountRepository.findByUsername(username)) {
@@ -30,12 +28,12 @@ class AccountService(
         }
     }
 
-    fun createAccount(account: Account) {
+    fun createAccount(account: Account) : Account{
         if (usernameAlreadyExists(account.username)) {
-            TODO("Not yet implemented")
+            throw Exception()
         }
         account.password = hash(account.password)
-        accountRepository.save(account).also {
+        return accountRepository.save(account).also {
             logger.info("New Account created: $it")
         }
     }
@@ -50,6 +48,10 @@ class AccountService(
 
     fun findOne(id: String): Account {
         return accountRepository.findById(id).get()
+    }
+
+    fun findOneByUsername(name: String): Account {
+        return accountRepository.findByUsername(name)?: throw Exception()
     }
 
     fun createAdministrator(account: Account) {

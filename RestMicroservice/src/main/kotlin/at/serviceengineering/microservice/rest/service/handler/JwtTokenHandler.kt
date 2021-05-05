@@ -23,11 +23,11 @@ class JwtTokenHandler(
     @Value("\${token.expirationTime}")
     val expirationTime: Long = 0
 
-    fun buildJwt(uuid: UUID): String {
+    fun buildJwt(id: String): String {
         val signer: Signer = HMACSigner.newSHA256Signer(privateKey)
         val jwt = JWT().setIssuer(issuer)
                 .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-                .setSubject(uuid.toString())
+                .setSubject(id)
                 .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(expirationTime))
         return JWT.getEncoder().encode(jwt, signer)
     }
