@@ -6,14 +6,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
 
 @Service
-@RabbitListener(queues = ["hello"])
-class Consumer (
-        val producer: Producer
-        ) {
-    @RabbitHandler
-    fun receive(obj: String) {
+class Consumer {
+    @RabbitListener(queues = ["tut.rpc.requests"])
+    fun receive(obj: String): String {
 
         println("Received: '$obj'")
-        producer.send()
+        return obj + "recieved"
     }
 }

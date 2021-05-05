@@ -24,7 +24,7 @@ class UserMicroserviceApplication(
 				logger.info("Add Administrator")
 				accountService.createAdministrator(
 						Account(
-								id= null,
+								id= "",
 								username = "admin",
 								password = "admin",
 								firstname = "firstname",

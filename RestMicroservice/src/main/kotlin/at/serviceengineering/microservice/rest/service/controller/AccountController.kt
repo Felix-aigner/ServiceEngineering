@@ -2,8 +2,6 @@ package at.serviceengineering.microservice.rest.service.controller
 
 
 import at.serviceengineering.microservice.rest.service.handler.AccountMessageHandler
-import com.google.gson.Gson
-import org.springframework.amqp.rabbit.core.RabbitTemplate
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,15 +12,16 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/accounts")
 class AccountController(
-        val accountMessageHandler: AccountMessageHandler,
+        val accountMessageHandler: AccountMessageHandler
 ) {
 
     @GetMapping("/test")
-    fun testRabbit (): ResponseEntity<*> {
+    fun testRabbit(): ResponseEntity<*> {
         return try {
-            val test = "Test"
-            val response = accountMessageHandler.sendTestMessage(test)
-            ResponseEntity.ok().body(response)
+//            val test = "Test"
+//            val response = accountMessageHandler.sendTestMessage(test)
+            val test = accountMessageHandler.send("hallo")
+            ResponseEntity.ok().body(test)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
