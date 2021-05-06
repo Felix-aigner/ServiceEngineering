@@ -1,7 +1,9 @@
 package at.serviceengineering.microservice.rest.service.controller
 
 
+import at.serviceengineering.microservice.rest.service.exceptions.InvalidLoginCredentialsException
 import at.serviceengineering.microservice.rest.service.exceptions.TokenNotValidException
+import at.serviceengineering.microservice.rest.service.exceptions.UsernameAlreadyExistsException
 import at.serviceengineering.microservice.rest.service.handler.AccountMessageHandler
 import at.serviceengineering.microservice.rest.service.handler.JwtTokenHandler
 
@@ -15,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/accounts")
 class AccountController(
         val accountMessageHandler: AccountMessageHandler,
-        //val jwtTokenHandler: JwtTokenHandler
+        val jwtTokenHandler: JwtTokenHandler
 ) {
 
     @GetMapping("/test")
@@ -29,56 +31,56 @@ class AccountController(
     }
 
     @GetMapping
-    fun getAllAccounts (@RequestHeader("token") token: String
+    fun getAllAccounts (@RequestHeader("token") token: String?
     ): ResponseEntity<String> {
         return try {
             //jwtTokenHandler.recoverJWT(token)
-            val accounts = accountMessageHandler.getAllAccounts()
+            val accounts = accountMessageHandler.getAccounts()
             ResponseEntity.ok().body(accounts)
-        /*} catch (e: TokenNotValidException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)*/
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
-        }
-    }
-/*
-    @GetMapping("/{id}")
-    fun getAccount(@RequestHeader("token") token: String,  @PathVariable id: String): ResponseEntity<String> {
-        return try {
-            jwtTokenService.getAccountFromToken(token)
-            val accountDto = accountService.findOne(id)
-            ResponseEntity.ok().body(accountDto)
-
         } catch (e: TokenNotValidException) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
-        } catch (e: AccountNotFoundException) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
         } catch (e: Exception) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
     }
 
+    @GetMapping("/{id}")
+    fun getAccount(@RequestHeader("token") token: String?,  @PathVariable id: String): ResponseEntity<String> {
+        return try {
+            //jwtTokenHandler.recoverJWT(token)
+            val accounts = accountMessageHandler.getAccounts(id)
+            ResponseEntity.ok().body(accounts)
+        } catch (e: TokenNotValidException) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+        }
+    }
 
     @PostMapping
     fun createAccount(@RequestBody accountCreation: String): ResponseEntity<*> {
         return try {
-            accountService.createAccount(accountCreation)
-            ResponseEntity.ok().body("")
-
+            val account = accountMessageHandler.createAccount(accountCreation)
+            if(account.equals("username already exists")){
+                throw UsernameAlreadyExistsException()
+            }
+            ResponseEntity.ok().body(account)
         } catch (e: UsernameAlreadyExistsException) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
         } catch (e: Exception) {
-            ResponseEntity(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
         }
     }
 
     @PostMapping("/login")
     fun login(@RequestBody login: String): ResponseEntity<*> {
         return try {
-            accountService.login(login)
-            val user = accountService.getUserDtoByUsername(login.username)
-            ResponseEntity.ok().body(user)
-
+            val accountId = accountMessageHandler.login(login)
+            if(accountId.equals("invalid credentials")){
+                throw InvalidLoginCredentialsException()
+            }
+            val token = jwtTokenHandler.buildJwt(accountId)
+            ResponseEntity.ok().body(token)
         } catch (e: InvalidLoginCredentialsException) {
             ResponseEntity(e.message, HttpStatus.UNAUTHORIZED)
         } catch (e: Exception) {
@@ -88,20 +90,22 @@ class AccountController(
 
     @DeleteMapping("/{id}")
     fun deleteAccount(
-            @RequestHeader("token") token: String,
+            @RequestHeader("token") token: String?,
             @PathVariable id: String): ResponseEntity<*> {
         return try {
-            jwtTokenService.getAccountFromToken(token)
-            accountService.deleteAccount(id)
+            //jwtTokenHandler.recoverJWT(token)
+            val response = accountMessageHandler.deleteAccount(id)
+            if(response.equals("failed")){
+                throw Exception()
+            }
             ResponseEntity.ok().body("")
-
         } catch (e: TokenNotValidException) {
             ResponseEntity(e.message, HttpStatus.FORBIDDEN)
         } catch (e: Exception) {
             ResponseEntity(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
-
+/*
     @PutMapping("/change-password")
     fun changePassword(
             @RequestHeader("token") token: String,

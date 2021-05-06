@@ -18,10 +18,10 @@ data class Account (
     var password: String,
 
     @Field("firstname")
-    var firstname: String,
+    var firstname: String?,
 
     @Field("lastname")
-    var lastname: String,
+    var lastname: String?,
 
     @Field("isAdministrator")
     var isAdministrator: Boolean,
