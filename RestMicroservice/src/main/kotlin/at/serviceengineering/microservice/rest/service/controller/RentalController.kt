@@ -2,6 +2,7 @@ package at.serviceengineering.microservice.rest.service.controller
 
 
 import at.serviceengineering.microservice.rest.service.exceptions.TokenNotValidException
+import at.serviceengineering.microservice.rest.service.handler.JwtTokenHandler
 import at.serviceengineering.microservice.rest.service.handler.RentalMessageHandler
 import at.serviceengineering.microservice.rest.service.util.Response
 import org.slf4j.LoggerFactory
@@ -14,7 +15,8 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/rentals")
 class RentalController(
-        val rentalMessageHandler: RentalMessageHandler
+        val rentalMessageHandler: RentalMessageHandler,
+        val jwtTokenHandler: JwtTokenHandler
 ) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -23,7 +25,7 @@ class RentalController(
     fun getRentals(@RequestHeader("token") token: String?
     ): ResponseEntity<String> {
         return try {
-            //jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token?: throw Exception())
             val rentals = rentalMessageHandler.getRentals()
             ResponseEntity.ok().body(rentals)
         } catch (e: Exception) {
@@ -34,7 +36,7 @@ class RentalController(
     @GetMapping("/{id}")
     fun getRental(@RequestHeader("token") token: String?,  @PathVariable id: String): ResponseEntity<String> {
         return try {
-            //jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token?: throw Exception())
             val rentals = rentalMessageHandler.getRentals(id)
             ResponseEntity.ok().body(rentals)
         } catch (e: Exception) {
@@ -50,7 +52,7 @@ class RentalController(
         logger.debug("REST request to create Rental : $body")
 
         return try {
-//            val account = jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token?: throw Exception())
             val response = rentalMessageHandler.editRental(body)
             ResponseEntity.ok().body(response)
 

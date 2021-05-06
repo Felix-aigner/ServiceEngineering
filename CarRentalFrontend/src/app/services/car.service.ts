@@ -42,7 +42,7 @@ export class CarService {
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
 
-    if(environment.production) {
+    if (environment.production) {
       this.getURL();
     } else {
       this.carURL = 'http://localhost:5000/cars';
@@ -52,7 +52,7 @@ export class CarService {
 
   getURL() {
     this.http.get("http://api.ipify.org/?format=json")
-      .subscribe((res:any)=> {
+      .subscribe((res: any) => {
         this.carURL = 'http://' + res.ip + ':5000/cars';
         this.rentalURL = 'http://' + res.ip + ':5000/rentals';
       });
@@ -89,10 +89,10 @@ export class CarService {
   }
 
   getCarsFromStore(): void {
-      this.carSelector.getAllCarsFromStore().pipe(
-      ).subscribe( (cars: Car[]) => {
-        this.loadedCars.next(cars);
-        })
+    this.carSelector.getAllCarsFromStore().pipe(
+    ).subscribe((cars: Car[]) => {
+      this.loadedCars.next(cars);
+    })
   }
 
   delete(id: number): any {
@@ -104,16 +104,19 @@ export class CarService {
 
   bookCar(rental: Rental): void {
     console.log(rental);
-    this.http.post<Rental>(this.rentalURL, rental, {
-      observe: 'response',
-      headers: this.commonHttpHeaders
-        .append('token', this.userService.currUser.value.token)
-    }).subscribe(() => {
-        if (this.userService.currUser.value.isAdministrator) {
-          this.queryAllRentals();
-        }
-      }
-    );
+    this.http.post<Rental>(this.rentalURL + "/create",
+      {
+        rental: rental,
+        method: "create"
+      },
+      {
+        observe: 'response',
+        headers: this.commonHttpHeaders
+          .append('token', this.userService.currUser.value.token)
+      }).pipe(
+      map((_) => {
+        this.store.dispatch(restAction.GetAllRentals());
+      })).subscribe()
   }
 
   releaseCar(rental: Rental): void {
@@ -121,26 +124,9 @@ export class CarService {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    }).subscribe(() => {
-        if (this.userService.currUser.value.isAdministrator) {
-          this.queryAllRentals();
-        }
-      }
-    );
-  }
-
-  queryAllRentals(): void {
-    this.http.get<Rental[]>(this.rentalURL, {
-      observe: 'response',
-      headers: this.commonHttpHeaders
-        .append('token', this.userService.currUser.value.token)
     }).pipe(
-      catchError(error => {
-        return of(null);
-      }),
-      map((value: HttpResponse<Rental[]>) => value.body),
-    ).subscribe((value) => {
-      // this.allRentals.next(value.filter(rental => rental.car != null));
-    });
+      map((_) => {
+        this.store.dispatch(restAction.GetAllRentals());
+      })).subscribe()
   }
 }

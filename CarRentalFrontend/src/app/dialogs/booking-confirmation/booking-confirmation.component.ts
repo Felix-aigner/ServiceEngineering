@@ -50,8 +50,8 @@ export class BookingConfirmationComponent implements OnInit {
   private createFromForm(): Rental {
     return {
       id: this.bookingForm.get(['id'])!.value,
-      startDate: this.bookingForm.get(['startDate'])!.value,
-      endDate: this.bookingForm.get(['endDate'])!.value,
+      startDate: this.bookingForm.get(['startDate'])!.value.toString(),
+      endDate: this.bookingForm.get(['endDate'])!.value.toString(),
       isActive: this.bookingForm.get(['isActive'])!.value,
       carId: (<Car>(this.bookingForm.get(['car'])!.value)).id,
       userId: this.userService.currUser.value.id

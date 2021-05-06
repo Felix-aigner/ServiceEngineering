@@ -14,11 +14,11 @@ export const GetAllCarsSuccess = createAction(
 );
 
 export const GetAllRentals = createAction(
-  '[Car] Get All Cars'
+  '[Rental] Get All Rentals'
 );
 
 export const GetAllRentalsSuccess = createAction(
-  '[Car] Get All Cars Success',
+  '[Rental] Get All Rentals Success',
   props<{rentals: Rental[]}>()
 );
 

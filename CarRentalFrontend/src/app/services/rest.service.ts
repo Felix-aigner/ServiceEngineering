@@ -41,6 +41,7 @@ export class RestService {
     return this.http.get( this.carURL + "?cy=" + CurrencyEnum[currency],
       {
         headers: this.commonHttpHeaders
+          .append('token', this.userService.currUser.value.token)
       }
     ).pipe(
       catchError(err => {
@@ -53,6 +54,7 @@ export class RestService {
     return this.http.get( this.rentalURL,
       {
         headers: this.commonHttpHeaders
+          .append('token', this.userService.currUser.value.token)
       }
     ).pipe(
       catchError(err => {

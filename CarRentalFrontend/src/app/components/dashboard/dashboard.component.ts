@@ -4,7 +4,7 @@ import {Car, CurrencyEnum} from '../../models/car.model';
 import {CarService} from '../../services/car.service';
 import {UserService} from '../../services/user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of, zip} from 'rxjs';
 import {CreateCarComponent} from '../../dialogs/create-car/create-car.component';
 import {EditCarComponent} from '../../dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
@@ -13,6 +13,9 @@ import * as rest from "../../car/+state/rest.actions";
 import {Store} from "@ngrx/store";
 import {State} from "../../app.store";
 import {CarSelectorService} from "../../car/car-selector.service";
+import {RentalSelectorService} from "../../car/rental-selector.service";
+import {switchMap} from "rxjs/operators";
+import {Rental} from "../../models/rental.model";
 
 @Component({
   selector: 'app-dashboard',
@@ -31,15 +34,21 @@ export class DashboardComponent implements OnInit {
     public userService: UserService,
     private dialog: MatDialog,
     private store: Store<State>,
-    private carSelector: CarSelectorService
+    private carSelector: CarSelectorService,
+    private rentalSelector: RentalSelectorService
   ) {
   }
 
   ngOnInit(): void {
     this.carService.getCarsFromStore();
-    this.carSelector.getAllCarsFromStore().subscribe( (cars: Car[]) =>
-      this.loadedCars = cars
-    )
+    zip(
+      this.carSelector.getAllCarsFromStore(),
+      this.rentalSelector.getAllActiveRentalsFromStore()
+      ).pipe(
+        switchMap(([cars, rentals]: [Car[], Rental[]]) => {
+          return of(cars.filter((car: Car) => !rentals.map((rental) => rental.carId).includes(car.id)))
+        }
+        )).subscribe( (cars: Car[]) => this.loadedCars = cars)
   }
 
 

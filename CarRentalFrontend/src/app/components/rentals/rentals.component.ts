@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CarService} from '../../services/car.service';
 import {Rental} from '../../models/rental.model';
 import {UserService} from '../../services/user.service';
+import {RentalSelectorService} from "../../car/rental-selector.service";
 
 @Component({
   selector: 'app-rentals',
@@ -10,13 +11,19 @@ import {UserService} from '../../services/user.service';
 })
 export class RentalsComponent implements OnInit {
 
-  allrentals = this.carService.allRentals;
+  allrentals: Rental[]
 
-  constructor(private carService: CarService, private userService: UserService) {
-    this.carService.queryAllRentals();
+  constructor(
+    private carService: CarService,
+    private userService: UserService,
+    private rentalSelector: RentalSelectorService
+  ) {
+
   }
 
   ngOnInit(): void {
+    this.rentalSelector.getAllRentalsFromStore()
+      .subscribe((rentals: Rental[]) => this.allrentals = rentals)
   }
 
   releaseCar(rental: Rental): void {

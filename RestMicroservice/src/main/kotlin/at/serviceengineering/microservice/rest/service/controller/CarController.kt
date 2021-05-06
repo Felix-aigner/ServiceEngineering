@@ -2,6 +2,7 @@ package at.serviceengineering.microservice.rest.service.controller
 
 import at.serviceengineering.microservice.rest.service.exceptions.TokenNotValidException
 import at.serviceengineering.microservice.rest.service.handler.CarMessageHandler
+import at.serviceengineering.microservice.rest.service.handler.JwtTokenHandler
 import at.serviceengineering.microservice.rest.service.util.Response
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -12,7 +13,8 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/cars")
 class CarController(
-        val carMessageHandler: CarMessageHandler
+        val carMessageHandler: CarMessageHandler,
+        val jwtTokenHandler: JwtTokenHandler
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -36,11 +38,11 @@ class CarController(
 
     @PostMapping
     fun addCar(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
         return try {
-//            jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token?: throw Exception())
             carMessageHandler.editCar(body)
             ResponseEntity.ok().body("")
         } catch (e: TokenNotValidException) {
@@ -52,11 +54,11 @@ class CarController(
 
     @PutMapping
     fun changeCar(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
         return try {
-//            jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token?: throw Exception())
             val response = carMessageHandler.editCar(body)
             if(response == Response.FAILED.name){
                 throw Exception()

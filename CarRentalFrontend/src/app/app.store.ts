@@ -21,3 +21,4 @@ export const metaReducers: MetaReducer<State>[] = !(environment.production)
 
 
 export const getCarState = createFeatureSelector<fromCar.CarState>('car');
+export const getRentalState = createFeatureSelector<fromRental.RentalState>('rental');
