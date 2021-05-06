@@ -19,17 +19,14 @@ class RentalRabbitConsumer(
 
     val logger: Logger = LoggerFactory.getLogger(RentalRabbitConsumer::class.java)
 
-    @RabbitListener(queues = ["cars.getRentals.requests"])
+    @RabbitListener(queues = ["rentals.getRentals.requests"])
     fun receiveRentalRequests(obj: String): String {
         logger.info(" [X] Received Get Rentals: '$obj'")
-
-        val request = Gson().fromJson(obj, RentalRequest::class.java)
-
         return try {
-            if (request.method == "findAll") {
+            if(obj.toLowerCase().equals("getallrentals")) {
                 Gson().toJson(rentalService.findAll())
             } else {
-                Gson().toJson(rentalService.findOne(request.id!!))
+                Gson().toJson(rentalService.findOne(obj))
             }
         } catch (e: Exception) {
             logger.error(" [-] Failed Get Rentals: '$obj' ${e.message}")
