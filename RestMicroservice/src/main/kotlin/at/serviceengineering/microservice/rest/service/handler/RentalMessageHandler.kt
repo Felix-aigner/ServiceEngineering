@@ -30,12 +30,12 @@ class RentalMessageHandler {
         return response?: throw Exception()
     }
 
-    fun getRentals(message: String): String {
+    fun getRentals(id: String = "getAllRentals"): String {
         val routingKey = "rentals.getRentals"
-        return send(exchangeRestRequestRental!!, routingKey, message)
+        return send(exchangeRestGetRentals!!, routingKey, id)
     }
 
-    fun rentalRequest(message: String): String {
+    fun editRental(message: String): String {
         val routingKey = "rentals.requestRental"
         return send(exchangeRestRequestRental!!, routingKey, message)
     }

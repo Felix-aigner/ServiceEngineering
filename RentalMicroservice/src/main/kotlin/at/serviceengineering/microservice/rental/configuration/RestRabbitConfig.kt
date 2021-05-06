@@ -12,7 +12,7 @@ class RestRabbitConfig {
 
     @Bean
     fun getRentalsQueue(): Queue? {
-        return Queue("cars.getRentals.requests")
+        return Queue("rentals.getRentals.requests")
     }
 
     @Bean
