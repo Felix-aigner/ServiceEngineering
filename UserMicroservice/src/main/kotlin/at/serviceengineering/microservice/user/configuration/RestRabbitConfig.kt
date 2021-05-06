@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration
 
 
 @Configuration
-class RabbitConfig {
+class RestRabbitConfig {
 
-    //----------getAccounts------------------
+    //----------getAccountsREST------------------
 
     @Bean
     fun getAccountsQueue(): Queue? {
@@ -30,37 +30,23 @@ class RabbitConfig {
                 .with("user.getAccounts")
     }
 
-    //----------getNameREST------------------
+    //----------isAccountRental------------------
 
     @Bean
-    fun getNameQueue(): Queue? {
-        return Queue("user.getName.requests")
+    fun isAccountQueue(): Queue? {
+        return Queue("user.isAccount.requests")
     }
 
     @Bean
-    fun exchangeRestGetName(): DirectExchange? {
-        return DirectExchange("rest.getName")
+    fun exchangeRentalIsAccount(): DirectExchange? {
+        return DirectExchange("rental.isAccount")
     }
 
     @Bean
-    fun bindingRestGetName(exchangeRestGetName: DirectExchange , getNameQueue: Queue): Binding? {
-        return BindingBuilder.bind(getNameQueue)
-                .to(exchangeRestGetName)
-                .with("user.getName")
-    }
-
-    //----------getNameRentals------------------
-
-    @Bean
-    fun exchangeRentalsGetName(): DirectExchange? {
-        return DirectExchange("rentals.getName")
-    }
-
-    @Bean
-    fun bindingRentalGetName(exchangeRentalsGetName: DirectExchange , getNameQueue: Queue): Binding? {
-        return BindingBuilder.bind(getNameQueue)
-                .to(exchangeRentalsGetName)
-                .with("user.getName")
+    fun bindingRentalGetAccounts(exchangeRentalIsAccount: DirectExchange , isAccountQueue: Queue): Binding? {
+        return BindingBuilder.bind(isAccountQueue)
+                .to(exchangeRentalIsAccount)
+                .with("user.isAccount")
     }
 
     //----------createAccountRest------------------

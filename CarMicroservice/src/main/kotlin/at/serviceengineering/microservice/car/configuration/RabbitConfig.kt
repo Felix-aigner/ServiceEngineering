@@ -30,7 +30,7 @@ class RabbitConfig {
 
     @Bean
     fun exchangeRentalGetCars(): DirectExchange? {
-        return DirectExchange("rest.getCars")
+        return DirectExchange("rental.getCars")
     }
 
     @Bean
@@ -39,9 +39,6 @@ class RabbitConfig {
                 .to(exchangeRentalGetCars)
                 .with("cars.getCars")
     }
-
-
-
 
     @Bean
     fun editCarQueue(): Queue? {

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface RentalRepository: MongoRepository<Rental, String> {
+    fun findByCarId(id: String) : List<Rental>?
 }

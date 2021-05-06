@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class RentalRabbitConsumer(
-        val rentalService: RentalService
+        val rentalService: RentalService,
+        val rentalRabbitProducer: RentalRabbitProducer
 ) {
 
     val logger: Logger = LoggerFactory.getLogger(RentalRabbitConsumer::class.java)
 
     @RabbitListener(queues = ["cars.getRentals.requests"])
-    fun receiveCarRequests(obj: String): String {
+    fun receiveRentalRequests(obj: String): String {
         logger.info(" [X] Received Get Rentals: '$obj'")
 
         val request = Gson().fromJson(obj, RentalRequest::class.java)
@@ -37,7 +38,7 @@ class RentalRabbitConsumer(
     }
 
     @RabbitListener(queues = ["rentals.requestRental.requests"])
-    fun receiveEditCarRequests(obj: String): String {
+    fun receiveEditRentalRequests(obj: String): String {
         logger.info(" [X] Received Rental Request: '$obj'")
         return try {
             val request = Gson().fromJson(obj, RentalRequest::class.java)
@@ -48,7 +49,7 @@ class RentalRabbitConsumer(
                 else -> throw Exception()
             }
         } catch (e: Exception) {
-            logger.error(" [-] Failed Edit Car: '$obj'")
+            logger.error(" [-] Failed Edit Rental: '$obj'")
             Response.FAILED.name
         }
     }
@@ -65,7 +66,14 @@ class RentalRabbitConsumer(
     }
 
     private fun createRental(rental: Rental): String {
-        rentalService.findAllByCarId(rental.carId).forEach {
+        if(rentalRabbitProducer.getCar(rental.carId) == Response.FAILED.name){
+            throw Exception()
+        }
+        if(rentalRabbitProducer.isAccount(rental.userId) == Response.FAILED.name){
+            throw Exception()
+        }
+        val rentals = rentalService.findAllByCarId(rental.carId)
+        rentals?.forEach {
             if(it.isActive)
                 throw Exception()
         }
