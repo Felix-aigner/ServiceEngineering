@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 
 
 @Configuration
-class RabbitConfig {
+class AccountRabbitConfig {
 
     @Bean
     fun nameExchange(): DirectExchange? {

@@ -21,4 +21,10 @@ data class Rental(
 
         @Field("isActive")
         var isActive: Boolean? = null,
+
+        @Field("carId")
+        var carId: String? = null,
+
+        @Field("userId")
+        var userId: String? = null,
 )

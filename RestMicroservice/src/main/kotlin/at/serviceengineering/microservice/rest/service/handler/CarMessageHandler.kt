@@ -29,7 +29,7 @@ class CarMessageHandler {
     fun send(exchange: DirectExchange, routingKey : String, message: String): String {
         logger.info(" [X] Send to '${exchange.name}' -> '$message'")
         val response = template!!.convertSendAndReceive(exchange.name, routingKey, message) as String?
-        logger.info(" [.] Got  '$response'")
+        logger.info(" [.] Got '$response'")
         return response?: throw Exception()
     }
 

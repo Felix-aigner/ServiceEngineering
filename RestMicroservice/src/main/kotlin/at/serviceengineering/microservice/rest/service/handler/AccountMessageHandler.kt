@@ -1,5 +1,7 @@
 package at.serviceengineering.microservice.rest.service.handler
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class AccountMessageHandler {
+
+    val logger: Logger = LoggerFactory.getLogger(AccountMessageHandler::class.java)
 
     @Autowired
     private val template: RabbitTemplate? = null
@@ -24,8 +28,9 @@ class AccountMessageHandler {
 
 
     fun send(exchange: DirectExchange, routingKey: String, message: String): String {
+        logger.info(" [X] Send to '${exchange.name}' -> '$message'")
         val response = template!!.convertSendAndReceive(exchange.name, routingKey, message) as String?
-        println(" [.] Got '$response'")
+        logger.info(" [.] Got '$response'")
         return response?: "none"
     }
 

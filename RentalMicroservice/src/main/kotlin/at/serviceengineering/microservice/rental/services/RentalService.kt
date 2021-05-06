@@ -10,52 +10,17 @@ import java.util.*
 
 
 @Service
-@Transactional
 class RentalService(
         private val rentalRepository: RentalRepository
 ) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    fun save(rental: Rental): Rental = rentalRepository.save(rental)
 
-    @Transactional
-    fun save(rental: Rental): Rental {
-        log.debug("Request to save Rental : $rental")
-        return rentalRepository.save(rental)
-    }
+    fun findAll(): List<Rental> = rentalRepository.findAll()
 
-    @Transactional(readOnly = true)
-    fun findAll(): MutableList<Rental> {
-        log.debug("Request to get all Rentals")
-        return rentalRepository.findAll()
-    }
+    fun findOne(id: String): Rental = rentalRepository.findById(id).get()
 
-    @Transactional(readOnly = true)
-    fun findOne(id: String): Optional<Rental> {
-        log.debug("Request to get Rental : $id")
-        return rentalRepository.findById(id)
-    }
+    fun findAllByCarId(id: UUID): List<Rental> = TODO("Not Implemented")
 
-    @Transactional(readOnly = true)
-    fun findOneEntity(id: String): Rental {
-        log.debug("Request to get Rental : $id")
-        return rentalRepository.findById(id).get()
-    }
-
-    @Transactional(readOnly = true)
-    fun saveEntity(rental: Rental): Rental {
-        log.debug("Request to get Rental : $rental")
-        return rentalRepository.save(rental)
-    }
-
-    @Transactional
-    fun findAllByCarId(id: UUID): MutableList<Rental> {
-        log.debug("Request to get all Rentals")
-        TODO("Not yet implemented")
-    }
-
-
-    fun delete(id: String): Unit {
-        log.debug("Request to delete Rental : $id")
-        rentalRepository.deleteById(id)
-    }
+    fun delete(id: String) = rentalRepository.deleteById(id)
 }
