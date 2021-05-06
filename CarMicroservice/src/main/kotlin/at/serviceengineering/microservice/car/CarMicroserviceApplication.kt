@@ -2,8 +2,6 @@ package at.serviceengineering.microservice.car
 
 import at.serviceengineering.microservice.car.entities.Car
 import at.serviceengineering.microservice.car.service.CarService
-import at.serviceengineering.microservice.car.service.CurrencyConverterService
-import at.serviceengineering.webservice2.wsdl.Currency
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -26,7 +24,7 @@ class CarMicroserviceApplication(
 				logger.info("Fill database with cars")
 				repeat(10) {
 					val price: Double = Random.nextInt(600, 1400).toDouble()
-					carService.addCarToDatabase(
+					carService.addCar(
 							Car(
 									id = "",
 									brand = "Audi",

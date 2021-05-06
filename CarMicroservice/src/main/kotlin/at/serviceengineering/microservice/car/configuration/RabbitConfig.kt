@@ -28,23 +28,35 @@ class RabbitConfig {
                 .with("cars.getCars")
     }
 
-
-
-
     @Bean
-    fun addCarQueue(): Queue? {
-        return Queue("cars.addCar.requests")
+    fun exchangeRentalGetCars(): DirectExchange? {
+        return DirectExchange("rest.getCars")
     }
 
     @Bean
-    fun exchangeRestAddCar(): DirectExchange? {
-        return DirectExchange("rest.addCar")
+    fun bindingRentalGetCars(exchangeRentalGetCars: DirectExchange , getCarsQueue: Queue): Binding? {
+        return BindingBuilder.bind(getCarsQueue)
+                .to(exchangeRentalGetCars)
+                .with("cars.getCars")
+    }
+
+
+
+
+    @Bean
+    fun editCarQueue(): Queue? {
+        return Queue("cars.editCar.requests")
     }
 
     @Bean
-    fun bindingRestAddCar(exchangeRestAddCar: DirectExchange , addCarQueue: Queue): Binding? {
-        return BindingBuilder.bind(addCarQueue)
-                .to(exchangeRestAddCar)
-                .with("cars.addCar")
+    fun exchangeRestEditCar(): DirectExchange? {
+        return DirectExchange("rest.editCar")
+    }
+
+    @Bean
+    fun bindingRestEditCar(exchangeRestEditCar: DirectExchange , editCarQueue: Queue): Binding? {
+        return BindingBuilder.bind(editCarQueue)
+                .to(exchangeRestEditCar)
+                .with("cars.editCar")
     }
 }

@@ -13,7 +13,7 @@ class CarService(
 
     fun findOne(id: String): Car = carRepository.findById(id).get()
 
-    fun addCarToDatabase(car: Car) = carRepository.save(car)
+    fun addCar(car: Car) = carRepository.save(car)
 
     fun isCarRepositoryEmpty(): Boolean = carRepository.findAll().isNullOrEmpty()
 

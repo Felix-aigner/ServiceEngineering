@@ -13,7 +13,7 @@ class CarRabbitConfig {
     }
 
     @Bean
-    fun exchangeRestAddCar(): DirectExchange? {
-        return DirectExchange("rest.addCar")
+    fun exchangeRestEditCar(): DirectExchange? {
+        return DirectExchange("rest.editCar")
     }
 }
