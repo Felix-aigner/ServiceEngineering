@@ -1,14 +1,25 @@
 import {createAction, props} from "@ngrx/store";
-import {Car} from "../models/car.model";
+import {Car, CurrencyEnum} from "../../models/car.model";
+import {Rental} from "../../models/rental.model";
 
 
 export const GetAllCars = createAction(
-  '[Car] Get All Cars'
+  '[Car] Get All Cars',
+  props<{currency: CurrencyEnum}>()
 );
 
 export const GetAllCarsSuccess = createAction(
   '[Car] Get All Cars Success',
   props<{cars: Car[]}>()
+);
+
+export const GetAllRentals = createAction(
+  '[Car] Get All Cars'
+);
+
+export const GetAllRentalsSuccess = createAction(
+  '[Car] Get All Cars Success',
+  props<{rentals: Rental[]}>()
 );
 
 export const GetCarById = createAction(

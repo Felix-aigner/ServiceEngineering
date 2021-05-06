@@ -4,7 +4,7 @@
     <span>Create a new Car</span>
   </button>
 
-  <div class="table-responsive" id="entities" *ngIf="loadedCars | async as cars">
+  <div class="table-responsive" id="entities" *ngIf="loadedCars as cars">
     <div class="car-wrapper" *ngFor="let car of cars ;">
       <h2>{{ car.brand }} {{ car.type }} </h2>
       <p>Power (KW): {{ car.kwPower }}</p>

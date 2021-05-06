@@ -1,9 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Car} from '../../car/models/car.model';
+import {Car} from '../../models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
-import {IRental, Rental} from '../../models/rental.model';
+import {Rental} from "../../models/rental.model";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-booking-confirmation',
@@ -23,7 +24,9 @@ export class BookingConfirmationComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: Car,
               private fb: FormBuilder,
               private dialog: MatDialogRef<BookingConfirmationComponent>,
-              private carService: CarService) {
+              private carService: CarService,
+              private userService: UserService
+              ) {
     this.updateBooking(data);
   }
 
@@ -44,14 +47,14 @@ export class BookingConfirmationComponent implements OnInit {
   }
 
 
-  private createFromForm(): IRental {
+  private createFromForm(): Rental {
     return {
-      ...new Rental(),
       id: this.bookingForm.get(['id'])!.value,
       startDate: this.bookingForm.get(['startDate'])!.value,
       endDate: this.bookingForm.get(['endDate'])!.value,
       isActive: this.bookingForm.get(['isActive'])!.value,
-      car: this.bookingForm.get(['car'])!.value,
+      carId: (<Car>(this.bookingForm.get(['car'])!.value)).id,
+      userId: this.userService.currUser.value.id
     };
   }
 }

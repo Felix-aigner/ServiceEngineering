@@ -2,13 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 
-import {Car, CurrencyEnum} from '../car/models/car.model';
+// @ts-ignore
+import {Car, CurrencyEnum} from '../models/car.model';
 import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
-import {IRental} from '../models/rental.model';
+import {Rental} from '../models/rental.model';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from "../../environments/environment";
+import {CarSelectorService} from "../car/car-selector.service";
+import {State} from "../app.store";
+import {Store} from "@ngrx/store";
+import * as restAction from '../car/+state/rest.actions';
 
 
 type EntityResponseType = HttpResponse<Car>;
@@ -23,13 +27,15 @@ export class CarService {
 
   public loadedCars = new BehaviorSubject<Car[]>([]);
 
-  public myRentals = new BehaviorSubject<IRental[]>([]);
-  public allRentals = new BehaviorSubject<IRental[]>([]);
+  public myRentals = new BehaviorSubject<Rental[]>([]);
+  public allRentals = new BehaviorSubject<Rental[]>([]);
 
   constructor(
     protected http: HttpClient,
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private carSelector: CarSelectorService,
+    private store: Store<State>
   ) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
@@ -67,30 +73,27 @@ export class CarService {
     });
   }
 
-  update(car: Car): Observable<EntityResponseType> {
-    console.log(car);
-    return this.http.put<Car>(this.carURL, {
-      id: car.id,
-      type: car.type,
-      brand: car.brand,
-      kwPower: car.kwPower,
-      usdPrice: car.price
+  updateCar(car: Car): Observable<any> {
+    return this.http.put<string>(this.carURL, {
+      car: car,
+      method: "put"
     }, {
-      observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    });
-  }
-
-  find(id: number): Observable<EntityResponseType> {
-    return this.http.get<Car>(`${this.carURL}/${id}`, {observe: 'response'});
+    }).pipe(
+      map((_ => {
+        debugger
+        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}))
+      }))
+    );
   }
 
   getCarsFromStore(): void {
-
+      this.carSelector.getAllCarsFromStore().pipe(
+      ).subscribe( (cars: Car[]) => {
+        this.loadedCars.next(cars);
+        })
   }
-
-  //this.loadedCars.next(response.body);
 
   delete(id: number): any {
     return this.http.delete(`${this.carURL}/${id}`, {
@@ -99,14 +102,13 @@ export class CarService {
     });
   }
 
-  bookCar(rental: IRental): void {
+  bookCar(rental: Rental): void {
     console.log(rental);
-    this.http.post<IRental>(this.rentalURL, rental, {
+    this.http.post<Rental>(this.rentalURL, rental, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
     }).subscribe(() => {
-        this.queryMyRentals();
         if (this.userService.currUser.value.isAdministrator) {
           this.queryAllRentals();
         }
@@ -114,50 +116,21 @@ export class CarService {
     );
   }
 
-  releaseCar(rental: IRental): void {
-    this.http.put<IRental>(`${this.rentalURL}/${rental.id}`, {}, {
+  releaseCar(rental: Rental): void {
+    this.http.put<Rental>(`${this.rentalURL}/${rental.id}`, {}, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
     }).subscribe(() => {
-        this.queryMyRentals();
         if (this.userService.currUser.value.isAdministrator) {
           this.queryAllRentals();
         }
       }
     );
-  }
-
-  getCar(carId: number): Observable<Car> {
-    return this.http.get<Car>(`${this.carURL}/${carId}`, {
-      observe: 'response',
-      headers: this.commonHttpHeaders
-        .append('token', this.userService.currUser.value.token)
-    }).pipe(
-      catchError(error => {
-        return of(null);
-      }),
-      map((value) => value.body)
-    );
-  }
-
-  queryMyRentals(): void {
-    this.http.get<IRental[]>(this.rentalURL + '/my-rentals', {
-      observe: 'response',
-      headers: this.commonHttpHeaders
-        .append('token', this.userService.currUser.value.token)
-    }).pipe(
-      catchError(error => {
-        return of(null);
-      }),
-      map((value: HttpResponse<IRental[]>) => value.body),
-    ).subscribe((value) => {
-      this.myRentals.next(value.filter(rental => rental.car != null));
-    });
   }
 
   queryAllRentals(): void {
-    this.http.get<IRental[]>(this.rentalURL, {
+    this.http.get<Rental[]>(this.rentalURL, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
@@ -165,9 +138,9 @@ export class CarService {
       catchError(error => {
         return of(null);
       }),
-      map((value: HttpResponse<IRental[]>) => value.body),
+      map((value: HttpResponse<Rental[]>) => value.body),
     ).subscribe((value) => {
-      this.allRentals.next(value.filter(rental => rental.car != null));
+      // this.allRentals.next(value.filter(rental => rental.car != null));
     });
   }
 }

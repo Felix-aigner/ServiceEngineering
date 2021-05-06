@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CarService} from '../../services/car.service';
-import {IRental} from '../../models/rental.model';
+import {Rental} from '../../models/rental.model';
 import {UserService} from '../../services/user.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class RentalsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  releaseCar(rental: IRental): void {
+  releaseCar(rental: Rental): void {
     this.carService.releaseCar(rental);
   }
 }

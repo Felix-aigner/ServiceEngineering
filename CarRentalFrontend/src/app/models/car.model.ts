@@ -1,10 +1,11 @@
 export interface Car {
-  id?: number;
+  id?: string;
   type?: string;
   brand?: string;
   kwPower?: number;
   price?: number;
   currency?: CurrencyEnum;
+  isRented?: Boolean
 }
 
 export enum CurrencyEnum {

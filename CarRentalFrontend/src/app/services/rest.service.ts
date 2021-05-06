@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {Car, CurrencyEnum} from "../car/models/car.model";
 import {UserService} from "./user.service";
 import {catchError, map} from "rxjs/operators";
+import {CurrencyEnum} from "../models/car.model";
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +37,8 @@ export class RestService {
       });
   }
 
-  getAllCars(currency: CurrencyEnum = CurrencyEnum.USD): Observable<any> {
-    return this.http.get( this.carURL + "?cy=" + "USD",
+  getAllCars(currency: CurrencyEnum): Observable<any> {
+    return this.http.get( this.carURL + "?cy=" + CurrencyEnum[currency],
       {
         headers: this.commonHttpHeaders
       }
@@ -47,6 +47,17 @@ export class RestService {
         throw Error('Load Vote Failed!' + err.message);
       })
     );
+  }
 
+  getAllRentals(): Observable<any> {
+    return this.http.get( this.rentalURL,
+      {
+        headers: this.commonHttpHeaders
+      }
+    ).pipe(
+      catchError(err => {
+        throw Error('Load Vote Failed!' + err.message);
+      })
+    );
   }
 }

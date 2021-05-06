@@ -16,11 +16,13 @@ data class Account(
         var isAdministrator: Boolean
 ) {
     fun toAccountResponse(token: String): AccountResponse {
-        return AccountResponse(username,firstname,lastname,isAdministrator, token)
+        return AccountResponse(id, username, firstname, lastname, isAdministrator, token)
     }
 }
 
 data class AccountResponse(
+
+        var id: String,
 
         var username: String,
 

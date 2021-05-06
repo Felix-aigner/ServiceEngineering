@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Car} from '../../car/models/car.model';
+// @ts-ignore
+import {Car, CurrencyEnum} from '../../models/car.model';
 import {CarService} from '../../services/car.service';
 import {UserService} from '../../services/user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {CreateCarComponent} from '../../dialogs/create-car/create-car.component';
 import {EditCarComponent} from '../../dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
@@ -11,6 +12,7 @@ import {BookingConfirmationComponent} from "../../dialogs/booking-confirmation/b
 import * as rest from "../../car/+state/rest.actions";
 import {Store} from "@ngrx/store";
 import {State} from "../../app.store";
+import {CarSelectorService} from "../../car/car-selector.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +21,7 @@ import {State} from "../../app.store";
 })
 export class DashboardComponent implements OnInit {
 
-  public loadedCars: BehaviorSubject<Car[]> = this.carService.loadedCars;
+  public loadedCars: Car[];
   confirmedBooking = new BehaviorSubject<boolean>(false);
   confirmedDelete = new BehaviorSubject<boolean>(false);
 
@@ -28,13 +30,16 @@ export class DashboardComponent implements OnInit {
     private carService: CarService,
     public userService: UserService,
     private dialog: MatDialog,
-    private store: Store<State>
+    private store: Store<State>,
+    private carSelector: CarSelectorService
   ) {
   }
 
   ngOnInit(): void {
     this.carService.getCarsFromStore();
-    this.store.dispatch(rest.GetAllCars());
+    this.carSelector.getAllCarsFromStore().subscribe( (cars: Car[]) =>
+      this.loadedCars = cars
+    )
   }
 
 

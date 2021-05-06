@@ -1,6 +1,6 @@
 <mat-card>
   <div>
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" #tabGroup>
       <mat-tab label="Login">
         <h2>Log In</h2>
         <div class="row">
@@ -93,7 +93,7 @@
           <div class="col-8 offset-2">
             <button mat-button
                     [disabled]="registerGroup.invalid"
-                    (click)="register()">
+                    (click)="register(); tabGroup.selectedIndex=0">
               Registieren
             </button>
           </div>

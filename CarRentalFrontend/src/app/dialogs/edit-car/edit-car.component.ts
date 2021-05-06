@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Car} from '../../car/models/car.model';
+import {Car} from '../../models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {CarService} from '../../services/car.service';
@@ -42,7 +42,7 @@ export class EditCarComponent implements OnInit, OnDestroy {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.update(car).subscribe();
+    this.carService.updateCar(car).subscribe();
   }
 
   private createFromForm(): Car {

@@ -6,6 +6,10 @@ import {catchError} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UserModel} from '../../models/user.model';
 import {Router} from '@angular/router';
+import * as rest from "../../car/+state/rest.actions";
+import {CurrencyEnum} from "../../models/car.model";
+import {Store} from "@ngrx/store";
+import {State} from "../../app.store";
 
 @Component({
   selector: 'app-login',
@@ -20,7 +24,12 @@ export class LoginComponent implements OnInit {
   loginError = new BehaviorSubject<boolean>(false);
   loginErrorMessage = new BehaviorSubject<string>('');
 
-  constructor(private userService: UserService, private router: Router, private fb: FormBuilder) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private fb: FormBuilder,
+    private store: Store<State>
+  ) {
     this.registerGroup = this.fb.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -51,6 +60,8 @@ export class LoginComponent implements OnInit {
         this.loginErrorMessage.next('');
         this.userService.isLoggedIn.next(true);
         this.userService.currUser.next(token);
+        this.store.dispatch(rest.GetAllCars({currency: CurrencyEnum.USD}));
+        this.store.dispatch(rest.GetAllRentals());
         this.router.navigate(['/main']);
       });
   }

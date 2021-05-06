@@ -1,5 +1,5 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
-import {Car} from "../models/car.model";
+import {Car} from "../../models/car.model";
 import {Action, createReducer, on} from "@ngrx/store";
 
 import * as restAction from './rest.actions';
@@ -31,7 +31,6 @@ export const {
   selectTotal,
 } = carAdapter.getSelectors();
 
-// export function getAllCarsThatAreNotRented(): (s: CarState) => Car[] {
-//   return (state: CarState) => selectAllCars(state)
-//     .filter( car => car.isRented !== true)
-// }
+export function getAllCars(): (s: CarState) => Car[] {
+  return (state: CarState) => selectAllCars(state)
+}

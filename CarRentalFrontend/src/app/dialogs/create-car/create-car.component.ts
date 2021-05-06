@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
-import {Car, CurrencyEnum} from '../../car/models/car.model';
+import {Car, CurrencyEnum} from '../../models/car.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 
