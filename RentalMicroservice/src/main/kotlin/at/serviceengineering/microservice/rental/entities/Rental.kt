@@ -14,17 +14,17 @@ data class Rental(
         var id: String?,
 
         @Field("startDate")
-        var startDate: String? = null,
+        var startDate: String,
 
         @Field("endDate")
-        var endDate: String? = null,
+        var endDate: String,
 
         @Field("isActive")
-        var isActive: Boolean? = null,
+        var isActive: Boolean,
 
         @Field("carId")
-        var carId: String? = null,
+        var carId: String,
 
         @Field("userId")
-        var userId: String? = null,
+        var userId: String,
 )

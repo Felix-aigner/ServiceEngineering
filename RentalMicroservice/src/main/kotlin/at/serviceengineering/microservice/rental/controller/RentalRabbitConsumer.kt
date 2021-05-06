@@ -43,7 +43,7 @@ class RentalRabbitConsumer(
             val request = Gson().fromJson(obj, RentalRequest::class.java)
             when (request.method) {
                 "create" -> createRental(request.rental ?: throw Exception())
-                "return" -> returnRental(request.rental ?: throw Exception())
+                "return" -> returnRental(request.id ?: throw Exception())
                 "delete" -> deleteRental(request.id ?: throw Exception())
                 else -> throw Exception()
             }
@@ -58,11 +58,18 @@ class RentalRabbitConsumer(
         return Response.OK.name
     }
 
-    private fun returnRental(rental: Rental): String {
-        TODO("Not yet implemented")
+    private fun returnRental(id: String): String {
+        val rental = rentalService.findOne(id)
+        rental.isActive = false
+        return Gson().toJson(rentalService.save(rental))
     }
 
     private fun createRental(rental: Rental): String {
+        rentalService.findAllByCarId(rental.carId).forEach {
+            if(it.isActive)
+                throw Exception()
+        }
+
         return Gson().toJson(rentalService.save(rental))
     }
 }

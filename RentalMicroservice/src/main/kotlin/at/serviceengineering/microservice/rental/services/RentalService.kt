@@ -20,7 +20,7 @@ class RentalService(
 
     fun findOne(id: String): Rental = rentalRepository.findById(id).get()
 
-    fun findAllByCarId(id: UUID): List<Rental> = TODO("Not Implemented")
+    fun findAllByCarId(carId: String): List<Rental> = TODO("Not Implemented")
 
     fun delete(id: String) = rentalRepository.deleteById(id)
 }
