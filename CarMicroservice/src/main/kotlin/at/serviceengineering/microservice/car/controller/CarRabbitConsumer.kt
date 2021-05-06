@@ -4,6 +4,7 @@ import at.serviceengineering.microservice.car.CarMicroserviceApplication
 import at.serviceengineering.microservice.car.entities.Car
 import at.serviceengineering.microservice.car.entities.CarEditRequest
 import at.serviceengineering.microservice.car.entities.CarRequest
+import at.serviceengineering.microservice.car.exceptions.SoapCallException
 import at.serviceengineering.microservice.car.service.CarService
 import at.serviceengineering.microservice.car.service.CurrencyConverterService
 import at.serviceengineering.microservice.car.utils.Response
@@ -29,14 +30,26 @@ class CarRabbitConsumer(
 
         return try {
             if (request.findAll) {
-                val list = carService.findAll()
+                val list = carService.findAll().map { car -> car.toCarResponse() }
                 list.forEach {
-                    it.price = currencyConverterService.convertCurrency(it.price, Currency.USD, request.currency)
+                    it.price = try {
+                        it.currency = request.currency
+                        currencyConverterService.convertCurrency(it.price, Currency.USD, request.currency)
+                    } catch (e: Exception){
+                        it.currency = Currency.USD
+                        it.price
+                    }
                 }
                 Gson().toJson(list)
             } else {
-                val car = carService.findOne(request.id!!)
-                car.price = currencyConverterService.convertCurrency(car.price, Currency.USD, request.currency)
+                val car = carService.findOne(request.id!!).toCarResponse()
+                car.price = try {
+                    car.currency = request.currency
+                    currencyConverterService.convertCurrency(car.price, Currency.USD, request.currency)
+                } catch (e: Exception){
+                    car.currency = Currency.USD
+                    car.price
+                }
                 Gson().toJson(car)
             }
         } catch (e: Exception) {

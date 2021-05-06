@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 
-import {CurrencyEnum, ICar} from '../models/car.model';
+import {Car, CurrencyEnum} from '../car/models/car.model';
 import {UserService} from './user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from '../dialogs/error-dialog/error-dialog.component';
@@ -11,7 +11,7 @@ import {catchError, map} from 'rxjs/operators';
 import {environment} from "../../environments/environment";
 
 
-type EntityResponseType = HttpResponse<ICar>;
+type EntityResponseType = HttpResponse<Car>;
 
 @Injectable({providedIn: 'root'})
 export class CarService {
@@ -21,12 +21,16 @@ export class CarService {
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
 
-  public loadedCars = new BehaviorSubject<ICar[]>([]);
+  public loadedCars = new BehaviorSubject<Car[]>([]);
 
   public myRentals = new BehaviorSubject<IRental[]>([]);
   public allRentals = new BehaviorSubject<IRental[]>([]);
 
-  constructor(protected http: HttpClient, private userService: UserService, private dialog: MatDialog) {
+  constructor(
+    protected http: HttpClient,
+    private userService: UserService,
+    private dialog: MatDialog
+  ) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
@@ -48,15 +52,14 @@ export class CarService {
       });
   }
 
-  save(car: ICar): Observable<EntityResponseType> {
+  save(car: Car): Observable<EntityResponseType> {
     console.log(car);
-    return this.http.post<ICar>(this.carURL, {
+    return this.http.post<Car>(this.carURL, {
       id: car.id,
       type: car.type,
       brand: car.brand,
       kwPower: car.kwPower,
-      usdPrice: car.price,
-      isRented: car.isRented
+      usdPrice: car.price
     }, {
       observe: 'response',
       headers: this.commonHttpHeaders
@@ -64,15 +67,14 @@ export class CarService {
     });
   }
 
-  update(car: ICar): Observable<EntityResponseType> {
+  update(car: Car): Observable<EntityResponseType> {
     console.log(car);
-    return this.http.put<ICar>(this.carURL, {
+    return this.http.put<Car>(this.carURL, {
       id: car.id,
       type: car.type,
       brand: car.brand,
       kwPower: car.kwPower,
-      usdPrice: car.price,
-      isRented: car.isRented
+      usdPrice: car.price
     }, {
       observe: 'response',
       headers: this.commonHttpHeaders
@@ -81,23 +83,14 @@ export class CarService {
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<ICar>(`${this.carURL}/${id}`, {observe: 'response'});
+    return this.http.get<Car>(`${this.carURL}/${id}`, {observe: 'response'});
   }
 
-  query(): void {
-    this.http.get<ICar[]>(this.carURL + '?cy=' + CurrencyEnum[this.selectedCurrency.value], {
-      observe: 'response',
-      headers: this.commonHttpHeaders
-        .append('token', this.userService.currUser.value.token)
-    }).subscribe(response => {
-      if (response.status === 503) {
-        this.dialog.open(ErrorDialogComponent, {
-          hasBackdrop: true
-        });
-      }
-      this.loadedCars.next(response.body);
-    });
+  getCarsFromStore(): void {
+
   }
+
+  //this.loadedCars.next(response.body);
 
   delete(id: number): any {
     return this.http.delete(`${this.carURL}/${id}`, {
@@ -135,8 +128,8 @@ export class CarService {
     );
   }
 
-  getCar(carId: number): Observable<ICar> {
-    return this.http.get<ICar>(`${this.carURL}/${carId}`, {
+  getCar(carId: number): Observable<Car> {
+    return this.http.get<Car>(`${this.carURL}/${carId}`, {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)

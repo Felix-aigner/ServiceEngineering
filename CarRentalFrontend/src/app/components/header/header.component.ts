@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {CurrencyEnum} from '../../models/car.model';
+import {CurrencyEnum} from '../../car/models/car.model';
 import {CarService} from '../../services/car.service';
 import {UserService} from "../../services/user.service";
 
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   saveSelectedCurrency(): void {
     this.carService.selectedCurrency.next(this.selectedCurrency.value);
-    this.carService.query();
+    this.carService.getCarsFromStore();
   }
 
 }

@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Car, ICar} from '../../models/car.model';
+import {Car} from '../../car/models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {CarService} from '../../services/car.service';
@@ -30,14 +30,13 @@ export class EditCarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  updateForm(car: ICar): void {
+  updateForm(car: Car): void {
     this.editForm.patchValue({
       id: car.id,
       type: car.type,
       brand: car.brand,
       kwPower: car.kwPower,
       price: car.price,
-      isRented: car.isRented,
     });
   }
 
@@ -46,15 +45,13 @@ export class EditCarComponent implements OnInit, OnDestroy {
     this.carService.update(car).subscribe();
   }
 
-  private createFromForm(): ICar {
+  private createFromForm(): Car {
     return {
-      ...new Car(),
       id: this.editForm.get(['id'])!.value,
       type: this.editForm.get(['type'])!.value,
       brand: this.editForm.get(['brand'])!.value,
       kwPower: this.editForm.get(['kwPower'])!.value,
-      price: this.editForm.get(['price'])!.value,
-      isRented: this.editForm.get(['isRented'])!.value,
+      price: this.editForm.get(['price'])!.value
     };
   }
 

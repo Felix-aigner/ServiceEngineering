@@ -40,7 +40,7 @@ class Consumer (
         println("Received: '$obj'")
         return try {
             val account = Gson().fromJson(obj, Account::class.java)
-            Gson().toJson(accountService.login(account).id)
+            Gson().toJson(accountService.login(account))
         }catch (e : Exception){
             Response.FAILED.name
         }

@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
-import {Car, CurrencyEnum, ICar} from '../../models/car.model';
+import {Car, CurrencyEnum} from '../../car/models/car.model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 
@@ -26,7 +26,7 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  constructor(@Inject(MAT_DIALOG_DATA) inputData: ICar, private carService: CarService, private fb: FormBuilder, private dialog: MatDialogRef<CreateCarComponent>) {
+  constructor(@Inject(MAT_DIALOG_DATA) inputData: Car, private carService: CarService, private fb: FormBuilder, private dialog: MatDialogRef<CreateCarComponent>) {
   }
 
   ngOnInit(): void {
@@ -35,20 +35,18 @@ export class CreateCarComponent implements OnInit, OnDestroy {
   save(): void {
     const car = this.createFromForm();
     this.carService.save(car).subscribe(() => {
-      this.carService.query();
+      this.carService.getCarsFromStore();
       this.dialog.close();
     });
   }
 
-  private createFromForm(): ICar {
+  private createFromForm(): Car {
     return {
-      ...new Car(),
       id: this.editForm.get(['id'])!.value,
       type: this.editForm.get(['type'])!.value,
       brand: this.editForm.get(['brand'])!.value,
       kwPower: this.editForm.get(['kwPower'])!.value,
-      price: this.editForm.get(['price'])!.value,
-      isRented: this.editForm.get(['isRented'])!.value,
+      price: this.editForm.get(['price'])!.value
     };
   }
 

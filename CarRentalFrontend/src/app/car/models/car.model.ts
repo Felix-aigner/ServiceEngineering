@@ -1,25 +1,10 @@
-export interface ICar {
+export interface Car {
   id?: number;
   type?: string;
   brand?: string;
   kwPower?: number;
   price?: number;
   currency?: CurrencyEnum;
-  isRented?: boolean;
-}
-
-export class Car implements ICar {
-  constructor(
-    public id?: number,
-    public type?: string,
-    public brand?: string,
-    public kwPower?: number,
-    public price?: number,
-    public currency?: CurrencyEnum,
-    public isRented?: boolean
-  ) {
-    this.isRented = this.isRented || false;
-  }
 }
 
 export enum CurrencyEnum {

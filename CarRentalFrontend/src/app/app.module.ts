@@ -27,6 +27,11 @@ import {RentalsComponent} from './components/rentals/rentals.component';
 import {BookingConfirmationComponent} from './dialogs/booking-confirmation/booking-confirmation.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from "@angular/material/core";
+import {EffectsModule} from "@ngrx/effects";
+import {RestEffects} from "./car/+state/rest.effects";
+import {StoreModule} from "@ngrx/store";
+import {reducers} from "./app.store";
+import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 
 @NgModule({
   declarations: [
@@ -59,7 +64,14 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatButtonModule,
     GoogleMapsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    EffectsModule.forRoot([RestEffects]),
+    [StoreModule.forRoot(reducers)],
+    StoreDevtoolsModule.instrument({
+      name: 'CarShare',
+      maxAge: 25,
+    }),
+
   ],
   providers: [],
   bootstrap: [AppComponent],

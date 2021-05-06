@@ -1,5 +1,8 @@
 package at.serviceengineering.microservice.rest.service.handler
 
+import at.serviceengineering.microservice.rest.service.exceptions.InvalidLoginCredentialsException
+import at.serviceengineering.microservice.rest.service.models.Account
+import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.DirectExchange
@@ -49,9 +52,13 @@ class AccountMessageHandler {
         return send(accountCreationExchange!!, routingKey, account)
     }
 
-    fun login(account: String): String {
+    fun login(account: String): Account {
         val routingKey = "user.login"
-        return send(loginExchange!!, routingKey, account)
+        val response = send(loginExchange!!, routingKey, account)
+        if(response.equals("invalid credentials")){
+            throw InvalidLoginCredentialsException()
+        }
+        return Gson().fromJson(response, Account::class.java)
     }
 
     fun deleteAccount(id: String): String{

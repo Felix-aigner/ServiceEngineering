@@ -1,4 +1,4 @@
-import {ICar} from './car.model';
+import {Car} from '../car/models/car.model';
 
 
 export interface IRental {
@@ -6,7 +6,7 @@ export interface IRental {
   startDate?: string;
   endDate?: string;
   isActive?: boolean;
-  car?: ICar;
+  car?: Car;
 }
 
 export class Rental implements IRental {
@@ -15,7 +15,7 @@ export class Rental implements IRental {
     startDate?: string,
     endDate?: string,
     isAvtice?: boolean,
-    car?: ICar
+    car?: Car
   ) {
   }
 }

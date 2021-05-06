@@ -1,9 +1,18 @@
 
-.wrapper {
-  margin: auto;
-  display: flex;
-  flex: auto;
-  align-self: center;
-  align-content: center;
-  align-items: center;
+/*.wrapper {*/
+/*  margin: auto;*/
+/*  display: flex;*/
+/*  flex: auto;*/
+/*  align-self: center;*/
+/*  align-content: center;*/
+/*  align-items: center;*/
+/*}*/
+
+.mat-card {
+  margin: 3% 40% 0 40%;
+}
+
+::ng-deep mat-tab-body {
+  text-align: center;
+  margin-top: 10%;
 }

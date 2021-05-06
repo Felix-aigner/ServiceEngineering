@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Car, ICar} from '../../models/car.model';
+import {Car} from '../../car/models/car.model';
 import {CarService} from '../../services/car.service';
 import {UserService} from '../../services/user.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -8,6 +8,9 @@ import {CreateCarComponent} from '../../dialogs/create-car/create-car.component'
 import {EditCarComponent} from '../../dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {BookingConfirmationComponent} from "../../dialogs/booking-confirmation/booking-confirmation.component";
+import * as rest from "../../car/+state/rest.actions";
+import {Store} from "@ngrx/store";
+import {State} from "../../app.store";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,16 +19,22 @@ import {BookingConfirmationComponent} from "../../dialogs/booking-confirmation/b
 })
 export class DashboardComponent implements OnInit {
 
-  public loadedCars: BehaviorSubject<ICar[]> = this.carService.loadedCars;
+  public loadedCars: BehaviorSubject<Car[]> = this.carService.loadedCars;
   confirmedBooking = new BehaviorSubject<boolean>(false);
   confirmedDelete = new BehaviorSubject<boolean>(false);
 
 
-  constructor(private carService: CarService, public userService: UserService, private dialog: MatDialog) {
+  constructor(
+    private carService: CarService,
+    public userService: UserService,
+    private dialog: MatDialog,
+    private store: Store<State>
+  ) {
   }
 
   ngOnInit(): void {
-    this.carService.query();
+    this.carService.getCarsFromStore();
+    this.store.dispatch(rest.GetAllCars());
   }
 
 
@@ -42,7 +51,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openBookingDialog(car: ICar): void {
+  openBookingDialog(car: Car): void {
     this.dialog.open(BookingConfirmationComponent, {
       data: car,
       hasBackdrop: true

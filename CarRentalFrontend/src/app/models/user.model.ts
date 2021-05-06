@@ -1,7 +1,7 @@
 export class UserModel {
+  username: string;
   firstname: string;
   lastname: string;
-  username: string;
-  token: string;
   isAdministrator: boolean;
+  token: string;
 }

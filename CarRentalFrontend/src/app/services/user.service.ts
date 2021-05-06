@@ -37,7 +37,12 @@ export class UserService {
 
   login(username: string, password: string): Observable<UserModel> {
     return this.http.post<UserModel>(this.accountURL + '/login', {
-      username, password
+      id: "",
+      username: username,
+      password: password,
+      firstname: "",
+      lastname: "",
+      isAdministrator: ""
     }, {
       headers: this.commonHttpHeaders
     });

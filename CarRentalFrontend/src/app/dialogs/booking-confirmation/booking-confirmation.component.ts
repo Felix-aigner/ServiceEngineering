@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ICar} from '../../models/car.model';
+import {Car} from '../../car/models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
 import {IRental, Rental} from '../../models/rental.model';
@@ -20,7 +20,7 @@ export class BookingConfirmationComponent implements OnInit {
     car: [],
   });
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ICar,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Car,
               private fb: FormBuilder,
               private dialog: MatDialogRef<BookingConfirmationComponent>,
               private carService: CarService) {
@@ -37,7 +37,7 @@ export class BookingConfirmationComponent implements OnInit {
     this.dialog.close();
   }
 
-  private updateBooking(data: ICar): void {
+  private updateBooking(data: Car): void {
     this.bookingForm.patchValue({
       car: data
     });
