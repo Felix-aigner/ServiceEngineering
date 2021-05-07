@@ -26,7 +26,12 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  constructor(@Inject(MAT_DIALOG_DATA) inputData: Car, private carService: CarService, private fb: FormBuilder, private dialog: MatDialogRef<CreateCarComponent>) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) inputData: Car,
+    private carService: CarService,
+    private fb: FormBuilder,
+    private dialog: MatDialogRef<CreateCarComponent>,
+    ) {
   }
 
   ngOnInit(): void {
@@ -34,8 +39,7 @@ export class CreateCarComponent implements OnInit, OnDestroy {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.save(car).subscribe(() => {
-      this.carService.getCarsFromStore();
+    this.carService.createNewCar(car).subscribe(_ => {
       this.dialog.close();
     });
   }

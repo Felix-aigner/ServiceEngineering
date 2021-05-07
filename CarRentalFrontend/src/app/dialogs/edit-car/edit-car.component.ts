@@ -1,9 +1,13 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Car} from '../../models/car.model';
 import {FormBuilder} from '@angular/forms';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CarService} from '../../services/car.service';
 import {Subject} from 'rxjs';
+import * as restAction from "../../car/+state/rest.actions";
+import {State} from "../../app.store";
+import {Store} from "@ngrx/store";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-edit-car',
@@ -23,7 +27,13 @@ export class EditCarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Car, private carService: CarService, private fb: FormBuilder) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: Car,
+    private carService: CarService,
+    private fb: FormBuilder,
+    private dialog: MatDialogRef<EditCarComponent>,
+    private store: Store<State>
+  ) {
     this.updateForm(data);
   }
 
@@ -42,7 +52,7 @@ export class EditCarComponent implements OnInit, OnDestroy {
 
   save(): void {
     const car = this.createFromForm();
-    this.carService.updateCar(car).subscribe();
+    this.carService.updateCar(car).subscribe( _ => this.dialog.close());
   }
 
   private createFromForm(): Car {

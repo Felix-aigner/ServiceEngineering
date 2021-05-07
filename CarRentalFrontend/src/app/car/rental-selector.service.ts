@@ -30,4 +30,12 @@ export class RentalSelectorService {
       )
     )
   }
+
+  getRentalsForUserIdFromStore(id: string): Observable<Rental[]> {
+    return this.store.pipe(
+      select(createSelector(
+        fromRoot.getRentalState, fromRental.getRentalsForUserId(id))
+      )
+    )
+  }
 }

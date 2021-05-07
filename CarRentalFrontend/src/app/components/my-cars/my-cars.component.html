@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div *ngIf="myRentals|async as rentals">
+<div *ngIf="myRentals as rentals">
   <div class="list-wrapper">
     <h2>These are your active Rentals</h2>
     <div *ngFor="let rented of rentals">
@@ -27,11 +27,6 @@
         <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
         <p>Rental started: {{rented.startDate}}</p>
         <p>Rental will end: {{rented.endDate}}</p>
-        <div class="btn-group">
-          <button mat-raised-button (click)="releaseCar(rented)">
-            release car
-          </button>
-        </div>
       </div>
     </div>
   </div>

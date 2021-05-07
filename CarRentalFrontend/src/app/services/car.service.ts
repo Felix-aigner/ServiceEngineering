@@ -25,11 +25,6 @@ export class CarService {
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
 
-  public loadedCars = new BehaviorSubject<Car[]>([]);
-
-  public myRentals = new BehaviorSubject<Rental[]>([]);
-  public allRentals = new BehaviorSubject<Rental[]>([]);
-
   constructor(
     protected http: HttpClient,
     private userService: UserService,
@@ -58,19 +53,18 @@ export class CarService {
       });
   }
 
-  save(car: Car): Observable<EntityResponseType> {
-    console.log(car);
+  createNewCar(car: Car): Observable<any>  {
     return this.http.post<Car>(this.carURL, {
-      id: car.id,
-      type: car.type,
-      brand: car.brand,
-      kwPower: car.kwPower,
-      usdPrice: car.price
+      car: car,
+      method: "post"
     }, {
-      observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    });
+    }).pipe(
+      map((_ => {
+        this.store.dispatch(restAction.GetAllRentals());
+        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}))
+      })));
   }
 
   updateCar(car: Car): Observable<any> {
@@ -82,24 +76,23 @@ export class CarService {
         .append('token', this.userService.currUser.value.token)
     }).pipe(
       map((_ => {
-        debugger
+        this.store.dispatch(restAction.GetAllRentals());
         this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}))
-      }))
-    );
+      })));
   }
 
-  getCarsFromStore(): void {
-    this.carSelector.getAllCarsFromStore().pipe(
-    ).subscribe((cars: Car[]) => {
-      this.loadedCars.next(cars);
-    })
-  }
-
-  delete(id: number): any {
-    return this.http.delete(`${this.carURL}/${id}`, {
+  delete(id: number): void {
+    this.http.post(this.carURL + "/delete", {
+      id: id,
+      method: "delete"
+    }, {
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
-    });
+    }).pipe(
+      map((_ => {
+        this.store.dispatch(restAction.GetAllRentals());
+        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}))
+      }))).subscribe();
   }
 
   bookCar(rental: Rental): void {
@@ -116,17 +109,24 @@ export class CarService {
       }).pipe(
       map((_) => {
         this.store.dispatch(restAction.GetAllRentals());
+        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}));
       })).subscribe()
   }
 
   releaseCar(rental: Rental): void {
-    this.http.put<Rental>(`${this.rentalURL}/${rental.id}`, {}, {
+    this.http.post<Rental>(this.rentalURL + "/return",
+      {
+        rental: rental,
+        method: "return"
+      },
+      {
       observe: 'response',
       headers: this.commonHttpHeaders
         .append('token', this.userService.currUser.value.token)
     }).pipe(
       map((_) => {
         this.store.dispatch(restAction.GetAllRentals());
+        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}));
       })).subscribe()
   }
 }

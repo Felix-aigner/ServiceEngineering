@@ -22,10 +22,10 @@ class RentalController(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
-    fun getRentals(@RequestHeader("token") token: String?
+    fun getRentals(@RequestHeader("token") token: String
     ): ResponseEntity<String> {
         return try {
-            jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token)
             val rentals = rentalMessageHandler.getRentals()
             ResponseEntity.ok().body(rentals)
         } catch (e: Exception) {
@@ -34,9 +34,9 @@ class RentalController(
     }
 
     @GetMapping("/{id}")
-    fun getRental(@RequestHeader("token") token: String?,  @PathVariable id: String): ResponseEntity<String> {
+    fun getRental(@RequestHeader("token") token: String,  @PathVariable id: String): ResponseEntity<String> {
         return try {
-            jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token)
             val rentals = rentalMessageHandler.getRentals(id)
             ResponseEntity.ok().body(rentals)
         } catch (e: Exception) {
@@ -46,13 +46,13 @@ class RentalController(
 
     @PostMapping("/create")
     fun createRental(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
-        logger.debug("REST request to create Rental : $body")
+        logger.info("REST request to create Rental : $body")
 
         return try {
-            jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token)
             val response = rentalMessageHandler.editRental(body)
             ResponseEntity.ok().body(response)
 
@@ -65,13 +65,13 @@ class RentalController(
 
     @PostMapping("/return")
     fun returnRental(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
-        logger.debug("REST request to update Rental : $body")
+        logger.info("REST request to update Rental : $body")
 
         return try {
-//            val account = jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token)
             val response = rentalMessageHandler.editRental(body)
             ResponseEntity.ok().body(response)
 
@@ -84,11 +84,11 @@ class RentalController(
 
     @PutMapping
     fun changeRental(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
         return try {
-//            jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token)
             val response = rentalMessageHandler.editRental(body)
             if(response == Response.FAILED.name){
                 throw Exception()
@@ -103,13 +103,13 @@ class RentalController(
 
     @DeleteMapping
     fun deleteRental(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
-        logger.debug("REST request to delete Rental : $body")
+        logger.info("REST request to delete Rental : $body")
 
         return try {
-//            jwtTokenService.getAccountFromToken(token)
+            jwtTokenHandler.recoverJWT(token)
             val response = rentalMessageHandler.editRental(body)
             ResponseEntity.ok().body(response)
 

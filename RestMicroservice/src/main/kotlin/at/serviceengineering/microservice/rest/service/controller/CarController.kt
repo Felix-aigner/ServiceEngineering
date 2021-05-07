@@ -42,7 +42,7 @@ class CarController(
             @RequestBody body: String
     ): ResponseEntity<*> {
         return try {
-            jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token)
             carMessageHandler.editCar(body)
             ResponseEntity.ok().body("")
         } catch (e: TokenNotValidException) {
@@ -58,7 +58,7 @@ class CarController(
             @RequestBody body: String
     ): ResponseEntity<*> {
         return try {
-            jwtTokenHandler.recoverJWT(token?: throw Exception())
+            jwtTokenHandler.recoverJWT(token)
             val response = carMessageHandler.editCar(body)
             if(response == Response.FAILED.name){
                 throw Exception()
@@ -71,14 +71,14 @@ class CarController(
         }
     }
 
-    @DeleteMapping
+    @PostMapping("/delete")
     fun deleteCar(
-            @RequestHeader("token") token: String?,
+            @RequestHeader("token") token: String,
             @RequestBody body: String
     ): ResponseEntity<*> {
         log.debug("REST request to delete Car : $body")
         return try {
-            //jwtTokenHandler.recoverJWT(token)
+            jwtTokenHandler.recoverJWT(token)
             val response = carMessageHandler.editCar(body)
             if(response == Response.FAILED.name){
                 throw Exception()

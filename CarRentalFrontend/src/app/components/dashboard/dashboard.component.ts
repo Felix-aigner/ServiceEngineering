@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.carService.getCarsFromStore();
     zip(
       this.carSelector.getAllCarsFromStore(),
       this.rentalSelector.getAllActiveRentalsFromStore()
@@ -80,7 +79,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(result => {
         this.confirmedDelete.next(result);
         if (this.confirmedDelete.value) {
-          this.carService.delete(carId).subscribe();
+          this.carService.delete(carId);
         }
       });
   }

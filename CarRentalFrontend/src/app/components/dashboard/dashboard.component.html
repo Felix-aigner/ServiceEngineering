@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div>
-  <button mat-button (click)="openNewCarDialog()">
+  <button mat-button *ngIf="userService.currUser.value.isAdministrator" (click)="openNewCarDialog()">
     <span>Create a new Car</span>
   </button>
 

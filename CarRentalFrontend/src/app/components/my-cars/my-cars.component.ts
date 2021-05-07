@@ -1,10 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {of, Subject} from 'rxjs';
+import {of, Subject, zip} from 'rxjs';
 import {CarService} from '../../services/car.service';
-import {Rental} from '../../models/rental.model';
+import {Rental, RentalCar} from '../../models/rental.model';
 import {RentalSelectorService} from "../../car/rental-selector.service";
 import {map, switchMap} from "rxjs/operators";
 import {UserService} from "../../services/user.service";
+import {CarSelectorService} from "../../car/car-selector.service";
+import {Car} from "../../models/car.model";
 
 @Component({
   selector: 'app-my-cars',
@@ -13,22 +15,33 @@ import {UserService} from "../../services/user.service";
 })
 export class MyCarsComponent implements OnInit, OnDestroy {
 
-  public myRentals: Rental[];
+  public myRentals: RentalCar[];
 
   private unsubscribe$ = new Subject();
 
   constructor(public carService: CarService,
               private rentalSelector: RentalSelectorService,
+              private carSelector: CarSelectorService,
               private userService: UserService
   ) {
   }
 
   ngOnInit(): void {
-    this.rentalSelector.getAllRentalsFromStore().pipe(
-      switchMap((rentals: Rental[]) => {
-        return of(rentals.filter((rental: Rental) => rental.userId == this.userService.currUser.value.id))
+    zip(
+      this.rentalSelector.getRentalsForUserIdFromStore(this.userService.currUser.value.id),
+      this.carSelector.getAllCarsFromStore()
+    ).pipe(
+      switchMap(([rentals, cars]: [Rental[], Car[]]) => {
+        return of(rentals.map(rental => {
+          return <RentalCar>{
+            ...rental,
+            car: cars.filter((car: Car) => car.id === rental.carId)
+          }
+        }))
       })
-    ).subscribe((rentals: Rental[]) => this.myRentals = rentals)
+    ).subscribe((rentals: RentalCar[]) => {
+      this.myRentals = rentals
+    })
   }
 
 
@@ -37,7 +50,14 @@ export class MyCarsComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  releaseCar(rental: Rental): void {
-    this.carService.releaseCar(rental);
+  releaseCar(rental: RentalCar): void {
+    this.carService.releaseCar(<Rental>{
+      id: rental.id,
+      startDate: rental.startDate,
+      endDate: rental.endDate,
+      isActive: rental.isActive,
+      carId: rental.carId,
+      userId: rental.userId
+    });
   }
 }

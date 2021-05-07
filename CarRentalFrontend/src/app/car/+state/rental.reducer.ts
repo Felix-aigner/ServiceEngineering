@@ -35,3 +35,8 @@ export const {
 export function getAllRentals(): (s: RentalState) => Rental[] {
   return (state: RentalState) => selectAllRentals(state)
 }
+
+export function getRentalsForUserId(id: string): (s: RentalState) => Rental[] {
+  return (state: RentalState) => selectAllRentals(state)
+    .filter(rental => rental.userId == id)
+}

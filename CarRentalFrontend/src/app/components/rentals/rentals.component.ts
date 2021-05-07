@@ -1,8 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {CarService} from '../../services/car.service';
-import {Rental} from '../../models/rental.model';
+import {Rental, RentalCar} from '../../models/rental.model';
 import {UserService} from '../../services/user.service';
 import {RentalSelectorService} from "../../car/rental-selector.service";
+import {of, zip} from "rxjs";
+import {switchMap} from "rxjs/operators";
+import {Car} from "../../models/car.model";
+import {CarSelectorService} from "../../car/car-selector.service";
 
 @Component({
   selector: 'app-rentals',
@@ -11,22 +15,32 @@ import {RentalSelectorService} from "../../car/rental-selector.service";
 })
 export class RentalsComponent implements OnInit {
 
-  allrentals: Rental[]
+  allrentals: RentalCar[];
 
   constructor(
     private carService: CarService,
     private userService: UserService,
-    private rentalSelector: RentalSelectorService
+    private rentalSelector: RentalSelectorService,
+    private carSelector: CarSelectorService,
   ) {
 
   }
 
   ngOnInit(): void {
-    this.rentalSelector.getAllRentalsFromStore()
-      .subscribe((rentals: Rental[]) => this.allrentals = rentals)
-  }
-
-  releaseCar(rental: Rental): void {
-    this.carService.releaseCar(rental);
+    zip(
+      this.rentalSelector.getAllRentalsFromStore(),
+      this.carSelector.getAllCarsFromStore()
+    ).pipe(
+      switchMap(([rentals, cars]: [Rental[], Car[]]) => {
+        return of(rentals.map(rental => {
+          return <RentalCar>{
+            ...rental,
+            car: cars.filter((car: Car) => car.id === rental.carId)
+          }
+        }))
+      })
+    ).subscribe((rentals: RentalCar[]) => {
+      this.allrentals = rentals
+    })
   }
 }
