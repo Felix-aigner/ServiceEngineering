@@ -1,15 +1,13 @@
 .list-wrapper {
-  width: 600px;
   float: left;
 }
 
-.car-wrapper {
-  width: 300px;
-  height: 220px;
-  float: left;
-  border: 1px solid gray;
-  border-radius: 20px;
-  margin: 10px;
-  padding: 20px;
-  position: relative;
+.mat-card {
+  margin: 2%;
 }
+
+.rental-wrapper {
+  margin-top: 100px;
+  margin-left: 6%;
+}
+

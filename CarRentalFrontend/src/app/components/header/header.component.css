@@ -6,8 +6,26 @@
 
 h1 {
   float: left;
+  margin: 3%;
+  font-family: "Brush Script MT", cursive; font-size: 60px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px;
 }
 
 .nav-button {
-  margin-left: 2rem;
+  margin-right: 2rem;
+  float: right;
+}
+
+.button-group {
+  margin-right: 5%;
+  height: 50px;
+}
+
+.currencySelector {
+  float: right;
+  margin-top: 10px;
+  margin-right: 7%;
+}
+
+.selectCurrencyButton {
+  margin-left: 10px;
 }

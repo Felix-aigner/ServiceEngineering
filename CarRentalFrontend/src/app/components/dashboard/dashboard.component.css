@@ -1,20 +1,19 @@
-.car-wrapper {
+.mat-card {
+  margin: 20px;
   width: 300px;
-  height: 180px;
   float: left;
-  border: 1px solid gray;
-  border-radius: 20px;
-  margin: 10px;
-  padding: 20px;
-  position: relative;
-}
-
-.btn-group {
-  position: absolute;
-  bottom: 20px;
 }
 
 .admin-btn-group {
-
+  margin-top: 10px;
 }
 
+.table-responsive {
+  margin-top: 100px;
+  margin-left: 8%;
+  margin-right: 8%;
+}
+
+.createCarButton {
+  align-self: center;
+}

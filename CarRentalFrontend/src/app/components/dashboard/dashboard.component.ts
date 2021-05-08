@@ -4,7 +4,7 @@ import {Car, CurrencyEnum} from '../../models/car.model';
 import {CarService} from '../../services/car.service';
 import {UserService} from '../../services/user.service';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, Observable, of, zip} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, zip} from 'rxjs';
 import {CreateCarComponent} from '../../dialogs/create-car/create-car.component';
 import {EditCarComponent} from '../../dialogs/edit-car/edit-car.component';
 import {ConfirmationDialogComponent} from '../../dialogs/confirmation-dialog/confirmation-dialog.component';
@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    zip(
+    combineLatest(
       this.carSelector.getAllCarsFromStore(),
       this.rentalSelector.getAllActiveRentalsFromStore()
       ).pipe(
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openDeleteDialog(carId: number): void {
+  openDeleteDialog(carId: string): void {
     this.dialog.open(ConfirmationDialogComponent, {
       data: 'Do you want to delete this Car?',
       hasBackdrop: true

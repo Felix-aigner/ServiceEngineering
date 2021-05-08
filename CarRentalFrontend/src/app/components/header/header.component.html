@@ -1,19 +1,24 @@
-<div class="header">
+<span class="header">
   <h1 id="page-heading">
     Car Rental
   </h1>
-  <a mat-raised-button class="nav-button" color="primary" routerLink="/main">Dashboard</a>
-  <a mat-raised-button class="nav-button" color="primary" routerLink="/mycars">My Cars</a>
-  <a mat-raised-button class="nav-button" color="primary" routerLink="/rentals" *ngIf="userService.currUser.value.isAdministrator">Rentals</a>
+  <div class="button-group">
   <a mat-raised-button class="nav-button" color="primary" routerLink="/contact">Contact Us</a>
-</div>
+  <a mat-raised-button class="nav-button" color="primary" routerLink="/rentals" *ngIf="userService.currUser.value.isAdministrator">Rentals</a>
+  <a mat-raised-button class="nav-button" color="primary" routerLink="/mycars">My Cars</a>
+  <a mat-raised-button class="nav-button" color="primary" routerLink="/main">Dashboard</a>
+  </div>
+</span>
 
-<mat-form-field appearance="fill">
-  <mat-label>Currency</mat-label>
-  <mat-select [formControl]="selectedCurrency">
-    <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
-  </mat-select>
-</mat-form-field>
-<button mat-button (click)="saveSelectedCurrency()">
-  select Currency
-</button>
+<span class="currencySelector">
+  <mat-form-field appearance="fill">
+    <mat-label>Currency</mat-label>
+    <mat-select [formControl]="selectedCurrency">
+      <mat-option *ngFor="let currency of currencies" [value]="currency">{{currencyEnum[currency]}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-button (click)="saveSelectedCurrency()" class="selectCurrencyButton">
+    select Currency
+  </button>
+</span>
+

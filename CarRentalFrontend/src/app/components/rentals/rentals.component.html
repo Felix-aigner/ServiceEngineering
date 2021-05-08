@@ -1,27 +1,31 @@
 <app-header></app-header>
 
-<div *ngIf="allrentals as currentlyRented">
+<div *ngIf="allrentals as currentlyRented" class="rental-wrapper">
   <div class="list-wrapper">
     <h2>Active Rentals</h2>
     <div *ngFor="let rented of currentlyRented">
-      <div *ngIf="rented.isActive" class="car-wrapper">
-        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
-        <p>Power (KW): {{ rented.car.kwPower }}</p>
-        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
-        <p>Rental started: {{rented.startDate}}</p>
-        <p>Rental will end: {{rented.endDate}}</p>
+      <div *ngIf="rented.isActive">
+        <mat-card>
+          <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+          <p>Power (KW): {{ rented.car.kwPower }}</p>
+          <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+          <p>Rental started: {{rented.startDate}}</p>
+          <p>Rental will end: {{rented.endDate}}</p>
+        </mat-card>
       </div>
     </div>
   </div>
   <div class="list-wrapper">
     <h2>Inactive Rentals</h2>
     <div *ngFor="let rented of currentlyRented">
-      <div *ngIf="!rented.isActive" class="car-wrapper">
-        <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
-        <p>Power (KW): {{ rented.car.kwPower }}</p>
-        <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
-        <p>Rental started: {{rented.startDate}}</p>
-        <p>Rental will end: {{rented.endDate}}</p>
+      <div *ngIf="!rented.isActive">
+        <mat-card>
+          <h2>{{ rented.car.brand }} {{ rented.car.type }} </h2>
+          <p>Power (KW): {{ rented.car.kwPower }}</p>
+          <p>Price ({{rented.car.currency}}): {{ rented.car.price }}</p>
+          <p>Rental started: {{rented.startDate}}</p>
+          <p>Rental will end: {{rented.endDate}}</p>
+        </mat-card>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {of, Subject, zip} from 'rxjs';
+import {combineLatest, of, Subject, zip} from 'rxjs';
 import {CarService} from '../../services/car.service';
 import {Rental, RentalCar} from '../../models/rental.model';
 import {RentalSelectorService} from "../../car/rental-selector.service";
@@ -24,10 +24,7 @@ export class MyCarsComponent implements OnInit, OnDestroy {
               private carSelector: CarSelectorService,
               private userService: UserService
   ) {
-  }
-
-  ngOnInit(): void {
-    zip(
+    combineLatest(
       this.rentalSelector.getRentalsForUserIdFromStore(this.userService.currUser.value.id),
       this.carSelector.getAllCarsFromStore()
     ).pipe(
@@ -35,13 +32,17 @@ export class MyCarsComponent implements OnInit, OnDestroy {
         return of(rentals.map(rental => {
           return <RentalCar>{
             ...rental,
-            car: cars.filter((car: Car) => car.id === rental.carId)
+            car: cars.filter((car: Car) => car.id === rental.carId)[0]
           }
         }))
       })
     ).subscribe((rentals: RentalCar[]) => {
       this.myRentals = rentals
     })
+  }
+
+  ngOnInit(): void {
+
   }
 
 

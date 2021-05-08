@@ -3,7 +3,7 @@ import {CarService} from '../../services/car.service';
 import {Rental, RentalCar} from '../../models/rental.model';
 import {UserService} from '../../services/user.service';
 import {RentalSelectorService} from "../../car/rental-selector.service";
-import {of, zip} from "rxjs";
+import {combineLatest, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {Car} from "../../models/car.model";
 import {CarSelectorService} from "../../car/car-selector.service";
@@ -27,7 +27,7 @@ export class RentalsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    zip(
+    combineLatest(
       this.rentalSelector.getAllRentalsFromStore(),
       this.carSelector.getAllCarsFromStore()
     ).pipe(
@@ -35,7 +35,7 @@ export class RentalsComponent implements OnInit {
         return of(rentals.map(rental => {
           return <RentalCar>{
             ...rental,
-            car: cars.filter((car: Car) => car.id === rental.carId)
+            car: cars.filter((car: Car) => car.id === rental.carId)[0]
           }
         }))
       })

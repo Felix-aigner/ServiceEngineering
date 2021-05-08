@@ -23,6 +23,10 @@ const CarReducer = createReducer(
     (state, {cars}) => ({
       ...carAdapter.upsertMany(cars, state)
     })),
+  on(restAction.DeleteCarByIdSuccess,
+    (state, {id}) => ({
+      ...carAdapter.removeOne(id, state)
+    })),
 );
 
 export const {

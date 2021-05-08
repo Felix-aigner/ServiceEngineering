@@ -81,7 +81,7 @@ export class CarService {
       })));
   }
 
-  delete(id: number): void {
+  delete(id: string): void {
     this.http.post(this.carURL + "/delete", {
       id: id,
       method: "delete"
@@ -90,8 +90,7 @@ export class CarService {
         .append('token', this.userService.currUser.value.token)
     }).pipe(
       map((_ => {
-        this.store.dispatch(restAction.GetAllRentals());
-        this.store.dispatch(restAction.GetAllCars({currency: this.selectedCurrency.getValue()}))
+        this.store.dispatch(restAction.DeleteCarByIdSuccess({id}))
       }))).subscribe();
   }
 

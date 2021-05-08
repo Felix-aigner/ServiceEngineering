@@ -22,12 +22,7 @@ export const GetAllRentalsSuccess = createAction(
   props<{rentals: Rental[]}>()
 );
 
-export const GetCarById = createAction(
-  '[Car] Get Car By Id',
-  props<{ id: string }>()
-);
-
-export const GetCarByIdSuccess = createAction(
-  '[Car] Get Car By Id Success',
-  props<{cars: Car}>()
+export const DeleteCarByIdSuccess = createAction(
+  '[Car] DeleteCarById Success',
+  props<{id: string}>()
 );
