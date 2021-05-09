@@ -21,7 +21,7 @@ export class RestService {
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
 
-    if(environment.production) {
+    if (environment.production) {
       this.getURL();
     } else {
       this.carURL = 'http://localhost:5000/cars';
@@ -30,15 +30,13 @@ export class RestService {
   }
 
   getURL() {
-    this.http.get("http://api.ipify.org/?format=json")
-      .subscribe((res:any)=> {
-        this.carURL = 'http://' + res.ip + ':5000/cars';
-        this.rentalURL = 'http://' + res.ip + ':5000/rentals';
-      });
+    let ip = window.location.origin
+    this.carURL = ip + ':5000/cars';
+    this.rentalURL = ip + ':5000/rentals';
   }
 
   getAllCars(currency: CurrencyEnum): Observable<any> {
-    return this.http.get( this.carURL + "?cy=" + CurrencyEnum[currency],
+    return this.http.get(this.carURL + "?cy=" + CurrencyEnum[currency],
       {
         headers: this.commonHttpHeaders
           .append('token', this.userService.currUser.value.token)
@@ -51,7 +49,7 @@ export class RestService {
   }
 
   getAllRentals(): Observable<any> {
-    return this.http.get( this.rentalURL,
+    return this.http.get(this.rentalURL,
       {
         headers: this.commonHttpHeaders
           .append('token', this.userService.currUser.value.token)

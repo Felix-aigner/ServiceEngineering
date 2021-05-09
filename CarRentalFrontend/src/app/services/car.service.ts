@@ -46,11 +46,9 @@ export class CarService {
   }
 
   getURL() {
-    this.http.get("http://api.ipify.org/?format=json")
-      .subscribe((res: any) => {
-        this.carURL = 'http://' + res.ip + ':5000/cars';
-        this.rentalURL = 'http://' + res.ip + ':5000/rentals';
-      });
+    let ip = window.location.origin
+    this.carURL = ip + ':5000/cars';
+    this.rentalURL = ip + ':5000/rentals';
   }
 
   createNewCar(car: Car): Observable<any>  {

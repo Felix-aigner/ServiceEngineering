@@ -26,13 +26,12 @@ export class UserService {
     } else {
       this.accountURL = 'http://localhost:5000/accounts';
     }
+    console.log(this.accountURL)
   }
 
   getURL() {
-    this.http.get("http://api.ipify.org/?format=json")
-      .subscribe((res:any)=> {
-      this.accountURL = 'http://' + res.ip + ':5000/accounts';
-    });
+    let ip = window.location.origin
+    this.accountURL = ip + ':5000/accounts'
   }
 
   login(username: string, password: string): Observable<UserModel> {
