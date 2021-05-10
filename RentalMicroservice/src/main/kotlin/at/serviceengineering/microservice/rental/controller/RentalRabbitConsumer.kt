@@ -24,9 +24,19 @@ class RentalRabbitConsumer(
         logger.info(" [X] Received Get Rentals: '$obj'")
         return try {
             if(obj.toLowerCase().equals("getallrentals")) {
-                Gson().toJson(rentalService.findAll())
+                val rentals = try {
+                    rentalService.findAll()
+                } catch (e: Exception) {
+                    ""
+                }
+                Gson().toJson(rentals)
             } else {
-                Gson().toJson(rentalService.findOne(obj))
+                val rentals = try {
+                    rentalService.findOne(obj)
+                } catch (e: Exception) {
+                    ""
+                }
+                Gson().toJson(rentals)
             }
         } catch (e: Exception) {
             logger.error(" [-] Failed Get Rentals: '$obj' ${e.message}")
