@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 // @ts-ignore
 import {Car, CurrencyEnum} from '../../models/car.model';
 import {CarService} from '../../services/car.service';
-import {UserService} from '../../services/user.service';
+import {UserService} from '../../services/user.servizz';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, combineLatest, Observable, of, zip} from 'rxjs';
 import {CreateCarComponent} from '../../dialogs/create-car/create-car.component';

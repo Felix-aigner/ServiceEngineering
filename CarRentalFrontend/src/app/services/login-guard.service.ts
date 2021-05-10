@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {UserService} from './user.service';
+import {UserService} from './user.servizz';
 import {EMPTY, Observable, of} from 'rxjs';
 import {first, switchMap} from 'rxjs/operators';
 

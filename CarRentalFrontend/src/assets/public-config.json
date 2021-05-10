@@ -1,0 +1,4 @@
+{
+	"restUrl": "http://localhost:5000/",
+	"currencyUrl": "http://localhost:4000/"
+}

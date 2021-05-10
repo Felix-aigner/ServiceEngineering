@@ -7,7 +7,7 @@ import {Subject} from 'rxjs';
 import * as restAction from "../../car/+state/rest.actions";
 import {State} from "../../app.store";
 import {Store} from "@ngrx/store";
-import {UserService} from "../../services/user.service";
+import {UserService} from "../../services/user.servizz";
 
 @Component({
   selector: 'app-edit-car',

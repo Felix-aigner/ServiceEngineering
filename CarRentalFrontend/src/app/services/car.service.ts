@@ -4,7 +4,8 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 
 // @ts-ignore
 import {Car, CurrencyEnum} from '../models/car.model';
-import {UserService} from './user.service';
+import {UserService} from './user.servizz';
+import {ConfigService} from './config.service';
 import {MatDialog} from '@angular/material/dialog';
 import {Rental} from '../models/rental.model';
 import {catchError, map} from 'rxjs/operators';
@@ -27,6 +28,7 @@ export class CarService {
 
   constructor(
     protected http: HttpClient,
+    private configService: ConfigService,
     private userService: UserService,
     private dialog: MatDialog,
     private carSelector: CarSelectorService,
@@ -46,9 +48,9 @@ export class CarService {
   }
 
   getURL() {
-    let ip = window.location.origin
-    this.carURL = ip + ':5000/cars';
-    this.rentalURL = ip + ':5000/rentals';
+    // let ip = window.location.origin
+    this.carURL    = this.configService.config.restUrl + 'cars';
+    this.rentalURL = this.configService.config.restUrl + 'rentals';
   }
 
   createNewCar(car: Car): Observable<any>  {

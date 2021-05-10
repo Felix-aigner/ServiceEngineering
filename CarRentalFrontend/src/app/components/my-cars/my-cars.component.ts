@@ -4,7 +4,7 @@ import {CarService} from '../../services/car.service';
 import {Rental, RentalCar} from '../../models/rental.model';
 import {RentalSelectorService} from "../../car/rental-selector.service";
 import {map, switchMap} from "rxjs/operators";
-import {UserService} from "../../services/user.service";
+import {UserService} from "../../services/user.servizz";
 import {CarSelectorService} from "../../car/car-selector.service";
 import {Car} from "../../models/car.model";
 

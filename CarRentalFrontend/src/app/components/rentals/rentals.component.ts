@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CarService} from '../../services/car.service';
 import {Rental, RentalCar} from '../../models/rental.model';
-import {UserService} from '../../services/user.service';
+import {UserService} from '../../services/user.servizz';
 import {RentalSelectorService} from "../../car/rental-selector.service";
 import {combineLatest, of, zip} from "rxjs";
 import {switchMap} from "rxjs/operators";

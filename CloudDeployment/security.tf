@@ -2,7 +2,7 @@
 // Load Generation (Pool)
 // -------------------------------------------------------------------------- //
 resource "exoscale_security_group" "webservices" {
-  name = "(Managed) Load generator group"
+  name = "(Managed) Webservices group"
 }
 
 resource "exoscale_security_group_rule" "http" {

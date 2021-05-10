@@ -5,7 +5,7 @@ resource "exoscale_compute" "webservices" {
   security_group_ids = [exoscale_security_group.webservices.id]
   zone = var.zone
 
-  key_pair = exoscale_ssh_keypair.iwer_anders_von_den_jungs.id // <- hier erstmal nur Estepan für Tests
+  key_pair = exoscale_ssh_keypair.stefan.id // <- hier erstmal nur Estepan für Tests
   template_id = data.exoscale_compute_template.ubuntu.id
   disk_size = 10
   // size = "micro" // für 2 java services in dieser Form wohl nicht ganz ausreichend
@@ -39,44 +39,78 @@ apt-get install -y docker-ce docker-ce-cli containerd.io
 # region User-defined bridge network (grafana / prometheus / scaler)
 # https://docs.docker.com/network/bridge/#differences-between-user-defined-bridges-and-the-default-bridge
 # (in order to more nicely reference from one dockerinstance to the other (config))
-# docker network create my-custom-bridged-net
+docker network create carrental-net
 # docker network rm my-custom-bridged-net # (info for removal, if need be)
 #((docker run)) --network my-custom-bridged-net
 # endregion
 
-# region Run containers
-# Webservice for Currency Conversion
-docker run -d \
-  -e CURRENCY_PORT=4000 \
-  --network host \
-  --name currency_conversion \
-  shipitplz/currency-webservice
+# Own IP via exoscale service
+RENTAL_IP=$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4)
+echo $RENTAL_IP
 
-# Webservice for Car Rental
-docker run -d \
-  -e RENTAL_PORT=5000 \
-  --network host \
-  --name car_rental \
-  shipitplz/car-rental-service
+# Frontend preparations
+#mkdir -p /usr/share/nginx/html/assets
+mkdir -p /srv/frontend-config/
+echo '{
+  "restUrl":     "http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):5000/",
+  "currencyUrl": "http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):4000/"
+}' > /srv/frontend-config/public-config.json
 
+# ---------------------------------------------
 # Frontend
+# ---------------------------------------------
 docker run -d \
   -e FRONTEND_PORT=80 \
+  -e RENTAL_PORT=5000 \
+  -e RENTAL_IP \
+  -v /srv/frontend/public-config.json:/usr/share/nginx/html/assets/public-config.json \
   --network host \
-  --name car_rental_frontend \
-  shipitplz/car-rental-frontend
-# endregion
+  --name frontend \
+  shipitplz/se-frontend
 
-# Frontend
+# ---------------------------------------------
+# Webservice for REST (5000 => testing)
+# ---------------------------------------------
 docker run -d \
-  -p 5432:5432 \
-  -e POSTGRES_DB:postgres\
-  -e POSTGRES_USER:postgres \
-  -e POSTGRES_PASSWORD:postgres \
-  --network host \
-  --name database \
-  postgres:12.1
-# endregion
+  -p 5000:5000 \
+  -e RENTAL_PORT=5000 \
+  -e PORT=5000 \
+  --network carrental-net \
+  --name rest \
+  shipitplz/se-rest-service
+
+# ---------------------------------------------
+# ---------------------------------------------
+
+# Car Service
+docker run -d \
+  -e RENTAL_PORT=5000 \
+  --network carrental-net \
+  --name car_service \
+  shipitplz/se-car-service
+
+# Rental Service
+docker run -d \
+  --network carrental-net \
+  --name rental_service \
+  shipitplz/se-rental-service
+
+# User Service
+docker run -d \
+  --network carrental-net \
+  --name user_service \
+  shipitplz/se-user-service
+
+# ---------------------------------------------
+# ---------------------------------------------
+
+# Webservice for Currency Conversion (4000 => testing)
+docker run -d \
+  -p 4000:4000 \
+  -e CURRENCY_PORT=4000 \
+  --network carrental-net \
+  --name currency_conversion \
+  shipitplz/currency-webservice
 
 EOF
 }

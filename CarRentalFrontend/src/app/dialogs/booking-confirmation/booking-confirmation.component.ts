@@ -4,7 +4,7 @@ import {Car} from '../../models/car.model';
 import {FormBuilder} from '@angular/forms';
 import {CarService} from '../../services/car.service';
 import {Rental} from "../../models/rental.model";
-import {UserService} from "../../services/user.service";
+import {UserService} from "../../services/user.servizz";
 
 @Component({
   selector: 'app-booking-confirmation',

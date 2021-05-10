@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppComponent} from './app.component';
@@ -32,6 +32,11 @@ import {RestEffects} from "./car/+state/rest.effects";
 import {StoreModule} from "@ngrx/store";
 import {reducers} from "./app.store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {ConfigService} from './services/config.service';
+
+export const configFactory = (configService: ConfigService) => {
+  return () => configService.loadConfig();
+};
 
 @NgModule({
   declarations: [
@@ -73,7 +78,14 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
     }),
 
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configFactory,
+      deps: [ConfigService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmationDialogComponent, CreateCarComponent, EditCarComponent, ErrorDialogComponent, BookingConfirmationComponent]
 })

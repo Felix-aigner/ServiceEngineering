@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {BehaviorSubject, EMPTY} from 'rxjs';
-import {UserService} from '../../services/user.service';
+import {UserService} from '../../services/user.servizz';
 import {catchError} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UserModel} from '../../models/user.model';
@@ -10,6 +10,7 @@ import * as rest from "../../car/+state/rest.actions";
 import {CurrencyEnum} from "../../models/car.model";
 import {Store} from "@ngrx/store";
 import {State} from "../../app.store";
+// import {ConfigService} from '../../services/config.service';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
   loginErrorMessage = new BehaviorSubject<string>('');
 
   constructor(
+    // configService: ConfigService,
     private userService: UserService,
     private router: Router,
     private fb: FormBuilder,
@@ -34,7 +36,8 @@ export class LoginComponent implements OnInit {
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      // testi: [configService.config.restUrl, Validators.required],
     });
   }
 

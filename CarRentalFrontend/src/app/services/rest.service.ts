@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {UserService} from "./user.service";
+import {UserService} from "./user.servizz";
+import {ConfigService} from './config.service';
 import {catchError, map} from "rxjs/operators";
 import {CurrencyEnum} from "../models/car.model";
 
@@ -15,7 +16,7 @@ export class RestService {
   rentalURL: string;
   private readonly commonHttpHeaders;
 
-  constructor(protected http: HttpClient, private userService: UserService) {
+  constructor(protected http: HttpClient, private configService: ConfigService, private userService: UserService) {
     this.commonHttpHeaders = new HttpHeaders()
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
@@ -30,9 +31,9 @@ export class RestService {
   }
 
   getURL() {
-    let ip = window.location.origin
-    this.carURL = ip + ':5000/cars';
-    this.rentalURL = ip + ':5000/rentals';
+    //let ip = window.location.origin
+    this.carURL    = this.configService.config.restUrl + 'cars';
+    this.rentalURL = this.configService.config.restUrl + 'rentals';
   }
 
   getAllCars(currency: CurrencyEnum): Observable<any> {
