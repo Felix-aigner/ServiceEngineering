@@ -49,6 +49,91 @@ docker network create carrental-net
 #echo $RENTAL_IP
 echo "\n\n\n\n\n"
 echo "################# Here starts the core cloud init #################"
+# -----------------------------------------------------------------------------------------------------------------
+
+mkdir -p /srv/rabbitmq/config/
+
+# RabbitMQ (definitions.json)
+echo \
+'{
+  "rabbit_version": "3.7.6",
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "MQdLugKr3mH+/F80LFlcmSCmW7PzRIs2mhkw+K84COXmhIot",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "administrator"
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "cluster_name",
+      "value": "rabbit@my-rabbit"
+    }
+  ],
+  "policies": [],
+  "queues": [
+    {
+      "name": "hello",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "hello2",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "getUser",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [],
+  "bindings": []
+}
+' > /srv/rabbitmq/config/definitions.json
+
+# RabbitMQ (rabbitmq.config)
+echo \
+'[
+  {
+    rabbit,
+      [
+        { loopback_users, [] }
+      ]
+  },
+  {
+    rabbitmq_management,
+      [
+        { load_definitions, "/etc/rabbitmq/definitions.json" }
+      ]
+  }
+].' > /srv/rabbitmq/config/rabbitmq.config
+
+
 
 # Frontend preparations
 #mkdir -p /usr/share/nginx/html/assets
@@ -59,21 +144,23 @@ echo \
   \"currencyUrl\": \"http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):4000/\"
 }" > /srv/frontend/public-config.json
 
+
 # ---------------------------------------------
 # Database (RabbitMQ & MongoDB)
 docker run -d \
-  --network carrental-net \
+  --network host \
   -p 5672:5672 \
+  -v /srv/rabbitmq/config/:/etc/rabbitmq/ \
   --hostname my-rabbit --name some-rabbit rabbitmq:3
+
 docker run -d \
-  --network carrental-net \
+  --network host \
   --name mongo \
   -e MONGO_INITDB_DATABASE=userdb \
   -e MONGO_INITDB_DATABASE=cardb \
   -e MONGO_INITDB_DATABASE=rentaldb \
-  -p 27017:27017 \
   mongo
-# ports: - 27017:27017
+# -p 27017:27017
 
 
 # ---------------------------------------------
@@ -95,7 +182,7 @@ docker run -d \
   -p 5000:5000 \
   -e RENTAL_PORT=5000 \
   -e PORT=5000 \
-  --network carrental-net \
+  --network host \
   --name rest \
   shipitplz/se-rest-service
 
@@ -105,19 +192,19 @@ docker run -d \
 # Car Service
 docker run -d \
   -e RENTAL_PORT=5000 \
-  --network carrental-net \
+  --network host \
   --name car_service \
   shipitplz/se-car-service
 
 # Rental Service
 docker run -d \
-  --network carrental-net \
+  --network host \
   --name rental_service \
   shipitplz/se-rental-service
 
 # User Service
 docker run -d \
-  --network carrental-net \
+  --network host \
   --name user_service \
   shipitplz/se-user-service
 
@@ -128,7 +215,7 @@ docker run -d \
 docker run -d \
   -p 4000:4000 \
   -e CURRENCY_PORT=4000 \
-  --network carrental-net \
+  --network host \
   --name currency_conversion \
   shipitplz/currency-webservice
 

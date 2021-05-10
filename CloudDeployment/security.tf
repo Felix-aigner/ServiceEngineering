@@ -1,5 +1,5 @@
 // -------------------------------------------------------------------------- //
-// Load Generation (Pool)
+// Webservice Groups
 // -------------------------------------------------------------------------- //
 resource "exoscale_security_group" "webservices" {
   name = "(Managed) Webservices group"
