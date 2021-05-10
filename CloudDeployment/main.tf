@@ -60,6 +60,23 @@ echo \
 }" > /srv/frontend/public-config.json
 
 # ---------------------------------------------
+# Database (RabbitMQ & MongoDB)
+docker run -d \
+  --network carrental-net \
+  -p 5672:5672 \
+  --hostname my-rabbit --name some-rabbit rabbitmq:3
+docker run -d \
+  --network carrental-net \
+  --name mongo \
+  -e MONGO_INITDB_DATABASE=userdb \
+  -e MONGO_INITDB_DATABASE=cardb \
+  -e MONGO_INITDB_DATABASE=rentaldb \
+  -p 27017:27017 \
+  mongo
+# ports: - 27017:27017
+
+
+# ---------------------------------------------
 # Frontend
 # ---------------------------------------------
 docker run -d \
