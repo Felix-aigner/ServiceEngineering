@@ -12,8 +12,6 @@ import {CurrencyEnum} from "../models/car.model";
 })
 export class RestService {
 
-  carURL: string;
-  rentalURL: string;
   private readonly commonHttpHeaders;
 
   constructor(protected http: HttpClient, private configService: ConfigService, private userService: UserService) {
@@ -21,23 +19,14 @@ export class RestService {
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
-
-    if (environment.production) {
-      this.getURL();
-    } else {
-      this.carURL = 'http://localhost:5000/cars';
-      this.rentalURL = 'http://localhost:5000/rentals';
-    }
   }
 
-  getURL() {
-    //let ip = window.location.origin
-    this.carURL    = this.configService.config.restUrl + 'cars';
-    this.rentalURL = this.configService.config.restUrl + 'rentals';
+  carURL() {
+    return (environment.production) ? this.configService.config.restUrl + 'cars' : 'http://localhost:5000/cars';
   }
 
   getAllCars(currency: CurrencyEnum): Observable<any> {
-    return this.http.get(this.carURL + "?cy=" + CurrencyEnum[currency],
+    return this.http.get(this.carURL() + "?cy=" + CurrencyEnum[currency],
       {
         headers: this.commonHttpHeaders
           .append('token', this.userService.currUser.value.token)
@@ -50,7 +39,7 @@ export class RestService {
   }
 
   getAllRentals(): Observable<any> {
-    return this.http.get(this.rentalURL,
+    return this.http.get(environment.production ? (this.configService.config.restUrl+'rentals') : 'http://localhost:5000/rentals',
       {
         headers: this.commonHttpHeaders
           .append('token', this.userService.currUser.value.token)

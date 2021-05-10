@@ -21,7 +21,7 @@ export class ConfigService {
 
   loadConfig() {
     return this.http
-      .get<Config>('./assets/public-config.json')
+      .get<Config>('./assets/public-config.json', {},)
       .toPromise()
       .then(config => {
         this.config = config;

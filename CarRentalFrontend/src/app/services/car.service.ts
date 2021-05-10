@@ -20,8 +20,8 @@ type EntityResponseType = HttpResponse<Car>;
 
 @Injectable({providedIn: 'root'})
 export class CarService {
-  carURL: string;
-  rentalURL: string;
+  //carURL: string;
+  //rentalURL: string;
 
   private readonly commonHttpHeaders;
   selectedCurrency = new BehaviorSubject<CurrencyEnum>(CurrencyEnum.EUR);
@@ -38,23 +38,13 @@ export class CarService {
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
-
-    if (environment.production) {
-      this.getURL();
-    } else {
-      this.carURL = 'http://localhost:5000/cars';
-      this.rentalURL = 'http://localhost:5000/rentals';
-    }
   }
 
-  getURL() {
-    // let ip = window.location.origin
-    this.carURL    = this.configService.config.restUrl + 'cars';
-    this.rentalURL = this.configService.config.restUrl + 'rentals';
-  }
+  carURL()    { return (environment.production) ? this.configService.config.restUrl + 'cars'    : 'http://localhost:5000/cars'; }
+  rentalURL() { return (environment.production) ? this.configService.config.restUrl + 'rentals' : 'http://localhost:5000/rentals'; }
 
   createNewCar(car: Car): Observable<any>  {
-    return this.http.post<Car>(this.carURL, {
+    return this.http.post<Car>(this.carURL(), {
       car: car,
       method: "post"
     }, {
@@ -68,7 +58,7 @@ export class CarService {
   }
 
   updateCar(car: Car): Observable<any> {
-    return this.http.put<string>(this.carURL, {
+    return this.http.put<string>(this.carURL(), {
       car: car,
       method: "put"
     }, {
@@ -82,7 +72,7 @@ export class CarService {
   }
 
   delete(id: string): void {
-    this.http.post(this.carURL + "/delete", {
+    this.http.post(this.carURL() + "/delete", {
       id: id,
       method: "delete"
     }, {
@@ -96,7 +86,7 @@ export class CarService {
 
   bookCar(rental: Rental): void {
     console.log(rental);
-    this.http.post<Rental>(this.rentalURL + "/create",
+    this.http.post<Rental>(this.rentalURL() + "/create",
       {
         rental: rental,
         method: "create"
@@ -113,7 +103,7 @@ export class CarService {
   }
 
   releaseCar(rental: Rental): void {
-    this.http.post<Rental>(this.rentalURL + "/return",
+    this.http.post<Rental>(this.rentalURL() + "/return",
       {
         rental: rental,
         method: "return"

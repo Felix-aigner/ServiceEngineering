@@ -12,8 +12,6 @@ export class UserService {
 
   isLoggedIn = new BehaviorSubject<boolean>(false);
   currUser = new BehaviorSubject<UserModel>(new UserModel());
-  accountURL: string;
-
 
   private readonly commonHttpHeaders;
 
@@ -22,16 +20,18 @@ export class UserService {
       .set('Access-Control-Allow-Methods', ['POST', 'GET', 'DELETE', 'OPTIONS', 'PUT'])
       .set('Access-Control-Allow-Headers', ['token'])
       .set('Access-Control-Allow-Origin', '*');
+  }
+
+  accountURL() {
     if(environment.production) {
-      this.accountURL = this.configService.config.restUrl + 'accounts';
+      return this.configService.config.restUrl + 'accounts';
     } else {
-      this.accountURL = 'http://localhost:5000/accounts';
+      return 'http://localhost:5000/accounts';
     }
-    console.log(this.accountURL)
   }
 
   login(username: string, password: string): Observable<UserModel> {
-    return this.http.post<UserModel>(this.accountURL + '/login', {
+    return this.http.post<UserModel>(this.accountURL() + '/login', {
       id: "",
       username: username,
       password: password,
@@ -45,7 +45,7 @@ export class UserService {
 
   // tslint:disable-next-line:typedef
   register(firstname: string, lastname: string, username: string, password: string) {
-    return this.http.post(this.accountURL, {
+    return this.http.post(this.accountURL(), {
       firstname,
       lastname,
       username,

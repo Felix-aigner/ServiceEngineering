@@ -45,16 +45,19 @@ docker network create carrental-net
 # endregion
 
 # Own IP via exoscale service
-RENTAL_IP=$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4)
-echo $RENTAL_IP
+#RENTAL_IP=$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4)
+#echo $RENTAL_IP
+echo "\n\n\n\n\n"
+echo "################# Here starts the core cloud init #################"
 
 # Frontend preparations
 #mkdir -p /usr/share/nginx/html/assets
-mkdir -p /srv/frontend-config/
-echo '{
-  "restUrl":     "http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):5000/",
-  "currencyUrl": "http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):4000/"
-}' > /srv/frontend-config/public-config.json
+mkdir -p /srv/frontend/
+echo \
+"{
+  \"restUrl\":     \"http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):5000/\",
+  \"currencyUrl\": \"http://$(curl http://metadata.exoscale.com/latest/meta-data/public-ipv4):4000/\"
+}" > /srv/frontend/public-config.json
 
 # ---------------------------------------------
 # Frontend
@@ -63,7 +66,7 @@ docker run -d \
   -e FRONTEND_PORT=80 \
   -e RENTAL_PORT=5000 \
   -e RENTAL_IP \
-  -v /srv/frontend/public-config.json:/usr/share/nginx/html/assets/public-config.json \
+  --mount type=bind,source=/srv/frontend/public-config.json,target=/usr/share/nginx/html/assets/public-config.json \
   --network host \
   --name frontend \
   shipitplz/se-frontend
