@@ -65,15 +65,21 @@ class RentalRabbitConsumer(
 
     private fun createRental(rental: Rental): String {
         if(rentalRabbitProducer.getCar(rental.carId) == Response.FAILED.name){
+            logger.info("CAR ID NOT FOUND IN CAR MICROSERVICE")
             throw Exception()
         }
         if(rentalRabbitProducer.isAccount(rental.userId) == Response.FAILED.name){
+            logger.info("USER ID NOT FOUND IN USER MICROSERVICE")
             throw Exception()
         }
-        val rentals = rentalService.findAllByCarId(rental.carId)
-        rentals?.forEach {
-            if(it.isActive)
-                throw Exception()
+        try {
+            val rentals = rentalService.findAllByCarId(rental.carId)
+            rentals?.forEach {
+                if(it.isActive)
+                    throw Exception()
+            }
+        } catch (e: Exception) {
+            logger.info("no rentals")
         }
 
         return Gson().toJson(rentalService.save(rental))
